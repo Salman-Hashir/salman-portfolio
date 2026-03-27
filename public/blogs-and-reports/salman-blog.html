@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Salman's PC Diaries — My Setup, Games & Random Tech Stuff</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --ink: #1a1a1a;
+  --page: #faf8f4;
+  --paper: #ffffff;
+  --muted: #888;
+  --light: #f0ede7;
+  --border: #e8e4dc;
+  --accent: #e8500a;
+  --accent2: #2e7d32;
+  --accent3: #1565c0;
+  --highlight: #fff3b0;
+  --highlight2: #fde8dc;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.top-banner {
+  background: var(--ink);
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.top-banner span { color: #ffcc44; }
+
+.masthead {
+  border-bottom: 3px double var(--border);
+  padding: 32px 20px 20px;
+  text-align: center;
+  background: var(--paper);
+}
+.masthead-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.masthead h1 {
+  font-family: 'Lora', serif;
+  font-weight: 700;
+  font-size: clamp(32px, 6vw, 64px);
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+.masthead-tagline {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 15px;
+  margin-top: 10px;
+}
+.masthead-meta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.masthead-meta a { color: var(--muted); text-decoration: none; }
+.masthead-meta a:hover { color: var(--accent); }
+
+nav {
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+}
+nav a {
+  padding: 14px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+nav a:hover, nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.layout {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 48px 20px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 60px;
+}
+
+/* Articles */
+.article-card {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 48px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+.article-card:nth-child(1) { animation-delay: 0.1s; }
+.article-card:nth-child(2) { animation-delay: 0.25s; }
+.article-card:nth-child(3) { animation-delay: 0.4s; }
+.article-card:last-child { border-bottom: none; margin-bottom: 0; }
+
+.article-cat {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 3px;
+  margin-bottom: 14px;
+}
+.cat-setup  { background: #fde8dc; color: var(--accent); }
+.cat-gaming { background: #e8f5e9; color: var(--accent2); }
+.cat-life   { background: #e3f2fd; color: var(--accent3); }
+
+.article-headline {
+  font-family: 'Lora', serif;
+  font-size: clamp(22px, 3.5vw, 34px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.article-headline:hover { color: var(--accent); }
+
+.byline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  font-size: 13px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.byline-author { font-weight: 600; color: var(--ink); }
+.byline-dot { color: var(--border); }
+
+.article-lead {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  line-height: 1.75;
+  font-style: italic;
+  color: #444;
+  margin-bottom: 22px;
+  border-left: 3px solid var(--accent);
+  padding-left: 20px;
+}
+
+.article-body p {
+  font-size: 16px;
+  line-height: 1.9;
+  color: #333;
+  margin-bottom: 18px;
+}
+.article-body strong { color: var(--ink); }
+
+.callout {
+  background: var(--highlight);
+  border-left: 4px solid #f0c040;
+  padding: 16px 20px;
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 24px 0;
+  color: #5a4a00;
+}
+.callout.blue  { background: #e8f0fe; border-color: #4285f4; color: #1a3a6e; }
+.callout.red   { background: var(--highlight2); border-color: var(--accent); color: #7a2200; }
+.callout.green { background: #e8f5e9; border-color: var(--accent2); color: #1b4a1e; }
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 14px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.spec-table th {
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.spec-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.spec-table tr:nth-child(even) td { background: var(--light); }
+.spec-table tr:last-child td { border-bottom: none; }
+.spec-table td:first-child { font-weight: 600; width: 38%; }
+.spec-table td:last-child { color: #555; }
+
+.pull-quote {
+  font-family: 'Lora', serif;
+  font-size: 21px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding: 20px 0;
+  margin: 32px 0;
+  text-align: center;
+}
+
+.article-tags { display: flex; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+.tag {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.tag:hover { border-color: var(--accent); color: var(--accent); }
+
+.read-more {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+  transition: opacity 0.2s;
+}
+.read-more:hover { opacity: 0.7; }
+
+.divider {
+  text-align: center;
+  color: var(--border);
+  letter-spacing: 8px;
+  font-size: 18px;
+  margin: 8px 0 40px;
+}
+
+/* Sidebar */
+.sidebar { font-size: 14px; }
+.sidebar-widget {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.sidebar-widget h3 {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.about-avatar {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b35, #f7c59f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 14px;
+}
+.about-text { color: #555; line-height: 1.7; font-size: 13px; text-align: center; }
+
+.spec-list { list-style: none; }
+.spec-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  gap: 8px;
+}
+.spec-list li:last-child { border-bottom: none; }
+.spec-list .k { color: var(--muted); flex-shrink: 0; }
+.spec-list .v { font-weight: 600; text-align: right; }
+.spec-list .v.good { color: var(--accent2); }
+.spec-list .v.ok { color: #e65100; }
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.status-row:last-child { border-bottom: none; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-green  { background: #4caf50; box-shadow: 0 0 0 3px rgba(76,175,80,0.2); }
+.dot-yellow { background: #ffc107; box-shadow: 0 0 0 3px rgba(255,193,7,0.2); }
+.dot-red    { background: #f44336; box-shadow: 0 0 0 3px rgba(244,67,54,0.2); }
+.status-label { color: var(--muted); font-size: 11px; }
+
+.recent-post {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.recent-post:last-child { border-bottom: none; }
+.recent-num {
+  font-family: 'Lora', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--border);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 28px;
+}
+.recent-title { font-size: 13px; font-weight: 600; line-height: 1.4; }
+.recent-title:hover { color: var(--accent); }
+.recent-date { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+footer {
+  background: var(--ink);
+  color: #aaa;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 13px;
+  line-height: 2;
+}
+.footer-title {
+  font-family: 'Lora', serif;
+  font-size: 22px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 760px) {
+  .layout { grid-template-columns: 1fr; gap: 40px; }
+  nav a { padding: 12px 10px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+  📍 Currently writing from <span>Dubai</span> — my 27" monitor is sitting alone back in Kerala 😢
+</div>
+
+<div class="masthead">
+  <div class="masthead-eyebrow">A personal tech blog by</div>
+  <h1>Salman's PC Diaries</h1>
+  <div class="masthead-tagline">Gaming, free game claims, YouTube rabbit holes & the occasional tech rant</div>
+  <div class="masthead-meta">
+    <a href="#">Home</a> <span>·</span>
+    <a href="#">My Setup</a> <span>·</span>
+    <a href="#">Gaming</a> <span>·</span>
+    <a href="#">Free Games</a> <span>·</span>
+    <a href="#">YouTube Life</a> <span>·</span>
+    <a href="#">About</a>
+  </div>
+</div>
+
+<nav>
+  <a href="#" class="active">All Posts</a>
+  <a href="#">My Setup</a>
+  <a href="#">Gaming</a>
+  <a href="#">Free Games 🎁</a>
+  <a href="#">YouTube Stuff</a>
+  <a href="#">Tech Explainers</a>
+</nav>
+
+<div class="layout">
+  <main>
+
+    <!-- ARTICLE 1 -->
+    <article class="article-card">
+      <span class="article-cat cat-setup">My Setup</span>
+      <h2 class="article-headline">Meet My HP Pavilion Gaming — The Laptop That Does Everything (Sometimes Too Hot)</h2>
+      <div class="byline">
+        <span class="byline-author">Salman Hashir</span>
+        <span class="byline-dot">•</span>
+        <span>March 2026</span>
+        <span class="byline-dot">•</span>
+        <span>8 min read</span>
+      </div>
+
+      <p class="article-lead">
+        If you've ever wondered what it's like to game, code, watch YouTube, and accidentally leave 47 browser tabs open on the same machine — this is the story of my HP Pavilion Gaming.
+      </p>
+
+      <div class="article-body">
+        <p>
+          Let me introduce you to my main guy. The <strong>HP Pavilion Gaming</strong> with a <strong>Ryzen 5 5600H</strong> and an <strong>NVIDIA GTX 1650</strong>. Not the flashiest specs in the room, but hear me out — this thing handles everything I throw at it with quiet dignity. Most of the time. When it's not sounding like a jet engine.
+        </p>
+
+        <div class="callout blue">
+          💡 <strong>What even is a Ryzen 5 5600H?</strong> It's a 6-core, 12-thread processor from AMD. The "H" at the end means it's the high-performance laptop version — built for gaming and heavy work. Think of it like the difference between a regular car and a car with sport mode. The <strong>GTX 1650</strong> is NVIDIA's entry-level dedicated graphics card — it's not trying to compete with RTX cards but it handles 1080p gaming comfortably without melting your budget or, ideally, your laptop.
+        </div>
+
+        <p>
+          At home in Kerala I had this laptop connected to a <strong>MarQ 27-inch 100Hz monitor</strong>. If you've never used an external monitor with a laptop before, stop what you're doing and fix that. It's not even a comparison — it's like going from watching a match on your phone screen to watching it on a proper TV in the living room. Your eyes thank you. Your productivity goes up. Your YouTube watch time goes dangerously up.
+        </p>
+
+        <p>
+          The 100Hz makes a real difference too. Normal monitors run at 60Hz — meaning they refresh the image 60 times per second. 100Hz means 100 times per second. It sounds like a small thing until you experience it. Scrolling is smoother. Games feel more responsive. Even moving your mouse cursor around the desktop feels weirdly satisfying. Once you go 100Hz it's almost painful to go back to 60Hz.
+        </p>
+
+        <div class="pull-quote">
+          "An external monitor is the single best upgrade you can make for a laptop setup. I'm saying this as someone who resisted it for way too long."
+        </div>
+
+        <p>
+          Then there's the keyboard. I was rocking a <strong>Portronics Hydra mechanical keyboard with red switches</strong>. Now if you're not into mechanical keyboards, here's the quick version: regular keyboards use rubber membranes that feel mushy. Mechanical keyboards use individual switches under each key that give you a much more satisfying, precise press.
+        </p>
+
+        <div class="callout">
+          ⌨️ <strong>Switch colors explained (the thing nobody tells you simply):</strong> <strong>Blue switches</strong> — loud, clicky, very satisfying, will annoy everyone around you. <strong>Brown switches</strong> — slight bump when you press, quieter, good for typing. <strong>Red switches</strong> — smooth, no bump, no click, fast. Best for gaming. That's what I had on the Hydra and honestly it's a pleasure to type on once you get used to it. The key thing with reds: you'll accidentally press keys at first because there's no tactile feedback telling you "okay that registered." Give it a week.
+        </div>
+
+        <p>
+          And the mouse — I have this wireless mouse. The brand starts with something like "Coconet" or similar? I genuinely cannot remember the exact name. It doesn't matter because it works perfectly. No lag, decent grip, wireless freedom. Sometimes the best peripheral is the one you just never have to think about.
+        </p>
+
+        <table class="spec-table">
+          <tr><th>Part</th><th>What I Use</th><th>The Point of It</th></tr>
+          <tr><td>Laptop</td><td>HP Pavilion Gaming</td><td>The base of everything</td></tr>
+          <tr><td>CPU</td><td>Ryzen 5 5600H</td><td>Handles gaming + multitasking well</td></tr>
+          <tr><td>GPU</td><td>GTX 1650</td><td>Solid 1080p gaming without RTX tax</td></tr>
+          <tr><td>Monitor</td><td>MarQ 27" 100Hz</td><td>Biggest quality-of-life upgrade</td></tr>
+          <tr><td>Keyboard</td><td>Portronics Hydra (Red)</td><td>Mechanical feel, gaming optimized</td></tr>
+          <tr><td>Mouse</td><td>Wireless (brand unknown)</td><td>Just works, no complaints</td></tr>
+          <tr><td>Internet</td><td>KeralaVision 50 Mbps</td><td>Downloads, streams, games fine</td></tr>
+        </table>
+
+        <p>
+          The internet — <strong>KeralaVision, 50 Mbps</strong>. This is genuinely a comfortable speed. Gaming online? Fine, low ping. Streaming 1080p YouTube? Instant. Downloading a 60GB game while watching YouTube in another tab? Works, but the download speed dips a bit and you'll feel it. Overall though, KeralaVision did its job without drama. Which is all you can ask from an ISP honestly.
+        </p>
+
+        <p>
+          Now I'm in Dubai with just the laptop and the unnamed wireless mouse. No 27" screen. No mechanical keyboard. Just me and the 15-inch laptop display and a deep appreciation for what I had back home.
+        </p>
+      </div>
+
+      <div class="article-tags">
+        <a href="#" class="tag">HP Pavilion</a>
+        <a href="#" class="tag">Ryzen 5</a>
+        <a href="#" class="tag">GTX 1650</a>
+        <a href="#" class="tag">Setup</a>
+        <a href="#" class="tag">MarQ Monitor</a>
+        <a href="#" class="tag">Mechanical Keyboard</a>
+      </div>
+      <a href="#" class="read-more">Continue reading →</a>
+    </article>
+
+    <div class="divider">• • •</div>
+
+    <!-- ARTICLE 2 -->
+    <article class="article-card">
+      <span class="article-cat cat-gaming">Gaming</span>
+      <h2 class="article-headline">Games I Played, Games I Claimed for Free, and Games I'll Probably Never Finish (But Won't Delete)</h2>
+      <div class="byline">
+        <span class="byline-author">Salman Hashir</span>
+        <span class="byline-dot">•</span>
+        <span>February 2026</span>
+        <span class="byline-dot">•</span>
+        <span>6 min read</span>
+      </div>
+
+      <p class="article-lead">
+        My game library is what I'd describe as "aggressively optimistic." Hundreds of games. Played maybe a dozen properly. Claimed everything free just in case I'd get to them eventually. Spoiler: I haven't.
+      </p>
+
+      <div class="article-body">
+        <p>
+          Let me confess something: I have a problem with claiming free games. Not playing them — just claiming them. <strong>Epic Games Store gives out free games every single week</strong>. Every Thursday, new free game. And every Thursday, without fail, I would open the Epic launcher, click "Get," watch it add to my library, and then never open it again. I have games I claimed during COVID that I still haven't launched.
+        </p>
+
+        <div class="callout green">
+          🎁 <strong>Where to grab free games regularly:</strong> <strong>Epic Games Store</strong> — weekly free game, always, no catch (just make an account). <strong>Amazon Prime Gaming</strong> — if you have Prime, you get free games every month, check the Gaming tab. <strong>GOG</strong> — occasional giveaways, DRM-free. <strong>Steam</strong> — free weekends where you can sometimes keep the game permanently. The GTX 1650 can actually run most of what you claim, which makes the habit feel more justified.
+        </div>
+
+        <p>
+          The games I actually played though — that's a different story. On the full home setup with the 27" monitor, gaming honestly feels premium. The MarQ at 100Hz makes even older games look fresh. I was into multiplayer titles mostly: <strong>CS2, Valorant, GTA V</strong> (never gets old), and a bunch of indie games from Steam sales where you buy three games for ₹150 and end up loving the one that looked least impressive.
+        </p>
+
+        <p>
+          The <strong>GTX 1650 hits its sweet spot at 1080p</strong>. Medium-to-high settings on most games runs at 60fps+ easily. Valorant pushes well past 100fps which on the 100Hz monitor looks absolutely clean. The Ryzen 5 5600H handles online multiplayer without bottlenecking — it's a balanced system for the price, and that's honestly what matters.
+        </p>
+
+        <div class="callout red">
+          🔥 <strong>The thermal situation — real talk:</strong> The HP Pavilion Gaming has decent cooling but when you're actually gaming, the fans go LOUD. Like, "laptop trying to become a drone" loud. Under sustained gaming load, the chassis gets warm too. What helps: put the laptop on a stand or even a thick book to improve airflow underneath. Also don't game on a bed or sofa with the vents blocked — the laptop will throttle itself to survive and you'll lose performance.
+        </div>
+
+        <p>
+          The best gaming sessions were always late night. Everyone else asleep. Room dark. Big monitor glowing. Mechanical keyboard clicking. KeralaVision doing its thing at 50 Mbps. Headphones on. That specific combination of setup + time of day hits different. Gaming on a laptop screen in a bright room is fine. Gaming on a 27" monitor at 1AM in a dark room is an experience.
+        </p>
+
+        <div class="pull-quote">
+          "You don't need a ₹3 lakh PC to enjoy gaming. A mid-range setup with the right monitor does 90% of the job at 30% of the cost."
+        </div>
+
+        <p>
+          Now abroad, I play the occasional game on the laptop screen and it's fine. It works. But fine is the operative word. The GTX 1650 is still there, still capable — the bottleneck now is purely the 15-inch screen and the absence of the mechanical keyboard. Gaming on a laptop keyboard after months of red switches feels like typing through a pillow.
+        </p>
+      </div>
+
+      <div class="article-tags">
+        <a href="#" class="tag">Gaming</a>
+        <a href="#" class="tag">Epic Free Games</a>
+        <a href="#" class="tag">GTX 1650</a>
+        <a href="#" class="tag">CS2</a>
+        <a href="#" class="tag">Valorant</a>
+        <a href="#" class="tag">Steam</a>
+      </div>
+      <a href="#" class="read-more">Continue reading →</a>
+    </article>
+
+    <div class="divider">• • •</div>
+
+    <!-- ARTICLE 3 -->
+    <article class="article-card">
+      <span class="article-cat cat-life">Life</span>
+      <h2 class="article-headline">I Watch Way Too Much YouTube — And My Setup Made It Dangerously Comfortable</h2>
+      <div class="byline">
+        <span class="byline-author">Salman Hashir</span>
+        <span class="byline-dot">•</span>
+        <span>January 2026</span>
+        <span class="byline-dot">•</span>
+        <span>4 min read</span>
+      </div>
+
+      <p class="article-lead">
+        There's something dangerously comfortable about a 27-inch monitor, a mechanical keyboard to idly type on, a fast internet connection, and YouTube. I've lost entire afternoons there. Zero regrets. Okay, some regrets.
+      </p>
+
+      <div class="article-body">
+        <p>
+          The MarQ 27" at 100Hz is genuinely a great YouTube screen. Videos look cinematic on a monitor that size. You start with one tech video, then it's a travel vlog, then a documentary about something obscure, then somehow at 2AM you're watching a 45-minute deep dive into why Soviet escalators were built the way they were. The algorithm knows. It always knows.
+        </p>
+
+        <p>
+          With <strong>KeralaVision's 50 Mbps</strong>, YouTube at 1080p is instant — no buffer, no waiting, just plays. 4K loads in a second or two. Auto quality never drops unless there's a real network issue. The combination of fast internet and a big screen makes YouTube genuinely feel like a streaming service you're paying for, except you're not paying for it.
+        </p>
+
+        <div class="callout blue">
+          📺 <strong>How much speed does YouTube actually need?</strong> 1080p HD needs around <strong>5 Mbps</strong>. 4K needs roughly <strong>15-20 Mbps</strong>. At 50 Mbps you can stream 4K YouTube, download something in the background, and still have plenty left. This is why internet speed matters more than most people think — not just for speed, but for the consistency of the experience.
+        </div>
+
+        <p>
+          My algorithm at this point is very specifically trained: tech reviews, programming tutorials I start and don't finish, Kerala food channels, random history rabbit holes, and the occasional late-night horror documentary. The 27" monitor makes all of it feel like an event. The same videos on a laptop screen are just videos — on the big monitor they become experiences.
+        </p>
+
+        <p>
+          Now that I'm abroad in Dubai with just the laptop screen, YouTube works perfectly fine technically. But fine is not the same as what I had. There's a real difference between watching on 15 inches versus 27. I sit there watching something and I'm thinking about how much better this would look back home. It's a genuinely silly thing to miss — a bigger screen — but it's real.
+        </p>
+
+        <p>
+          The lesson: once you set up a proper viewing environment, you can't go back to casual. The MarQ, the KeralaVision connection, the ability to just sit in a dark room with a big screen and good speakers — that combo spoils you. Completely worth it, but yes, you will miss it when it's gone.
+        </p>
+      </div>
+
+      <div class="article-tags">
+        <a href="#" class="tag">YouTube</a>
+        <a href="#" class="tag">MarQ Monitor</a>
+        <a href="#" class="tag">Internet</a>
+        <a href="#" class="tag">Setup Life</a>
+        <a href="#" class="tag">Kerala</a>
+      </div>
+      <a href="#" class="read-more">Continue reading →</a>
+    </article>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-widget">
+      <h3>About This Blog</h3>
+      <div class="about-avatar">👨‍💻</div>
+      <p class="about-text">
+        Hey, I'm <strong>Salman</strong> — IT engineer, developer, and person who has claimed well over 40 free games and finished maybe 8 of them. Based in Kerala, currently in Dubai. Writing about my setup, gaming, and the technology behind daily life.
+      </p>
+    </div>
+
+    <div class="sidebar-widget">
+      <h3>🟢 Current Status</h3>
+      <div class="status-row">
+        <div class="status-dot dot-yellow"></div>
+        <div>
+          <div>📍 Dubai — abroad mode</div>
+          <div class="status-label">laptop + mystery mouse only</div>
+        </div>
+      </div>
+      <div class="status-row">
+        <div class="status-dot dot-green"></div>
+        <div>
+          <div>🎮 Last played: Valorant</div>
+          <div class="status-label">on a 15" screen, suffering quietly</div>
+        </div>
+      </div>
+      <div class="status-row">
+        <div class="status-dot dot-green"></div>
+        <div>
+          <div>🎁 Free games claimed: 47+</div>
+          <div class="status-label">played: roughly 8 of them</div>
+        </div>
+      </div>
+      <div class="status-row">
+        <div class="status-dot dot-red"></div>
+        <div>
+          <div>🖥️ 27" Monitor: offline</div>
+          <div class="status-label">alone in Kerala, waiting</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-widget">
+      <h3>⚡ The Full Rig</h3>
+      <ul class="spec-list">
+        <li><span class="k">Laptop</span><span class="v">HP Pavilion Gaming</span></li>
+        <li><span class="k">CPU</span><span class="v good">Ryzen 5 5600H</span></li>
+        <li><span class="k">GPU</span><span class="v good">GTX 1650</span></li>
+        <li><span class="k">Monitor</span><span class="v good">MarQ 27" 100Hz</span></li>
+        <li><span class="k">Keyboard</span><span class="v">Portronics Hydra (Red)</span></li>
+        <li><span class="k">Mouse</span><span class="v ok">Wireless (brand unknown)</span></li>
+        <li><span class="k">Internet</span><span class="v good">KeralaVision 50 Mbps</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-widget">
+      <h3>Recent Posts</h3>
+      <div class="recent-post">
+        <div class="recent-num">01</div>
+        <div>
+          <div class="recent-title">Meet My HP Pavilion Gaming</div>
+          <div class="recent-date">March 2026 · Setup</div>
+        </div>
+      </div>
+      <div class="recent-post">
+        <div class="recent-num">02</div>
+        <div>
+          <div class="recent-title">Games I Claimed & Never Played</div>
+          <div class="recent-date">February 2026 · Gaming</div>
+        </div>
+      </div>
+      <div class="recent-post">
+        <div class="recent-num">03</div>
+        <div>
+          <div class="recent-title">I Watch Too Much YouTube</div>
+          <div class="recent-date">January 2026 · Life</div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-title">Salman's PC Diaries</div>
+  <div>A personal blog about tech, gaming & life with a mid-range rig</div>
+  <div style="margin-top:16px;color:#666">Written from Kerala & Dubai · © 2026 Salman Hashir</div>
+</footer>
+
+<script>
+  document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

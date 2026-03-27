@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluw Digital - Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Outfit', sans-serif; background-color: #050505; color: #fff; overflow-x: hidden; }
+    .neon-text { text-shadow: 0 0 40px rgba(56, 189, 248, 0.4); }
+    .interactive { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+    .interactive:hover { transform: translateY(-3px); }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="flex justify-between items-center py-8 px-12 absolute top-0 w-full z-10">
+    <div class="text-3xl font-black tracking-tight cursor-pointer interactive">Fluw<span class="text-sky-400">Digital.</span></div>
+    <div class="hidden md:flex gap-10 text-sm font-bold tracking-widest uppercase">
+      <a href="#" class="hover:text-sky-400 transition interactive">Services</a>
+      <a href="#" class="hover:text-sky-400 transition interactive">Cases</a>
+      <a href="#" class="hover:text-sky-400 transition interactive">Studio</a>
+    </div>
+    <button class="bg-white text-black font-bold uppercase tracking-widest text-xs px-8 py-4 rounded-full hover:bg-sky-400 hover:text-white interactive">Start a Project</button>
+  </nav>
+
+  <main class="relative pt-40 px-12 md:px-24 h-screen flex flex-col justify-center">
+    
+    <div class="absolute inset-0 z-[-1] overflow-hidden">
+      <div class="absolute top-[20%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-sky-500/20 blur-[120px] mix-blend-screen"></div>
+      <div class="absolute bottom-[20%] right-[10%] w-[30vw] h-[30vw] rounded-full bg-blue-700/20 blur-[100px] mix-blend-screen"></div>
+    </div>
+
+    <h1 class="text-6xl md:text-[8vw] leading-[0.9] font-black tracking-tighter mb-8 max-w-5xl neon-text">
+      WE ENGINEER <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">UNFAIR</span> ADVANTAGES.
+    </h1>
+
+    <p class="text-xl md:text-2xl text-gray-400 font-light max-w-2xl mb-12">
+      A digital marketing & creative development agency built to scale ambitious brands beyond their revenue targets.
+    </p>
+
+    <div class="flex items-center gap-6">
+      <button class="bg-sky-500 hover:bg-sky-400 text-white font-bold uppercase tracking-widest text-sm px-10 py-5 rounded-full interactive">
+        See Our Work
+      </button>
+      <button class="flex items-center gap-3 border border-white/20 hover:border-white/50 bg-black/50 backdrop-blur-md text-white font-bold uppercase tracking-widest text-sm px-10 py-5 rounded-full interactive">
+        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        Let's Talk
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const warningToast = document.createElement('div');
+      warningToast.innerHTML = `
+        <div style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
+                    background: rgba(220, 38, 38, 0.95); backdrop-filter: blur(10px); 
+                    color: white; padding: 16px 24px; border-radius: 8px; font-family: 'Outfit', sans-serif; 
+                    font-weight: 500; font-size: 15px; z-index: 99999; display: flex; align-items: center; gap: 12px;
+                    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); border: 1px solid rgba(255,100,100,0.2); transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    max-width: 90vw; text-align: left;">
+          <span style="font-size: 24px;">⚠️</span>
+          <div><b style="font-size: 16px;">Prototype Demonstration</b><br/><span style="font-size: 13px; opacity: 0.9;">This is an early concept and not a fully developed application. Feature unavailable.</span></div>
+        </div>
+      `;
+      document.body.appendChild(warningToast);
+      
+      const elements = document.querySelectorAll('button, a, .interactive');
+      let toastTimeout;
+      
+      elements.forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          const toast = warningToast.firstElementChild;
+          toast.style.top = '24px';
+          clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(() => { toast.style.top = '-100px'; }, 3500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

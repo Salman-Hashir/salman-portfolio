@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Story - Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #faf8f5; color: #333; }
+    h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+    .interactive { cursor: pointer; transition: all 0.2s ease-in-out; }
+    .interactive:hover { opacity: 0.8; transform: scale(1.02); }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="flex justify-center items-center py-6 px-12 border-b border-rose-100 bg-white shadow-sm sticky top-0 z-10">
+    <div class="text-2xl font-bold tracking-tight text-rose-800 flex items-center gap-2 serif interactive">
+      <span>💞</span> Our Story
+    </div>
+  </nav>
+
+  <main class="max-w-4xl mx-auto px-6 py-16">
+    <header class="text-center mb-16">
+      <h1 class="text-5xl font-bold text-rose-900 mb-4">A Shared Memory Space</h1>
+      <p class="text-gray-500 max-w-lg mx-auto italic serif text-lg">"Because every moment counts. Build your journal together, timeline your dates, and secure your special memories in one private place."</p>
+    </header>
+
+    <!-- App UI Mockup -->
+    <div class="bg-white rounded-3xl shadow-[0_20px_50px_rgba(225,29,72,0.1)] p-8 border border-rose-50 overflow-hidden relative">
+      <div class="flex justify-between items-center mb-8 pb-6 border-b border-rose-100">
+        <div class="flex items-center gap-4">
+          <div class="flex -space-x-4">
+            <div class="w-12 h-12 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-xl">🧑</div>
+            <div class="w-12 h-12 rounded-full border-2 border-white bg-rose-100 flex items-center justify-center text-xl">👩</div>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-gray-800">S & A's Journal</h2>
+            <p class="text-xs text-rose-500 font-semibold tracking-wider uppercase">Connected 14 days ago</p>
+          </div>
+        </div>
+        <button class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-2 px-6 rounded-full shadow-md text-sm interactive">Add Memory ＋</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Feed -->
+        <div class="flex flex-col gap-6">
+          <h3 class="text-lg font-bold text-gray-700 mb-2">Recent Memories</h3>
+          
+          <div class="bg-rose-50 rounded-2xl p-6 relative interactive cursor-pointer">
+            <span class="absolute top-4 right-4 text-xs text-gray-400 font-medium">Nov 12</span>
+            <div class="text-2xl mb-3">☕</div>
+            <h4 class="font-bold text-gray-800 mb-2">First Coffee Date</h4>
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">You spilled your latte on the table but played it off by saying you were testing gravity. I knew right then.</p>
+            <div class="flex items-center gap-2">
+              <span class="bg-white text-rose-600 text-xs px-2 py-1 rounded-md font-medium border border-rose-100">Milestone</span>
+            </div>
+          </div>
+          
+          <div class="bg-blue-50 rounded-2xl p-6 relative interactive cursor-pointer">
+            <span class="absolute top-4 right-4 text-xs text-gray-400 font-medium">Oct 05</span>
+            <h4 class="font-bold text-gray-800 mb-2">Late night voice note</h4>
+            <div class="bg-white rounded-full h-10 flex items-center px-4 gap-3 mt-3 shadow-sm border border-blue-100">
+              <button class="w-6 h-6 bg-blue-500 rounded-full text-white flex items-center justify-center text-xs">▶</button>
+              <div class="h-1 flex-grow bg-blue-200 rounded-full overflow-hidden"><div class="h-full bg-blue-500 w-1/3"></div></div>
+              <span class="text-xs text-gray-500">0:45</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Widgets -->
+        <div class="flex flex-col gap-6">
+          <h3 class="text-lg font-bold text-gray-700 mb-2">Upcoming</h3>
+          <div class="border border-gray-100 rounded-2xl p-6 bg-white shadow-sm interactive cursor-pointer">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-rose-500 font-bold">Anniversary</span>
+              <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full">In 14 Days</span>
+            </div>
+            <p class="text-gray-600 text-sm">Don't forget to book the reservation at that pasta place by the water.</p>
+          </div>
+
+          <button class="w-full border-2 border-dashed border-rose-200 text-rose-400 font-bold py-6 rounded-2xl hover:bg-rose-50 transition flex items-center justify-center gap-2 interactive">
+            📷 Upload Photo Gallery
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const warningToast = document.createElement('div');
+      warningToast.innerHTML = `
+        <div style="position: fixed; top: -100px; left: 50%; transform: translateX(-50%); 
+                    background: rgba(220, 38, 38, 0.95); backdrop-filter: blur(10px); 
+                    color: white; padding: 16px 24px; border-radius: 8px; font-family: 'Inter', sans-serif; 
+                    font-weight: 500; font-size: 15px; z-index: 99999; display: flex; align-items: center; gap: 12px;
+                    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); border: 1px solid rgba(255,100,100,0.2); transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    max-width: 90vw; text-align: left;">
+          <span style="font-size: 24px;">⚠️</span>
+          <div><b style="font-size: 16px;">Prototype Demonstration</b><br/><span style="font-size: 13px; opacity: 0.9;">This is an early concept and not a fully developed application. Feature unavailable.</span></div>
+        </div>
+      `;
+      document.body.appendChild(warningToast);
+      
+      const elements = document.querySelectorAll('button, .interactive, .cursor-pointer');
+      let toastTimeout;
+      
+      elements.forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          const toast = warningToast.firstElementChild;
+          toast.style.top = '24px';
+          clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(() => { toast.style.top = '-100px'; }, 3500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

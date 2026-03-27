@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Magnetic from './Magnetic';
 
 const Navigation = () => {
-  const links = ['About', 'Experience', 'Education', 'Projects', 'Books', 'Contact'];
+  const links = ['About', 'Experience', 'Education', 'Projects', 'Books', 'Reports', 'Contact'];
 
   return (
     <motion.nav 

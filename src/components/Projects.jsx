@@ -9,53 +9,60 @@ const fadeUp = {
 const Projects = () => {
   const projectsList = [
     {
-      num: '01 / 07', status: 'Live', statusColor: '#4ade80', icon: '🎯',
+      num: '01 / 08', status: 'Live', statusColor: '#4ade80', icon: '🤖',
+      title: 'FLUW AI', sub: 'WhatsApp AI Assistant',
+      desc: 'An intelligent conversational agent integrated with the WhatsApp Cloud API. Engineered to handle real-time customer interactions, business inquiries, and lead management automatically.',
+      tags: ['Python', 'FastAPI', 'WhatsApp API', 'Bot'],
+      link: '#'
+    },
+    {
+      num: '02 / 08', status: 'Live', statusColor: '#4ade80', icon: '🎯',
       title: 'DARE.ME', sub: 'Real-time Interactive Video Platform',
       desc: 'A real-time interactive video chat platform with built-in AI "Truth or Dare" prompts. Peer-to-peer communication with no server relay — pure WebRTC magic.',
       tags: ['WebRTC', 'WebSockets', 'Node.js', 'AI Prompts'],
       link: 'https://dareme-blue.vercel.app/'
     },
     {
-      num: '02 / 07', status: 'Live', statusColor: '#4ade80', icon: '⚡',
+      num: '03 / 08', status: 'Live', statusColor: '#4ade80', icon: '⚡',
       title: 'TryZappit', sub: 'Serverless P2P File Sharing',
       desc: 'A serverless, peer-to-peer file-sharing app that transfers files of unlimited size directly between browsers — no upload limits, no cloud storage, no middleman.',
       tags: ['WebRTC', 'P2P', 'Serverless', 'Data Channels'],
       link: 'https://tryzappit.vercel.app/'
     },
     {
-      num: '03 / 07', status: 'In Dev', statusColor: '#c9a84c', icon: '📰',
+      num: '04 / 08', status: 'In Dev', statusColor: '#c9a84c', icon: '📰',
       title: 'Vaartha (വാർത്ത)', sub: 'AI Malayalam News Aggregator',
       desc: 'A fully automated PWA that scrapes global RSS feeds and translates them into authentic Malayalam prose in real time using the Claude AI API. For the global Malayalam diaspora.',
       tags: ['Next.js 14', 'Claude API', 'Supabase', 'Malayalam NLP'],
-      link: '#'
+      link: 'demos/vaartha.html'
     },
     {
-      num: '04 / 07', status: 'In Dev', statusColor: '#c9a84c', icon: '🔍',
+      num: '05 / 08', status: 'In Dev', statusColor: '#c9a84c', icon: '🔍',
       title: 'DealSpy', sub: 'Cross-Platform Price Aggregator',
       desc: 'A price aggregator and affiliate monetization engine tracking deals across Amazon, Flipkart, Noon, and travel APIs — with in-memory caching for lightning-fast search results.',
       tags: ['Next.js', 'Node.js', 'Caching', 'Affiliate APIs'],
-      link: '#'
+      link: 'demos/dealspy.html'
     },
     {
-      num: '05 / 07', status: 'In Dev', statusColor: '#c9a84c', icon: '✦',
+      num: '06 / 08', status: 'In Dev', statusColor: '#c9a84c', icon: '✦',
       title: 'Fluw Digital', sub: 'Digital Marketing Agency Landing Page',
       desc: 'A modern, animated corporate landing page for a digital marketing agency — built with semantic HTML, advanced CSS variables, and Vanilla JS scroll-reveal animations.',
       tags: ['HTML', 'CSS Variables', 'Vanilla JS', 'Animations'],
-      link: '#'
+      link: 'demos/fluw-digital.html'
     },
     {
-      num: '06 / 07', status: 'Coming Soon', statusColor: '#6b6860', icon: '💞',
+      num: '07 / 08', status: 'Coming Soon', statusColor: '#6b6860', icon: '💞',
       title: 'Our Story', sub: 'Shared Couples Journal & Memory Space',
       desc: 'A beautiful shared space built exclusively for couples — add notes, special dates, photos, and memories together in one place. A living journal of your relationship that grows with every moment you share.',
       tags: ['React', 'Gemini API', 'Supabase', 'Real-time'],
-      link: '#'
+      link: 'demos/our-story.html'
     },
     {
-      num: '07 / 07', status: 'College', statusColor: '#6b6860', icon: '🩸',
+      num: '08 / 08', status: 'College', statusColor: '#6b6860', icon: '🩸',
       title: 'Blood Bank System', sub: 'Donor Management System',
       desc: 'A backend-driven local database application managing blood inventory, donor registration, and blood requests — built with core PHP and MySQL as a college capstone project.',
       tags: ['PHP', 'MySQL', 'Backend', 'College Project'],
-      link: '#'
+      link: 'demos/blood-bank.html'
     }
   ];
 
@@ -110,7 +117,7 @@ const Projects = () => {
                 variants={{ rest: { x: 0 }, hover: { x: 5 } }}
                 style={{ display: 'inline-flex', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', borderBottom: '1px solid rgba(201,168,76,0.3)', paddingBottom: '4px' }}
               >
-                View Live →
+                {proj.status === 'Live' ? 'View Live →' : 'View Demo →'}
               </motion.div>
             </div>
           </motion.div>

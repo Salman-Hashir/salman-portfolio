@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Tools — A Complete Study Report for Students</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f8f6f0;
+      --surface: #ffffff;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --border: #e5e0d8;
+      --accent1: #7c3aed;
+      --accent2: #0ea5e9;
+      --accent3: #10b981;
+      --accent4: #f59e0b;
+      --accent5: #ef4444;
+      --tag-bg: #f0ebff;
+      --tag-color: #7c3aed;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, #1c1917 0%, #2d1f6e 50%, #1c1917 100%);
+      padding: 70px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(124,58,237,0.3) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 50%, rgba(14,165,233,0.2) 0%, transparent 60%);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .header-inner { position: relative; z-index: 1; }
+
+    .report-badge {
+      display: inline-block;
+      background: rgba(124,58,237,0.3);
+      border: 1px solid rgba(124,58,237,0.5);
+      color: #c4b5fd;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(28px, 5vw, 54px);
+      color: #ffffff;
+      line-height: 1.1;
+      max-width: 800px;
+      margin: 0 auto 16px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: #c4b5fd;
+    }
+
+    .header-sub {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      max-width: 520px;
+      margin: 0 auto 32px;
+    }
+
+    .header-meta {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+    }
+
+    .meta-pill span { color: #c4b5fd; }
+
+    /* CONTAINER */
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      padding: 28px 32px;
+      margin: 48px 0 0;
+    }
+
+    .toc-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent1);
+      margin-bottom: 16px;
+    }
+
+    .toc ol {
+      padding-left: 20px;
+      columns: 2;
+      column-gap: 32px;
+    }
+
+    .toc li {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 500px) { .toc ol { columns: 1; } }
+
+    /* SECTION HEADINGS */
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      margin: 56px 0 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 50px; height: 2px;
+      background: var(--accent1);
+    }
+
+    h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      margin: 32px 0 10px;
+      color: var(--ink);
+    }
+
+    p { margin-bottom: 16px; color: #44403c; }
+
+    /* TOOL CARD */
+    .tool-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      padding: 28px;
+      margin: 24px 0;
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .tool-card:hover {
+      border-color: var(--accent1);
+      box-shadow: 0 4px 20px rgba(124,58,237,0.08);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .tool-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    .tool-emoji { font-size: 22px; margin-right: 8px; }
+
+    .stars {
+      font-size: 15px;
+      color: var(--accent4);
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
+    .tool-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .tool-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 2px;
+    }
+
+    .tag-free { background: #dcfce7; color: #166534; }
+    .tag-paid { background: #fef3c7; color: #92400e; }
+    .tag-freemium { background: #e0f2fe; color: #075985; }
+
+    .tool-desc { font-size: 15px; color: #57534e; margin-bottom: 14px; }
+
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    .pros, .cons {
+      padding: 14px 16px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .pros { background: #f0fdf4; border-left: 3px solid var(--accent3); }
+    .cons { background: #fff7f7; border-left: 3px solid var(--accent5); }
+
+    .pros-title, .cons-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .pros-title { color: var(--accent3); }
+    .cons-title { color: var(--accent5); }
+
+    .pros ul, .cons ul { padding-left: 16px; color: #44403c; }
+
+    .student-use {
+      background: #faf5ff;
+      border-left: 3px solid var(--accent1);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #44403c;
+      margin-top: 12px;
+    }
+
+    .student-use strong {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent1);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* CATEGORY LABEL */
+    .category-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 48px 0 4px;
+    }
+
+    .cat-icon {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      background: var(--ink);
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .cat-name {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* COMPARISON TABLE */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 28px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      min-width: 560px;
+    }
+
+    thead tr {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    th {
+      padding: 12px 14px;
+      text-align: left;
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: #44403c;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: #faf9f7; }
+    tr:hover td { background: #f0ebff; }
+
+    .td-stars { color: var(--accent4); letter-spacing: 1px; }
+    .td-free { color: #166534; font-weight: 500; }
+    .td-paid { color: #92400e; font-weight: 500; }
+    .td-freemium { color: #075985; font-weight: 500; }
+
+    /* CALLOUT */
+    .callout {
+      padding: 20px 24px;
+      margin: 28px 0;
+      font-size: 15px;
+      border-radius: 2px;
+    }
+
+    .callout.purple { background: #faf5ff; border-left: 4px solid var(--accent1); }
+    .callout.yellow { background: #fffbeb; border-left: 4px solid var(--accent4); }
+    .callout.red    { background: #fff7f7; border-left: 4px solid var(--accent5); }
+    .callout.green  { background: #f0fdf4; border-left: 4px solid var(--accent3); }
+
+    .callout strong {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .callout.purple strong { color: var(--accent1); }
+    .callout.yellow strong { color: #92400e; }
+    .callout.red strong    { color: var(--accent5); }
+    .callout.green strong  { color: var(--accent3); }
+
+    /* STARTER GUIDE */
+    .starter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .starter-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .starter-card .icon { font-size: 28px; margin-bottom: 10px; display: block; }
+    .starter-card .who {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent1);
+      margin-bottom: 6px;
+    }
+    .starter-card .tool-rec {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .starter-card .why { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ETHICS */
+    .ethics-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0;
+    }
+
+    .ethics-list li {
+      padding: 12px 16px 12px 44px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: #44403c;
+      position: relative;
+    }
+
+    .ethics-list li::before {
+      position: absolute;
+      left: 14px;
+      font-size: 16px;
+    }
+
+    .ethics-list li.do::before  { content: '✅'; }
+    .ethics-list li.dont::before { content: '❌'; }
+    .ethics-list li.do   { background: #f0fdf4; }
+    .ethics-list li.dont { background: #fff7f7; }
+
+    /* FOOTER */
+    footer {
+      background: var(--ink);
+      color: rgba(248,246,240,0.4);
+      text-align: center;
+      padding: 36px 24px;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-top: 72px;
+    }
+
+    footer span { color: #c4b5fd; }
+
+    .divider {
+      text-align: center;
+      color: var(--border);
+      letter-spacing: 14px;
+      margin: 44px 0 0;
+      font-size: 14px;
+    }
+
+    @media (max-width: 560px) {
+      .pros-cons { grid-template-columns: 1fr; }
+      .tool-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="report-badge">Study Report · 2025 Edition</span>
+    <h1>AI Tools — <em>A Complete Guide</em><br/>for Students & Beginners</h1>
+    <p class="header-sub">Everything you need to know about the AI tools reshaping how we learn, work, and create — explained simply.</p>
+    <div class="header-meta">
+      <span class="meta-pill">By <span>Salman Hashir</span></span>
+      <span class="meta-pill">~2300 words</span>
+      <span class="meta-pill">15+ Tools Covered</span>
+      <span class="meta-pill">Kerala → Dubai</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="toc">
+    <p class="toc-title">📋 Table of Contents</p>
+    <ol>
+      <li>What Are AI Tools?</li>
+      <li>AI Chatbots</li>
+      <li>AI Image Generation</li>
+      <li>AI Coding Tools</li>
+      <li>AI Productivity Tools</li>
+      <li>AI Video & Audio Tools</li>
+      <li>Other Notable AI Tools</li>
+      <li>Comparison Table</li>
+      <li>Where Should You Start?</li>
+      <li>Warnings & Limitations</li>
+      <li>Using AI Ethically as a Student</li>
+    </ol>
+  </div>
+
+  <div class="divider">· · ·</div>
+
+  <h2>1. What Are AI Tools?</h2>
+
+  <p>Artificial Intelligence (AI) tools are software applications powered by machine learning models that can understand, generate, and process human language, images, code, and more. In simple terms — they're programs that can think, write, draw, and code alongside you.</p>
+
+  <p>Over the past few years, AI tools have gone from being a sci-fi concept to something a college student in Kerala can use for free on their phone. They're changing how students study, how developers write code, how designers create visuals, and how businesses run.</p>
+
+  <div class="callout purple">
+    <strong>💡 Key Idea</strong>
+    AI tools don't replace your brain — they amplify it. The students who learn to use them well will have a massive advantage over those who don't.
+  </div>
+
+  <!-- CHATBOTS -->
+  <div class="category-label">
+    <div class="cat-icon">💬</div>
+    <span class="cat-name">Category 01 — AI Chatbots</span>
+  </div>
+  <h2>2. AI Chatbots</h2>
+  <p>AI chatbots are conversational tools that can answer questions, write essays, explain concepts, summarize documents, and much more. Think of them as an incredibly knowledgeable friend available 24/7.</p>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🟢</span>ChatGPT</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="tool-tags">
+      <span class="tool-tag tag-freemium">Freemium</span>
+    </div>
+    <p class="tool-desc">Made by OpenAI, ChatGPT is the most popular AI chatbot in the world. It can write essays, answer exam questions, explain complex topics simply, translate languages, write code, and much more. The free version (GPT-3.5) is very capable; the paid version (GPT-4o) is significantly more powerful.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Extremely versatile</li><li>Strong free tier</li><li>Huge user community</li><li>Supports image input (paid)</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Can confidently give wrong answers</li><li>Knowledge cutoff date</li><li>Best features are paid</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Summarize textbook chapters, get explanations of difficult topics, practice exam Q&A, brainstorm essay ideas, check grammar.</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🟣</span>Claude (by Anthropic)</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="tool-tags">
+      <span class="tool-tag tag-freemium">Freemium</span>
+    </div>
+    <p class="tool-desc">Claude is Anthropic's AI assistant — known for being thoughtful, nuanced, and excellent at long-form writing and analysis. Claude handles very long documents better than most competitors and is considered one of the safest and most honest AI chatbots available. Great for reading and summarizing large PDFs.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Excellent at long documents</li><li>Very honest about uncertainty</li><li>Strong reasoning ability</li><li>Clean, readable writing style</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Free tier has message limits</li><li>Less popular than ChatGPT</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Upload your study notes or textbook PDFs and ask questions. Great for research papers, essay writing, and understanding complex subjects.</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🔵</span>Google Gemini</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="tool-tags">
+      <span class="tool-tag tag-freemium">Freemium</span>
+    </div>
+    <p class="tool-desc">Google's AI assistant, integrated directly with Google Search, Gmail, and Docs. Gemini's biggest advantage is real-time internet access — it can search the web and give you current information, unlike most AI tools that have a knowledge cutoff.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Real-time web search</li><li>Free with Google account</li><li>Integrates with Google Workspace</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Weaker at deep reasoning</li><li>Inconsistent quality</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Research current events, get up-to-date information, use inside Google Docs to help draft assignments.</div>
+  </div>
+
+  <!-- IMAGE GENERATION -->
+  <div class="category-label">
+    <div class="cat-icon">🎨</div>
+    <span class="cat-name">Category 02 — AI Image Generation</span>
+  </div>
+  <h2>3. AI Image Generation</h2>
+  <p>These tools create images from text descriptions. Type what you want to see and the AI draws it for you — in seconds.</p>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🖼️</span>Midjourney</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-paid">Paid</span></div>
+    <p class="tool-desc">The gold standard of AI image generation. Midjourney produces stunning, photorealistic and artistic images from text prompts. Used by designers, marketers, and artists worldwide. Operates through Discord.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Highest quality outputs</li><li>Incredible artistic range</li><li>Active community</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>No free tier</li><li>Requires Discord</li><li>Learning curve for prompts</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Create visuals for presentations, posters, project covers, and creative assignments.</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🖌️</span>DALL·E (by OpenAI)</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">OpenAI's image generator, built directly into ChatGPT. Easier to use than Midjourney — just describe what you want in plain language. Great for beginners who want quick, decent-quality results without learning complex prompting.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Easy to use</li><li>Integrated with ChatGPT</li><li>Good for simple images</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Quality below Midjourney</li><li>Limited free credits</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Quick diagrams, presentation visuals, concept illustrations for projects.</div>
+  </div>
+
+  <!-- CODING TOOLS -->
+  <div class="category-label">
+    <div class="cat-icon">💻</div>
+    <span class="cat-name">Category 03 — AI Coding Tools</span>
+  </div>
+  <h2>4. AI Coding Tools</h2>
+  <p>These tools help you write, debug, and understand code faster. For IT students, these are game-changers.</p>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🤖</span>GitHub Copilot</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">An AI coding assistant built into VS Code and other editors. As you type, it suggests entire lines or blocks of code. Trained on billions of lines of code from GitHub. The closest thing to having a senior developer sitting next to you.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Works inside your editor</li><li>Speeds up coding significantly</li><li>Free for students (GitHub Education)</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Can suggest wrong or insecure code</li><li>Paid for non-students</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Speed up your lab assignments, get code suggestions, understand how functions work. Apply for GitHub Student Developer Pack — it's free!</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">⚡</span>Cursor</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">A next-generation code editor built entirely around AI. You can describe what you want in plain English and Cursor writes the code. You can also highlight code and ask it to explain or fix it. Think VS Code but with AI built into its DNA.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Chat with your codebase</li><li>Explain & fix code instantly</li><li>Free tier available</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Can make you dependent on AI</li><li>Premium features cost money</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Build projects faster, debug errors, understand code written by others, learn by seeing AI-generated solutions.</div>
+  </div>
+
+  <!-- PRODUCTIVITY -->
+  <div class="category-label">
+    <div class="cat-icon">📋</div>
+    <span class="cat-name">Category 04 — AI Productivity Tools</span>
+  </div>
+  <h2>5. AI Productivity Tools</h2>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">📝</span>Notion AI</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-paid">Add-on (Paid)</span></div>
+    <p class="tool-desc">Notion is already one of the best note-taking and project management apps. Notion AI adds the ability to generate summaries, write content, translate, and brainstorm — all inside your notes. Great for students who already use Notion.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Seamless in your workspace</li><li>Great for summarizing notes</li><li>Helps organize ideas</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Costs extra on top of Notion</li><li>Not standalone</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Summarize lecture notes, generate study flashcards, organize your semester schedule with AI suggestions.</div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">✍️</span>Grammarly</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">The most widely used AI writing assistant. Grammarly checks grammar, spelling, tone, clarity, and plagiarism. It works as a browser extension and integrates with Google Docs, Word, and email. The free version alone is incredibly useful.</p>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Works everywhere</li><li>Strong free tier</li><li>Tone detection is excellent</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Advanced features are paid</li><li>Occasionally over-corrects</li></ul></div>
+    </div>
+    <div class="student-use"><strong>🎓 Student Use</strong>Every assignment, email, and report you write should go through Grammarly. It will make your English significantly better over time.</div>
+  </div>
+
+  <!-- VIDEO & AUDIO -->
+  <div class="category-label">
+    <div class="cat-icon">🎬</div>
+    <span class="cat-name">Category 05 — AI Video & Audio Tools</span>
+  </div>
+  <h2>6. AI Video & Audio Tools</h2>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🎥</span>Runway ML</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">Generate and edit videos using AI. You can create video from text, remove backgrounds, add effects, and generate entire scenes. One of the most advanced AI video tools available to the public.</p>
+    <div class="student-use"><strong>🎓 Student Use</strong>Create video presentations, visual demos for projects, short explainer videos without any filming or editing skills.</div>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Powerful video generation</li><li>Free trial available</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Expensive for heavy use</li><li>Outputs can be inconsistent</li></ul></div>
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🎙️</span>ElevenLabs</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">The most realistic AI voice generation tool available. Convert any text into natural-sounding speech in multiple languages and accents. You can even clone a voice with a short sample.</p>
+    <div class="student-use"><strong>🎓 Student Use</strong>Create voiceovers for presentations, convert study notes into audio for listening on the go, produce podcast-style content.</div>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Incredibly realistic voices</li><li>Supports many languages</li><li>Free tier available</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Voice cloning raises ethical concerns</li><li>Free tier has character limits</li></ul></div>
+    </div>
+  </div>
+
+  <!-- OTHER TOOLS -->
+  <h2>7. Other Notable AI Tools</h2>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">🔍</span>Perplexity AI</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">An AI-powered search engine that gives you direct answers with cited sources — like Google but smarter. Instead of a list of links, you get a summarized answer with references you can verify. Extremely useful for research.</p>
+    <div class="student-use"><strong>🎓 Student Use</strong>Research for assignments, fact-checking, finding academic sources. Use it instead of regular Google for study research.</div>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Real-time web search</li><li>Cites its sources</li><li>Excellent free tier</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Less creative than chatbots</li></ul></div>
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-header">
+      <div class="tool-name"><span class="tool-emoji">☁️</span>Claude.ai (Web App)</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="tool-tags"><span class="tool-tag tag-freemium">Freemium</span></div>
+    <p class="tool-desc">The web interface for Claude — great for uploading PDFs, long research documents, and having extended conversations. Claude's Projects feature lets you keep context across multiple chats, making it ideal for semester-long research.</p>
+    <div class="student-use"><strong>🎓 Student Use</strong>Upload entire textbooks or papers and ask questions. Build a study assistant tailored to your subject using Projects.</div>
+    <div class="pros-cons">
+      <div class="pros"><span class="pros-title">✅ Pros</span><ul><li>Handles very long documents</li><li>Projects feature is powerful</li><li>Very safe and reliable</li></ul></div>
+      <div class="cons"><span class="cons-title">❌ Cons</span><ul><li>Daily message limit on free plan</li></ul></div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <h2>8. Comparison Table</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Category</th>
+          <th>Pricing</th>
+          <th>Rating</th>
+          <th>Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ChatGPT</td><td>Chatbot</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★★</td><td>General use, writing, Q&A</td></tr>
+        <tr><td>Claude</td><td>Chatbot</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★★</td><td>Long documents, deep analysis</td></tr>
+        <tr><td>Gemini</td><td>Chatbot</td><td class="td-free">Free</td><td class="td-stars">★★★★☆</td><td>Real-time search, Google users</td></tr>
+        <tr><td>Midjourney</td><td>Image Gen</td><td class="td-paid">Paid</td><td class="td-stars">★★★★★</td><td>High quality visuals</td></tr>
+        <tr><td>DALL·E</td><td>Image Gen</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★☆</td><td>Quick simple images</td></tr>
+        <tr><td>GitHub Copilot</td><td>Coding</td><td class="td-freemium">Freemium*</td><td class="td-stars">★★★★★</td><td>Coding assistance in editor</td></tr>
+        <tr><td>Cursor</td><td>Coding</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★☆</td><td>AI-first code editor</td></tr>
+        <tr><td>Grammarly</td><td>Productivity</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★☆</td><td>Writing improvement</td></tr>
+        <tr><td>Notion AI</td><td>Productivity</td><td class="td-paid">Paid add-on</td><td class="td-stars">★★★★☆</td><td>Notes & organization</td></tr>
+        <tr><td>Runway ML</td><td>Video</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★☆</td><td>AI video creation</td></tr>
+        <tr><td>ElevenLabs</td><td>Audio</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★★</td><td>Realistic voice generation</td></tr>
+        <tr><td>Perplexity AI</td><td>Search</td><td class="td-freemium">Freemium</td><td class="td-stars">★★★★★</td><td>Research with citations</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px; color: var(--muted);">*GitHub Copilot is free for students via GitHub Education Pack.</p>
+
+  <!-- WHERE TO START -->
+  <h2>9. Where Should You Start?</h2>
+  <p>With so many tools available, it's easy to feel overwhelmed. Here's a simple recommendation based on what you want to do:</p>
+
+  <div class="starter-grid">
+    <div class="starter-card">
+      <span class="icon">📚</span>
+      <div class="who">For Study Help</div>
+      <div class="tool-rec">ChatGPT or Claude</div>
+      <div class="why">Start with the free tier. Use it to explain topics, summarize notes, and practice exam questions.</div>
+    </div>
+    <div class="starter-card">
+      <span class="icon">💻</span>
+      <div class="who">For Coding Students</div>
+      <div class="tool-rec">GitHub Copilot</div>
+      <div class="why">Apply for the free student pack. Use it in VS Code from day one of your programming course.</div>
+    </div>
+    <div class="starter-card">
+      <span class="icon">✍️</span>
+      <div class="who">For Better Writing</div>
+      <div class="tool-rec">Grammarly</div>
+      <div class="why">Install the free browser extension immediately. Use it for every assignment you submit.</div>
+    </div>
+    <div class="starter-card">
+      <span class="icon">🔍</span>
+      <div class="who">For Research</div>
+      <div class="tool-rec">Perplexity AI</div>
+      <div class="why">Replace Google for academic research. It gives cited answers instead of random links.</div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <strong>🚀 Pro Tip</strong>
+    Don't try to use all tools at once. Pick ONE tool per category, use it for 2–3 weeks until you're comfortable, then add the next one.
+  </div>
+
+  <!-- WARNINGS -->
+  <h2>10. Warnings & Limitations</h2>
+
+  <div class="callout red">
+    <strong>⚠️ Important Warnings</strong>
+    AI tools are powerful — but they have real limitations every student must understand before depending on them.
+  </div>
+
+  <p><strong>AI Hallucinations:</strong> AI tools sometimes confidently state wrong information. This is called "hallucination." Always verify important facts from original sources — never submit AI-generated content without checking it.</p>
+
+  <p><strong>Knowledge Cutoff:</strong> Most AI chatbots have a training cutoff date and don't know about very recent events. For current news or latest research, use Perplexity AI or Google Gemini instead.</p>
+
+  <p><strong>Privacy Risk:</strong> Never paste personal information, passwords, exam papers with student IDs, or sensitive data into AI tools. Your input may be used to train future models.</p>
+
+  <p><strong>Over-Dependence:</strong> Using AI to do all your thinking can prevent you from actually learning. Use AI as a tutor that helps you understand — not a machine that does your work for you.</p>
+
+  <p><strong>Academic Integrity:</strong> Many colleges and universities have strict policies against submitting AI-generated work as your own. Know your institution's rules before using AI for assignments.</p>
+
+  <!-- ETHICS -->
+  <h2>11. Using AI Ethically as a Student</h2>
+  <p>AI is a tool — like a calculator or a search engine. It's not cheating to use it. But how you use it matters enormously.</p>
+
+  <ul class="ethics-list">
+    <li class="do">Use AI to <strong>understand a concept</strong> you're struggling with — like having a free tutor</li>
+    <li class="do">Use AI to <strong>get feedback</strong> on your draft before submitting</li>
+    <li class="do">Use AI to <strong>brainstorm ideas</strong> — then write in your own words</li>
+    <li class="do">Use AI to <strong>summarize research papers</strong> so you can understand them faster</li>
+    <li class="do"><strong>Disclose AI use</strong> when your institution requires it</li>
+    <li class="dont">Don't submit <strong>AI-generated text word-for-word</strong> as your own assignment</li>
+    <li class="dont">Don't use AI to <strong>cheat in exams</strong> or bypass academic integrity rules</li>
+    <li class="dont">Don't trust AI output <strong>without verifying</strong> important facts</li>
+    <li class="dont">Don't use AI voice cloning to <strong>impersonate</strong> real people</li>
+    <li class="dont">Don't paste <strong>others' private information</strong> into AI tools</li>
+  </ul>
+
+  <div class="callout purple">
+    <strong>💜 Final Thought</strong>
+    The goal of education is to build your mind — AI is here to accelerate that process, not replace it. The students who use AI wisely will be the professionals that companies want to hire in 2025 and beyond. Start learning these tools now. They're not going away.
+  </div>
+
+</div>
+
+<footer>
+  Written by <span>Salman Hashir</span> &nbsp;·&nbsp; IT Professional &nbsp;·&nbsp; Kerala → Dubai &nbsp;·&nbsp; 2025
+</footer>
+
+</body>
+</html>

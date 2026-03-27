@@ -7,6 +7,7 @@ import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Writings from './components/Writings';
+import BlogsAndReports from './components/BlogsAndReports';
 import Contact from './components/Contact';
 import Marquee from './components/Marquee';
 
@@ -45,6 +46,7 @@ function App() {
       <Marquee text="CREATIVE DEVELOPMENT & ENGINEERING" />
       <Projects />
       <Writings />
+      <BlogsAndReports />
       <Contact />
     </Layout>
   )

@@ -227,10 +227,10 @@ const Projects = () => {
                       onClick={() => toggle(proj.originalIndex)}
                       style={{
                         background: 'var(--card-bg)',
-                        border: `1px solid ${isOpen ? proj.accent + '44' : proj.accent + '33'}`,
+                        border: `1px solid ${isOpen ? proj.accent : proj.accent + '33'}`,
                         borderLeft: `3px solid ${proj.accent}`,
                         /* No bottom border when open — panel continues below seamlessly */
-                        borderBottom: rowHasOpen && isOpen ? 'none' : `1px solid ${isOpen ? proj.accent + '44' : proj.accent + '33'}`,
+                        borderBottom: rowHasOpen && isOpen ? 'none' : `1px solid ${isOpen ? proj.accent : proj.accent + '33'}`,
                         padding: isMobile ? '1.4rem 1.2rem' : '1.8rem 2rem',
                         position: 'relative',
                         overflow: 'hidden',
@@ -238,7 +238,7 @@ const Projects = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         boxShadow: isOpen
-                          ? `0 0 0 1px rgba(${proj.accentRaw},0.3), inset 0 -2px 0 ${proj.accent}33`
+                          ? `0 12px 40px rgba(${proj.accentRaw},0.12)`
                           : 'none',
                         transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
                         zIndex: isOpen ? 2 : 1,
@@ -363,8 +363,8 @@ const Projects = () => {
                         background: 'var(--card-bg)',
                         /* Continue the card's border on all sides EXCEPT top */
                         borderLeft: `3px solid ${selected.accent}`,
-                        borderRight: `1px solid ${selected.accent}44`,
-                        borderBottom: `1px solid ${selected.accent}44`,
+                        borderRight: `1px solid ${selected.accent}`,
+                        borderBottom: `1px solid ${selected.accent}`,
                         borderTop: 'none',
                         padding: isMobile ? '1.4rem 1.2rem' : '2rem 2.8rem',
                         position: 'relative',

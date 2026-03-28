@@ -18,15 +18,7 @@ const BOOKS = [
     accent: 'var(--neon-pink)',
   },
   {
-    num: 'II', lang: 'Malayalam', genre: 'Religious Narrative · Eschatology',
-    title: 'Avarthanangalude Anthyam (ആവർത്തനങ്ങളുടെ അന്ത്യം)',
-    desc: 'A narrative exploration of Islamic eschatology, bringing the Signs of the End Times to life — grounded in Quranic verses and Sahih Hadiths, translated into relatable contemporary storytelling.',
-    pdfLink: 'books/ആവർത്തനങ്ങളുടെ_അന്ത്യം.pdf',
-    htmlLink: null,
-    accent: 'var(--neon-yellow)',
-  },
-  {
-    num: 'III', lang: 'Malayalam', genre: 'Epic High Fantasy · Series — Vol. 1',
+    num: 'II', lang: 'Malayalam', genre: 'Epic High Fantasy · Series — Vol. 1',
     title: 'Eryndor: The Era of Blood (Vol. 1)',
     desc: "Volume 1 of a sprawling epic fantasy saga. Amidst political betrayal and a faltering royal dynasty, a terrifying life-draining plague called the 'Hollows' emerges from the North.",
     pdfLink: 'books/eryndor.pdf',
@@ -43,13 +35,6 @@ const RESEARCH = [
     desc: 'A detailed research report analyzing modern AI tools, their applications, and potential impact on the tech landscape. Covers LLMs, automation tools, and productivity stacks.',
     link: 'blogs-and-reports/ai-tools-study-report.html',
     accent: 'var(--neon-cyan)',
-  },
-  {
-    num: '02', type: 'PDF', category: 'Case Study · Tech',
-    title: 'DID Case Study (2026)',
-    desc: 'An in-depth case study and technical report exploring Decentralized Identity (DID), its standards, on-chain implementations, and real-world enterprise use cases.',
-    link: 'blogs-and-reports/DID_Case_Study_Salman_Hashir_2026.pdf',
-    accent: 'var(--neon-green)',
   },
   {
     num: '03', type: 'HTML', category: 'Tech Report · Hardware',
@@ -121,6 +106,14 @@ const JOURNEY = {
       link: 'books/consciousness_and_soul.html',
       accent: 'var(--neon-cyan)',
       icon: '🧠',
+    },
+    {
+      num: 'C-02', category: 'Case Diary',
+      title: 'DID Case Study (2026)',
+      desc: 'An in-depth case study and technical report exploring Decentralized Identity (DID), its standards, on-chain implementations, and real-world enterprise use cases.',
+      link: 'blogs-and-reports/DID_Case_Study_Salman_Hashir_2026.pdf',
+      accent: 'var(--neon-green)',
+      icon: '🔐',
     },
   ],
 };
@@ -316,18 +309,36 @@ function JourneyCard({ item, index }) {
         {item.title}
       </h4>
       <p style={{ fontSize: '0.82rem', color: 'var(--muted)', lineHeight: 1.7, flexGrow: 1 }}>{item.desc}</p>
-      <a href={item.link} target="_blank" rel="noreferrer"
-        style={{
-          alignSelf: 'flex-start', fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
-          letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none',
-          color: item.accent, padding: '0.35rem 0.8rem', border: `1px solid ${item.accent}55`,
-          transition: 'all 0.2s',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.background = item.accent; e.currentTarget.style.color = 'var(--black)'; }}
-        onMouseLeave={e => { e.currentTarget.style.background = ''; e.currentTarget.style.color = item.accent; }}
-      >
-        → Read
-      </a>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <a href={item.link} target="_blank" rel="noreferrer"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+            fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.15em',
+            textTransform: 'uppercase', textDecoration: 'none',
+            padding: '0.35rem 0.8rem', background: 'transparent', color: item.accent,
+            border: `1px solid ${item.accent}55`, transition: 'all 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = item.accent; e.currentTarget.style.color = 'var(--black)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = item.accent; }}
+        >
+          👁 Read Online
+        </a>
+        {item.link.endsWith('.pdf') && (
+          <a href={item.link} download
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+              fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.15em',
+              textTransform: 'uppercase', textDecoration: 'none',
+              padding: '0.35rem 0.8rem', background: 'transparent', color: 'var(--muted)',
+              border: '1px solid var(--download-border)', transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = item.accent; e.currentTarget.style.color = item.accent; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--download-border)'; e.currentTarget.style.color = 'var(--muted)'; }}
+          >
+            ⬇ Download
+          </a>
+        )}
+      </div>
     </motion.div>
   );
 }

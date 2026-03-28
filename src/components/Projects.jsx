@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const projectsList = [
@@ -99,10 +99,8 @@ const statusColors = {
   'College': 'var(--muted)',
 };
 
-// One spring config everywhere → consistent, silky feel
-const SPRING = { type: 'spring', stiffness: 300, damping: 36, mass: 0.85 };
+const EASE = [0.22, 1, 0.36, 1];
 
-// Responsive grid columns hook
 const useColumns = () => {
   const [cols, setCols] = useState(() => {
     if (typeof window === 'undefined') return 3;
@@ -119,7 +117,7 @@ const useColumns = () => {
 const Projects = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const sectionRef = useRef(null);
-  const cardRefs = useRef({});
+  const expandedRef = useRef(null);
   const cols = useColumns();
   const [glow, setGlow] = useState({ x: -999, y: -999, opacity: 0 });
 
@@ -137,22 +135,33 @@ const Projects = () => {
     setOpenIndex(prev => {
       const next = prev === i ? null : i;
       if (next !== null) {
-        // Wait for spring layout to settle, then scroll so the card top
-        // sits ~80px below the viewport top — title always fully visible
+        // Panel slides open → scroll so its top edge is in view (with breathing room)
         setTimeout(() => {
-          const el = cardRefs.current[i];
-          if (!el) return;
-          const rect = el.getBoundingClientRect();
-          const offset = 80; // gap from top (clears nav + breathing room)
-          window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: 'smooth' });
-        }, 280);
+          if (!expandedRef.current) return;
+          const rect = expandedRef.current.getBoundingClientRect();
+          if (rect.top > window.innerHeight || rect.bottom < 0) {
+            window.scrollTo({ top: window.scrollY + rect.top - 80, behavior: 'smooth' });
+          }
+        }, 460); // after panel has mostly finished opening
       }
       return next;
     });
   };
 
-  const isMobile = cols === 1;
+  // Split projects into rows of `cols`
+  const rows = useMemo(() => {
+    const result = [];
+    for (let i = 0; i < projectsList.length; i += cols) {
+      result.push(
+        projectsList.slice(i, i + cols).map((p, j) => ({ ...p, originalIndex: i + j }))
+      );
+    }
+    return result;
+  }, [cols]);
+
+  const selected = openIndex !== null ? projectsList[openIndex] : null;
   const gridCols = cols === 1 ? '1fr' : cols === 2 ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)';
+  const isMobile = cols === 1;
 
   return (
     <section
@@ -187,286 +196,320 @@ const Projects = () => {
       </motion.div>
 
       {/*
-        ── Grid ──
-        Cards expand IN PLACE. When a card gets gridColumn 1/-1,
-        CSS grid auto-placement keeps it near its original row while
-        nudging siblings — Framer Motion layout/SPRING animates the whole reflow.
+        ── Row-drawer layout ──
+        Cards NEVER reposition. Clicking opens a smooth panel
+        directly below the card's row — no jumping, no confusion.
       */}
-      <motion.div
-        layout
-        transition={SPRING}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: gridCols,
-          gap: '1.2rem',
-          position: 'relative',
-          zIndex: 1,
-          alignItems: 'start',
-        }}
-      >
-        {projectsList.map((proj, i) => {
-          const isOpen = openIndex === i;
-          const showRowLayout = isOpen && !isMobile; // side-by-side only on wider screens
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {rows.map((rowCards, rowIdx) => {
+          const rowHasOpen = rowCards.some(p => p.originalIndex === openIndex);
 
           return (
-            <motion.div
-              key={proj.num}
-              ref={el => { cardRefs.current[i] = el; }}
-              layout
-              transition={SPRING}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              animate={{
-                padding: isOpen
-                  ? (isMobile ? '1.8rem 1.4rem' : '2.5rem 2.8rem')
-                  : (isMobile ? '1.4rem 1.2rem' : '1.8rem 2rem'),
-                boxShadow: isOpen
-                  ? `0 0 0 1px rgba(${proj.accentRaw},0.4), 0 24px 80px rgba(${proj.accentRaw},0.18)`
-                  : `0 0 0 0px rgba(0,0,0,0)`,
-              }}
-              whileHover={!isOpen ? { y: -4 } : {}}
-              onClick={() => toggle(i)}
-              style={{
-                background: 'var(--card-bg)',
-                border: `1px solid ${proj.accent}33`,
-                borderLeft: `3px solid ${proj.accent}`,
-                position: 'relative',
-                overflow: 'hidden',
-                cursor: isOpen ? 'default' : 'pointer',
-                /* Expand to fill the full grid row */
-                gridColumn: isOpen ? '1 / -1' : 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              {/* Top accent bar */}
-              <AnimatePresence>
-                {isOpen && (
-                  <motion.div
-                    key="topbar"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    exit={{ scaleX: 0 }}
-                    transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
-                    style={{
-                      position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
-                      background: `linear-gradient(90deg, ${proj.accent}, ${proj.accent}00)`,
-                      transformOrigin: 'left',
-                    }}
-                  />
-                )}
-              </AnimatePresence>
+            <React.Fragment key={rowIdx}>
 
-              {/* Ambient corner pulse */}
-              <motion.div
-                animate={{ width: isOpen ? 340 : 140, height: isOpen ? 220 : 90 }}
-                transition={SPRING}
-                style={{
-                  position: 'absolute', top: 0, right: 0, pointerEvents: 'none',
-                  background: `radial-gradient(ellipse at top right, ${proj.accent}1c, transparent 70%)`,
-                }}
-              />
-
-              {/* ── Card content ── */}
+              {/* ── Card row ── */}
               <div style={{
-                display: 'flex',
-                flexDirection: showRowLayout ? 'row' : 'column',
-                gap: showRowLayout ? '2.8rem' : '0',
-                alignItems: showRowLayout ? 'flex-start' : 'stretch',
-                flex: 1,
+                display: 'grid',
+                gridTemplateColumns: gridCols,
+                gap: '1.2rem',
+                marginBottom: rowHasOpen ? '0' : '1.2rem',
               }}>
-
-                {/* LEFT — identity block */}
-                <div style={{
-                  flex: showRowLayout ? '0 0 360px' : '1',
-                  minWidth: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}>
-                  {/* Num + Status */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-mono)', fontSize: isMobile ? '0.52rem' : '0.6rem',
-                      letterSpacing: '0.25em', color: `${proj.accent}bb`, textTransform: 'uppercase',
-                    }}>
-                      {proj.icon}&nbsp;&nbsp;{proj.num}
-                    </span>
-                    <span style={{
-                      fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em',
-                      textTransform: 'uppercase', color: statusColors[proj.status],
-                      border: `1px solid ${statusColors[proj.status]}55`, padding: '0.2rem 0.6rem',
-                      whiteSpace: 'nowrap',
-                    }}>
-                      ● {proj.status}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <motion.h3
-                    animate={{ fontSize: isOpen ? (isMobile ? '1.6rem' : '2.2rem') : (isMobile ? '1.15rem' : '1.5rem') }}
-                    transition={SPRING}
-                    style={{
-                      fontFamily: 'var(--font-display)', fontWeight: 900,
-                      color: 'var(--white)', textTransform: 'uppercase',
-                      lineHeight: 1.08, marginBottom: '0.35rem',
-                    }}
-                  >
-                    {proj.title}
-                  </motion.h3>
-
-                  {/* Sub */}
-                  <span style={{
-                    fontFamily: 'var(--font-mono)', fontSize: isMobile ? '0.5rem' : '0.55rem',
-                    letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: `${proj.accent}99`, marginBottom: '0.85rem', display: 'block',
-                  }}>
-                    {proj.sub}
-                  </span>
-
-                  {/* Preview */}
-                  <p style={{
-                    fontSize: isMobile ? '0.8rem' : '0.85rem', color: 'var(--muted)',
-                    lineHeight: 1.75,
-                    marginBottom: isOpen ? 0 : '0.8rem',
-                    flex: 1,
-                  }}>
-                    {proj.preview}
-                  </p>
-
-                  {/* Expand hint */}
-                  <AnimatePresence>
-                    {!isOpen && (
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        style={{
-                          fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.15em',
-                          textTransform: 'uppercase', color: proj.accent,
-                          borderBottom: `1px solid ${proj.accent}44`, paddingBottom: '2px',
-                          marginTop: '0.4rem', alignSelf: 'flex-start',
-                        }}
-                      >
-                        + Expand
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* RIGHT (or BOTTOM on mobile) — expanded panel */}
-                <AnimatePresence>
-                  {isOpen && (
+                {rowCards.map((proj) => {
+                  const isOpen = openIndex === proj.originalIndex;
+                  return (
                     <motion.div
-                      key="details"
-                      initial={{ opacity: 0, x: showRowLayout ? 30 : 0, y: showRowLayout ? 0 : 16 }}
-                      animate={{ opacity: 1, x: 0, y: 0 }}
-                      exit={{ opacity: 0, x: showRowLayout ? 30 : 0, y: showRowLayout ? 0 : 16 }}
-                      transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1], delay: 0.15 }}
+                      key={proj.num}
+                      initial={{ opacity: 0, y: 28 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-40px' }}
+                      transition={{ duration: 0.5, delay: proj.originalIndex * 0.04, ease: EASE }}
+                      whileHover={{ y: -3, transition: { duration: 0.18 } }}
+                      onClick={() => toggle(proj.originalIndex)}
                       style={{
-                        flex: 1, display: 'flex', flexDirection: 'column',
-                        gap: '1.3rem', position: 'relative',
-                        marginTop: showRowLayout ? 0 : '1.4rem',
-                        paddingTop: showRowLayout ? 0 : '1.4rem',
-                        borderTop: showRowLayout ? 'none' : `1px solid ${proj.accent}25`,
+                        background: 'var(--card-bg)',
+                        border: `1px solid ${isOpen ? proj.accent + '66' : proj.accent + '33'}`,
+                        borderLeft: `3px solid ${proj.accent}`,
+                        borderBottom: rowHasOpen && isOpen
+                          ? `1px solid ${proj.accent}00`  // fade bottom border into panel
+                          : `1px solid ${isOpen ? proj.accent + '66' : proj.accent + '33'}`,
+                        padding: isMobile ? '1.4rem 1.2rem' : '1.8rem 2rem',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        boxShadow: isOpen
+                          ? `0 0 0 1px rgba(${proj.accentRaw},0.3), inset 0 -2px 0 ${proj.accent}33`
+                          : 'none',
+                        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+                        zIndex: isOpen ? 2 : 1,
                       }}
-                      onClick={e => e.stopPropagation()}
                     >
-                      {/* Vertical divider (desktop only) */}
-                      {showRowLayout && (
+                      {/* Ambient corner */}
+                      <div style={{
+                        position: 'absolute', top: 0, right: 0, width: 140, height: 90,
+                        background: `radial-gradient(ellipse at top right, ${proj.accent}1c, transparent 70%)`,
+                        pointerEvents: 'none',
+                        transition: 'opacity 0.3s ease',
+                        opacity: isOpen ? 1.5 : 1,
+                      }} />
+
+                      {/* Active dot indicator */}
+                      {isOpen && (
                         <motion.div
-                          initial={{ scaleY: 0 }}
-                          animate={{ scaleY: 1 }}
-                          exit={{ scaleY: 0 }}
-                          transition={{ duration: 0.45, ease: [0.25, 1, 0.5, 1] }}
+                          layoutId="active-dot"
                           style={{
-                            position: 'absolute', left: '-1.4rem', top: 0, bottom: 0,
-                            width: '1px',
-                            background: `linear-gradient(to bottom, transparent, ${proj.accent}50, transparent)`,
-                            transformOrigin: 'top',
+                            position: 'absolute', top: '1rem', left: '1rem',
+                            width: 6, height: 6, borderRadius: '50%',
+                            background: proj.accent,
+                            boxShadow: `0 0 8px ${proj.accent}`,
                           }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 28 }}
                         />
                       )}
 
-                      {/* Full description */}
-                      <p style={{
-                        fontSize: isMobile ? '0.82rem' : '0.9rem', color: 'var(--muted)', lineHeight: 1.85,
-                        borderLeft: `2px solid ${proj.accent}55`, paddingLeft: '1rem',
+                      {/* Num + Status */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <span style={{
+                          fontFamily: 'var(--font-mono)', fontSize: isMobile ? '0.52rem' : '0.6rem',
+                          letterSpacing: '0.25em', color: `${proj.accent}bb`, textTransform: 'uppercase',
+                          paddingLeft: isOpen ? '1rem' : '0',
+                          transition: 'padding 0.3s ease',
+                        }}>
+                          {proj.icon}&nbsp;&nbsp;{proj.num}
+                        </span>
+                        <span style={{
+                          fontFamily: 'var(--font-mono)', fontSize: '0.5rem', letterSpacing: '0.15em',
+                          textTransform: 'uppercase', color: statusColors[proj.status],
+                          border: `1px solid ${statusColors[proj.status]}55`, padding: '0.2rem 0.6rem',
+                          whiteSpace: 'nowrap',
+                        }}>
+                          ● {proj.status}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 style={{
+                        fontFamily: 'var(--font-display)', fontWeight: 900,
+                        color: 'var(--white)', textTransform: 'uppercase',
+                        fontSize: isMobile ? '1.2rem' : '1.5rem',
+                        lineHeight: 1.08, marginBottom: '0.35rem',
                       }}>
-                        {proj.desc}
+                        {proj.title}
+                      </h3>
+
+                      {/* Sub */}
+                      <span style={{
+                        fontFamily: 'var(--font-mono)', fontSize: isMobile ? '0.5rem' : '0.55rem',
+                        letterSpacing: '0.1em', textTransform: 'uppercase',
+                        color: `${proj.accent}99`, marginBottom: '0.85rem', display: 'block',
+                      }}>
+                        {proj.sub}
+                      </span>
+
+                      {/* Preview */}
+                      <p style={{
+                        fontSize: isMobile ? '0.78rem' : '0.84rem',
+                        color: 'var(--muted)', lineHeight: 1.7,
+                        flex: 1, marginBottom: '0.8rem',
+                      }}>
+                        {proj.preview}
                       </p>
 
-                      {/* Tech tags */}
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
-                        {proj.tags.map((tag, idx) => (
-                          <motion.span
-                            key={idx}
-                            initial={{ opacity: 0, y: 6 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 + idx * 0.06, duration: 0.28 }}
-                            style={{
-                              padding: '0.28rem 0.75rem',
-                              border: `1px solid ${proj.accent}55`,
-                              fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
-                              letterSpacing: '0.1em', color: proj.accent, textTransform: 'uppercase',
-                            }}
-                          >
-                            {tag}
-                          </motion.span>
-                        ))}
-                      </div>
+                      {/* Expand hint / open indicator */}
+                      <span style={{
+                        fontFamily: 'var(--font-mono)', fontSize: '0.52rem', letterSpacing: '0.15em',
+                        textTransform: 'uppercase',
+                        color: isOpen ? proj.accent : proj.accent + 'aa',
+                        borderBottom: `1px solid ${proj.accent}${isOpen ? '88' : '44'}`,
+                        paddingBottom: '2px', alignSelf: 'flex-start',
+                        transition: 'color 0.3s, border-color 0.3s',
+                      }}>
+                        {isOpen ? '− Details open ↓' : '+ Expand'}
+                      </span>
+                    </motion.div>
+                  );
+                })}
 
-                      {/* Actions */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginTop: '0.2rem' }}>
-                        <a
-                          href={proj.link}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                            fontFamily: 'var(--font-mono)', fontSize: isMobile ? '0.55rem' : '0.58rem',
-                            letterSpacing: '0.15em', textTransform: 'uppercase',
-                            textDecoration: 'none',
-                            padding: isMobile ? '0.55rem 1.1rem' : '0.65rem 1.5rem',
-                            background: proj.accent, color: 'var(--black)', fontWeight: 700,
-                            border: `1px solid ${proj.accent}`,
-                            transition: 'transform 0.18s ease, box-shadow 0.18s ease',
-                          }}
-                          onMouseEnter={e => {
-                            e.currentTarget.style.transform = 'translate(-2px,-2px)';
-                            e.currentTarget.style.boxShadow = `4px 4px 0 rgba(${proj.accentRaw},0.4)`;
-                          }}
-                          onMouseLeave={e => {
-                            e.currentTarget.style.transform = '';
-                            e.currentTarget.style.boxShadow = '';
-                          }}
-                        >
-                          ↗ {proj.status === 'Live' ? 'View Live' : 'View Demo'}
-                        </a>
-                        <button
-                          onClick={() => setOpenIndex(null)}
-                          style={{
-                            fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
-                            letterSpacing: '0.15em', textTransform: 'uppercase',
-                            color: 'var(--muted)', background: 'none', border: 'none',
-                            cursor: 'pointer', textDecoration: 'underline',
-                            transition: 'color 0.2s ease',
-                          }}
-                          onMouseEnter={e => e.currentTarget.style.color = 'var(--white)'}
-                          onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
-                        >
-                          − Close
-                        </button>
+                {/* Fill empty slots in last row so grid stays balanced */}
+                {rowCards.length < cols && Array.from({ length: cols - rowCards.length }).map((_, k) => (
+                  <div key={`filler-${k}`} style={{
+                    border: '1px solid transparent',
+                    padding: isMobile ? '1.4rem 1.2rem' : '1.8rem 2rem',
+                    visibility: 'hidden',
+                  }} />
+                ))}
+              </div>
+
+              {/* ── Expanded panel — slides open below the row ── */}
+              <AnimatePresence>
+                {rowHasOpen && selected && (
+                  <motion.div
+                    key={`panel-${openIndex}`}
+                    ref={expandedRef}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.45, ease: EASE }}
+                    style={{ overflow: 'hidden', marginBottom: '1.2rem' }}
+                  >
+                    {/* Inner panel */}
+                    <motion.div
+                      initial={{ y: -16, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -16, opacity: 0 }}
+                      transition={{ duration: 0.4, ease: EASE, delay: 0.08 }}
+                      style={{
+                        background: `linear-gradient(135deg, rgba(${selected.accentRaw},0.06) 0%, var(--card-bg) 60%)`,
+                        border: `1px solid rgba(${selected.accentRaw},0.3)`,
+                        borderTop: `2px solid ${selected.accent}`,
+                        padding: isMobile ? '1.6rem 1.2rem' : '2.2rem 2.8rem',
+                        position: 'relative',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {/* Background accent blur */}
+                      <div style={{
+                        position: 'absolute', top: '-60px', right: '-60px',
+                        width: 280, height: 280,
+                        background: `radial-gradient(circle, rgba(${selected.accentRaw},0.1), transparent 70%)`,
+                        pointerEvents: 'none',
+                      }} />
+
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: isMobile ? 'column' : 'row',
+                        gap: isMobile ? '1.6rem' : '3rem',
+                        alignItems: 'flex-start',
+                        position: 'relative',
+                      }}>
+
+                        {/* LEFT — project identity recap */}
+                        <div style={{ flex: isMobile ? 'none' : '0 0 260px' }}>
+                          <div style={{
+                            fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
+                            letterSpacing: '0.25em', color: `${selected.accent}bb`,
+                            textTransform: 'uppercase', marginBottom: '0.6rem',
+                          }}>
+                            {selected.icon}&nbsp;&nbsp;{selected.num}
+                          </div>
+                          <h3 style={{
+                            fontFamily: 'var(--font-display)', fontWeight: 900,
+                            color: 'var(--white)', textTransform: 'uppercase',
+                            fontSize: isMobile ? '1.8rem' : '2.1rem',
+                            lineHeight: 1.05, marginBottom: '0.3rem',
+                          }}>
+                            {selected.title}
+                          </h3>
+                          <span style={{
+                            fontFamily: 'var(--font-mono)', fontSize: '0.55rem',
+                            letterSpacing: '0.1em', textTransform: 'uppercase',
+                            color: `${selected.accent}99`, display: 'block', marginBottom: '1.4rem',
+                          }}>
+                            {selected.sub}
+                          </span>
+
+                          {/* Tags */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+                            {selected.tags.map((tag, idx) => (
+                              <motion.span
+                                key={idx}
+                                initial={{ opacity: 0, y: 6 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.15 + idx * 0.06 }}
+                                style={{
+                                  padding: '0.28rem 0.7rem',
+                                  border: `1px solid rgba(${selected.accentRaw},0.4)`,
+                                  fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
+                                  letterSpacing: '0.1em', color: selected.accent,
+                                  textTransform: 'uppercase',
+                                }}
+                              >
+                                {tag}
+                              </motion.span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Divider */}
+                        {!isMobile && (
+                          <motion.div
+                            initial={{ scaleY: 0 }}
+                            animate={{ scaleY: 1 }}
+                            transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
+                            style={{
+                              width: 1, alignSelf: 'stretch',
+                              background: `linear-gradient(to bottom, transparent, rgba(${selected.accentRaw},0.4), transparent)`,
+                              transformOrigin: 'top', flexShrink: 0,
+                            }}
+                          />
+                        )}
+
+                        {/* RIGHT — full description + actions */}
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
+                          <p style={{
+                            fontSize: isMobile ? '0.83rem' : '0.92rem',
+                            color: 'var(--muted)', lineHeight: 1.88,
+                            borderLeft: `2px solid rgba(${selected.accentRaw},0.5)`,
+                            paddingLeft: '1.1rem',
+                          }}>
+                            {selected.desc}
+                          </p>
+
+                          {/* Actions */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                            <a
+                              href={selected.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                                fontFamily: 'var(--font-mono)',
+                                fontSize: isMobile ? '0.55rem' : '0.58rem',
+                                letterSpacing: '0.15em', textTransform: 'uppercase',
+                                textDecoration: 'none',
+                                padding: isMobile ? '0.6rem 1.2rem' : '0.7rem 1.6rem',
+                                background: selected.accent, color: 'var(--black)', fontWeight: 700,
+                                border: `1px solid ${selected.accent}`,
+                                transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                              }}
+                              onMouseEnter={e => {
+                                e.currentTarget.style.transform = 'translate(-2px,-2px)';
+                                e.currentTarget.style.boxShadow = `4px 4px 0 rgba(${selected.accentRaw},0.45)`;
+                              }}
+                              onMouseLeave={e => {
+                                e.currentTarget.style.transform = '';
+                                e.currentTarget.style.boxShadow = '';
+                              }}
+                            >
+                              ↗ {selected.status === 'Live' ? 'View Live' : 'View Demo'}
+                            </a>
+                            <button
+                              onClick={() => setOpenIndex(null)}
+                              style={{
+                                fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
+                                letterSpacing: '0.15em', textTransform: 'uppercase',
+                                color: 'var(--muted)', background: 'none', border: 'none',
+                                cursor: 'pointer', textDecoration: 'underline',
+                                transition: 'color 0.2s ease',
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.color = 'var(--white)'}
+                              onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
+                            >
+                              − Close
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+            </React.Fragment>
           );
         })}
-      </motion.div>
+      </div>
     </section>
   );
 };

@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Worship — Salman Hashir</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300&family=Noto+Serif+Malayalam:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --charcoal: #111111;
+  --graphite: #1a1a1a;
+  --steel: #252525;
+  --wire: #2e2e2e;
+  --ash: #3d3d3d;
+  --smoke: #6a6a6a;
+  --fog: #9a9a9a;
+  --paper: #e8e4dc;
+  --cream: #f0ece4;
+  --white: #f8f5f0;
+  --red: #c0392b;
+  --red-dim: #7a2318;
+  --red-glow: rgba(192,57,43,0.15);
+  --amber: #d4a855;
+  --amber-dim: rgba(212,168,85,0.12);
+  --green: #2d6a4f;
+  --border: rgba(255,255,255,0.06);
+  --border-red: rgba(192,57,43,0.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--black);
+  color: var(--paper);
+  font-family: 'IBM Plex Mono', 'Noto Serif Malayalam', monospace;
+  font-size: 15px;
+  line-height: 1.8;
+  cursor: default;
+}
+
+body.malayalam-mode {
+  font-family: 'Noto Serif Malayalam', 'IBM Plex Mono', serif;
+}
+
+/* ── Scanline effect ── */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:9998;
+}
+
+/* ── Progress bar ── */
+#progress {
+  position:fixed; top:0; left:0;
+  height:2px;
+  background: var(--red);
+  width:0%;
+  z-index:9999;
+  box-shadow: 0 0 8px var(--red);
+  transition: width .1s linear;
+}
+
+/* ══════════════ LOADING OVERLAY ══════════════ */
+#loader {
+  position:fixed; inset:0;
+  background: rgba(8,8,8,0.95);
+  z-index:9000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:2rem;
+  backdrop-filter: blur(4px);
+}
+#loader.on { display:flex; }
+
+.loader-ring {
+  width:56px; height:56px;
+  border:2px solid var(--wire);
+  border-top-color: var(--red);
+  border-radius:50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.loader-text {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.65rem;
+  letter-spacing:.25em;
+  color: var(--red);
+  animation: blink 1.2s ease-in-out infinite;
+}
+.loader-bar-wrap {
+  width:200px; height:2px;
+  background: var(--wire);
+}
+.loader-bar {
+  height:2px;
+  background: var(--red);
+  width:0%;
+  transition: width .3s ease;
+  box-shadow: 0 0 6px var(--red);
+}
+@keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+/* ══════════════ LANGUAGE TOGGLE ══════════════ */
+#lang-btn {
+  position:fixed;
+  top:1.2rem; right:1.5rem;
+  z-index:8000;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.5rem 1rem;
+  background: var(--charcoal);
+  border:1px solid var(--border-red);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.6rem;
+  letter-spacing:.2em;
+  color: var(--fog);
+  cursor:pointer;
+  transition: all .25s;
+  user-select:none;
+}
+#lang-btn:hover { border-color:var(--red); color:var(--red); }
+#lang-btn.active { border-color:var(--red); color:var(--red); box-shadow:0 0 12px var(--red-glow); }
+.lb-dot {
+  width:7px; height:7px;
+  border-radius:50%;
+  background: var(--ash);
+  transition: background .3s, box-shadow .3s;
+}
+#lang-btn.active .lb-dot {
+  background: var(--red);
+  box-shadow: 0 0 6px var(--red);
+}
+
+/* ══════════════ TOAST ══════════════ */
+#toast {
+  position:fixed;
+  bottom:2rem; left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--charcoal);
+  border:1px solid var(--red);
+  color:var(--red);
+  padding:.6rem 1.5rem;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.62rem;
+  letter-spacing:.15em;
+  z-index:8500;
+  transition:transform .35s ease;
+  white-space:nowrap;
+}
+#toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ══════════════ HERO / COVER ══════════════ */
+#hero {
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:3rem 2.5rem;
+  position:relative;
+  overflow:hidden;
+  background: var(--black);
+}
+
+.hero-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.hero-vignette {
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse at 50% 40%, transparent 20%, rgba(8,8,8,0.8) 70%, var(--black) 100%);
+}
+
+.hero-redline {
+  position:absolute;
+  top:0; left:3.5rem;
+  width:2px; height:100%;
+  background: linear-gradient(to bottom, transparent, var(--red), transparent);
+  opacity:.4;
+}
+
+.hero-stamp {
+  position:absolute;
+  top:2.5rem; left:2.5rem;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.85rem;
+  letter-spacing:.4em;
+  color: var(--red);
+  opacity:.7;
+  border:1px solid var(--red-dim);
+  padding:.3rem .8rem;
+}
+
+.hero-warn {
+  position:absolute;
+  top:2.5rem; right:10rem;
+  background: var(--red);
+  color: var(--black);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.55rem;
+  font-weight:700;
+  letter-spacing:.18em;
+  padding:.3rem .7rem;
+  transform: rotate(-1.5deg);
+}
+
+.hero-content { position:relative; z-index:2; max-width:900px; }
+
+.hero-eyebrow {
+  font-size:.6rem;
+  letter-spacing:.4em;
+  color: var(--red);
+  margin-bottom:1.5rem;
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+.hero-eyebrow::before {
+  content:'';
+  display:inline-block;
+  width:30px; height:1px;
+  background:var(--red);
+}
+
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,12vw,9rem);
+  line-height:.92;
+  color: var(--white);
+  letter-spacing:.02em;
+  margin-bottom:.5rem;
+}
+.hero-title .red { color:var(--red); }
+
+.hero-sub {
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:clamp(1rem,2.5vw,1.4rem);
+  color: var(--fog);
+  font-weight:400;
+  margin-bottom:3rem;
+}
+
+.hero-meta {
+  display:flex;
+  gap:3rem;
+  flex-wrap:wrap;
+}
+.hero-meta-item { display:flex; flex-direction:column; gap:.3rem; }
+.hero-meta-label {
+  font-size:.55rem;
+  letter-spacing:.3em;
+  color: var(--smoke);
+}
+.hero-meta-val {
+  font-size:.75rem;
+  color: var(--fog);
+  letter-spacing:.1em;
+}
+
+.hero-scroll {
+  position:absolute;
+  bottom:2.5rem; right:2.5rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.5rem;
+  opacity:.4;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse { 0%,100%{opacity:.2} 50%{opacity:.5} }
+.hero-scroll span {
+  font-size:.5rem;
+  letter-spacing:.25em;
+  color:var(--fog);
+  writing-mode:vertical-rl;
+}
+.hero-scroll-line {
+  width:1px; height:50px;
+  background:linear-gradient(to bottom, var(--fog), transparent);
+}
+
+/* ══════════════ WARNING BANNER ══════════════ */
+#warning-banner {
+  background: var(--red);
+  padding:1.2rem 2.5rem;
+  display:flex;
+  align-items:flex-start;
+  gap:1.2rem;
+}
+.wb-icon {
+  font-size:1.2rem;
+  flex-shrink:0;
+  margin-top:.1rem;
+}
+.wb-text {
+  font-size:.72rem;
+  color:var(--black);
+  font-weight:700;
+  line-height:1.6;
+  letter-spacing:.03em;
+}
+.wb-text strong { display:block; font-size:.8rem; letter-spacing:.1em; margin-bottom:.3rem; }
+
+/* ══════════════ TOC ══════════════ */
+#toc {
+  background: var(--charcoal);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:4rem 2.5rem;
+}
+.toc-inner { max-width:900px; margin:0 auto; }
+.toc-header {
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin-bottom:2.5rem;
+}
+.toc-header::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: var(--wire);
+}
+.toc-label {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;
+  letter-spacing:.25em;
+  color:var(--fog);
+}
+
+.toc-parts { display:flex; flex-direction:column; gap:1.5rem; }
+
+.toc-part-title {
+  font-size:.55rem;
+  letter-spacing:.4em;
+  color:var(--red);
+  margin-bottom:.6rem;
+  padding-bottom:.4rem;
+  border-bottom:1px solid var(--border-red);
+}
+
+.toc-items { display:flex; flex-direction:column; }
+
+.toc-item {
+  display:flex;
+  align-items:baseline;
+  gap:1rem;
+  padding:.5rem 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:all .2s;
+  text-decoration:none;
+  color:inherit;
+}
+.toc-item:hover { background:var(--graphite); padding-left:.6rem; }
+.toc-item:hover .toc-n { color:var(--red); }
+.toc-item:hover .toc-name { color:var(--white); }
+
+.toc-n {
+  font-size:.55rem;
+  letter-spacing:.2em;
+  color:var(--ash);
+  font-weight:700;
+  flex-shrink:0;
+  min-width:2.5rem;
+  transition:color .2s;
+}
+.toc-name {
+  font-size:.8rem;
+  color:var(--fog);
+  transition:color .2s;
+  flex:1;
+}
+.toc-arrow {
+  font-size:.6rem;
+  color:var(--ash);
+  opacity:0;
+  transition:opacity .2s;
+}
+.toc-item:hover .toc-arrow { opacity:1; }
+
+/* ══════════════ MAIN CONTENT ══════════════ */
+main { max-width:900px; margin:0 auto; padding:0 2.5rem 8rem; }
+
+/* ── Part divider ── */
+.part-divider {
+  margin:5rem 0 3rem;
+  padding:2rem 0;
+  border-top:1px solid var(--wire);
+  border-bottom:1px solid var(--wire);
+  display:flex;
+  align-items:center;
+  gap:2rem;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.part-divider.visible { opacity:1; transform:translateY(0); }
+.part-num {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:5rem;
+  color:var(--wire);
+  line-height:1;
+  flex-shrink:0;
+}
+.part-info { flex:1; }
+.part-tag {
+  font-size:.55rem;
+  letter-spacing:.4em;
+  color:var(--red);
+  margin-bottom:.3rem;
+}
+.part-title-text {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.8rem;
+  letter-spacing:.1em;
+  color:var(--fog);
+}
+
+/* ── Chapter ── */
+.chapter {
+  padding:4rem 0 2rem;
+  border-bottom:1px solid var(--border);
+  opacity:0;
+  transform:translateY(25px);
+  transition:opacity .65s ease, transform .65s ease;
+}
+.chapter.visible { opacity:1; transform:translateY(0); }
+.chapter:last-child { border-bottom:none; }
+
+.ch-header {
+  display:flex;
+  align-items:flex-start;
+  gap:2rem;
+  margin-bottom:2.5rem;
+}
+.ch-num {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:4.5rem;
+  line-height:1;
+  color:var(--red);
+  opacity:.25;
+  flex-shrink:0;
+  min-width:3rem;
+  text-align:right;
+}
+.ch-meta { flex:1; }
+.ch-tag {
+  font-size:.55rem;
+  letter-spacing:.35em;
+  color:var(--smoke);
+  margin-bottom:.5rem;
+}
+.ch-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.5rem,4vw,2.3rem);
+  font-weight:700;
+  color:var(--white);
+  line-height:1.2;
+  margin-bottom:.4rem;
+}
+.ch-subtitle {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.72rem;
+  font-style:italic;
+  color:var(--smoke);
+}
+
+.ch-rule {
+  height:1px;
+  background:linear-gradient(90deg, var(--red) 0%, var(--wire) 30%, transparent 100%);
+  margin-bottom:2.5rem;
+  opacity:.5;
+}
+
+/* ── Prose ── */
+p.prose {
+  color:var(--fog);
+  margin-bottom:1.3rem;
+  font-size:.88rem;
+  line-height:1.9;
+}
+em { color:var(--paper); font-style:italic; }
+
+/* ── Section heading ── */
+.sec-title {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.2em;
+  color:var(--amber);
+  margin:2.5rem 0 1rem;
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+.sec-title::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: rgba(212,168,85,0.2);
+}
+
+/* ── Case file / callout ── */
+.case-file {
+  background: var(--graphite);
+  border-left:3px solid var(--red);
+  padding:1.5rem 1.8rem;
+  margin:2rem 0;
+  position:relative;
+}
+.case-file::before {
+  content:'CASE FILE';
+  position:absolute;
+  top:-.6rem; left:1.5rem;
+  font-size:.5rem;
+  letter-spacing:.3em;
+  color:var(--red);
+  background:var(--graphite);
+  padding:0 .4rem;
+  font-weight:700;
+}
+.case-file-title {
+  font-size:.7rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  color:var(--white);
+  margin-bottom:.8rem;
+}
+.case-file p {
+  font-size:.82rem;
+  color:var(--fog);
+  line-height:1.8;
+  margin-bottom:.5rem;
+}
+.case-file p:last-child { margin-bottom:0; }
+
+/* ── Insight box ── */
+.insight {
+  background: var(--amber-dim);
+  border:1px solid rgba(212,168,85,0.2);
+  padding:1.4rem 1.8rem;
+  margin:1.8rem 0;
+  position:relative;
+}
+.insight::before {
+  content:'ANALYSIS';
+  position:absolute;
+  top:-.6rem; left:1.5rem;
+  font-size:.5rem;
+  letter-spacing:.3em;
+  color:var(--amber);
+  background:var(--black);
+  padding:0 .4rem;
+  font-weight:700;
+}
+.insight p {
+  font-size:.82rem;
+  color:var(--fog);
+  line-height:1.8;
+  margin-bottom:.5rem;
+}
+.insight p:last-child { margin-bottom:0; }
+.insight strong { color:var(--amber); }
+
+/* ── Warning box ── */
+.warn-box {
+  background:rgba(192,57,43,0.07);
+  border:1px solid var(--border-red);
+  padding:1.4rem 1.8rem;
+  margin:1.8rem 0;
+  position:relative;
+}
+.warn-box::before {
+  content:'WARNING';
+  position:absolute;
+  top:-.6rem; left:1.5rem;
+  font-size:.5rem;
+  letter-spacing:.3em;
+  color:var(--red);
+  background:var(--black);
+  padding:0 .4rem;
+  font-weight:700;
+}
+.warn-box p, .warn-box li {
+  font-size:.82rem;
+  color:var(--fog);
+  line-height:1.8;
+}
+
+/* ── Blockquote ── */
+blockquote {
+  border-left:2px solid var(--red-dim);
+  padding:.8rem 1.5rem;
+  margin:1.8rem 0;
+  font-family:'Playfair Display',serif;
+  font-style:italic;
+  font-size:1rem;
+  color:var(--smoke);
+  line-height:1.7;
+}
+blockquote cite {
+  display:block;
+  font-size:.65rem;
+  font-family:'IBM Plex Mono',monospace;
+  font-style:normal;
+  letter-spacing:.15em;
+  color:var(--ash);
+  margin-top:.5rem;
+}
+
+/* ── Lists ── */
+ul.dossier-list, ol.dossier-list {
+  list-style:none;
+  margin:1.2rem 0;
+  padding:0;
+}
+ul.dossier-list li {
+  padding:.5rem 0 .5rem 1.5rem;
+  position:relative;
+  color:var(--fog);
+  font-size:.85rem;
+  border-bottom:1px solid var(--border);
+  line-height:1.7;
+}
+ul.dossier-list li:last-child { border-bottom:none; }
+ul.dossier-list li::before {
+  content:'▸';
+  position:absolute;
+  left:0;
+  color:var(--red);
+  font-size:.7rem;
+  top:.6rem;
+}
+ul.dossier-list li strong { color:var(--paper); }
+
+/* ── Type grid (7 types) ── */
+.type-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  gap:1px;
+  background:var(--wire);
+  margin:1.8rem 0;
+}
+.type-card {
+  background:var(--charcoal);
+  padding:1.3rem;
+}
+.type-card-num {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;
+  color:var(--red);
+  opacity:.3;
+  line-height:1;
+  margin-bottom:.4rem;
+}
+.type-card-title {
+  font-size:.72rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  color:var(--white);
+  margin-bottom:.6rem;
+}
+.type-card-body {
+  font-size:.78rem;
+  color:var(--smoke);
+  line-height:1.7;
+}
+
+/* ── Ruqyah table ── */
+.ruqyah-table {
+  width:100%;
+  border-collapse:collapse;
+  margin:1.5rem 0;
+  font-size:.78rem;
+}
+.ruqyah-table th {
+  background:var(--graphite);
+  color:var(--amber);
+  font-size:.55rem;
+  letter-spacing:.25em;
+  padding:.7rem 1rem;
+  text-align:left;
+  border-bottom:1px solid var(--wire);
+}
+.ruqyah-table td {
+  padding:.65rem 1rem;
+  border-bottom:1px solid var(--border);
+  color:var(--fog);
+  vertical-align:top;
+  line-height:1.6;
+}
+.ruqyah-table tr:hover td { background:var(--graphite); }
+.ruqyah-table td:first-child { color:var(--paper); white-space:nowrap; }
+
+/* ── Conclusion ── */
+#conclusion {
+  background:var(--charcoal);
+  border-top:1px solid var(--wire);
+  padding:5rem 2.5rem;
+  text-align:center;
+  margin-top:4rem;
+}
+.conclusion-inner { max-width:700px; margin:0 auto; }
+.conclusion-inner .ch-title { color:var(--white); font-size:2rem; margin-bottom:1rem; }
+.conclusion-inner .prose { color:var(--smoke); }
+.conclusion-inner blockquote { border-color:var(--red-dim); margin:2.5rem auto; max-width:600px; }
+
+/* ── Sources ── */
+#sources {
+  background:var(--black);
+  padding:4rem 2.5rem;
+  border-top:1px solid var(--wire);
+}
+.sources-inner { max-width:900px; margin:0 auto; }
+.sources-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1.5rem;
+  margin-top:1.5rem;
+}
+.source-cat-title {
+  font-size:.55rem;
+  letter-spacing:.3em;
+  color:var(--red);
+  margin-bottom:.6rem;
+  font-weight:700;
+}
+.source-item {
+  font-size:.72rem;
+  color:var(--smoke);
+  padding:.4rem 0;
+  border-bottom:1px solid var(--border);
+  line-height:1.6;
+}
+
+/* ── Footer ── */
+footer {
+  background:var(--charcoal);
+  border-top:1px solid var(--border);
+  padding:2rem 2.5rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:1rem;
+  font-size:.58rem;
+  letter-spacing:.2em;
+  color:var(--ash);
+}
+footer span { color:var(--red); }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(15px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.hero-content > * {
+  opacity:0;
+  animation:fadeUp .8s ease forwards;
+}
+.hero-eyebrow { animation-delay:.1s; }
+.hero-title   { animation-delay:.3s; }
+.hero-sub     { animation-delay:.5s; }
+.hero-meta    { animation-delay:.7s; }
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  body { font-size:14px; }
+  main { padding:0 1.2rem 6rem; }
+  .hero-title { font-size:clamp(3rem,16vw,6rem); }
+  #hero { padding:2rem 1.5rem; }
+  #toc { padding:3rem 1.5rem; }
+  .ch-num { font-size:3rem; min-width:2.5rem; }
+  #conclusion { padding:3rem 1.5rem; }
+  #sources { padding:3rem 1.5rem; }
+  footer { padding:1.5rem; justify-content:center; }
+  #lang-btn { top:.8rem; right:.8rem; font-size:.55rem; padding:.4rem .7rem; }
+  .hero-warn { display:none; }
+  .type-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="lbar"></div></div>
+  <div class="loader-text" id="loader-msg">TRANSLATING — 0%</div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Language toggle -->
+<button id="lang-btn" onclick="toggleLang()">
+  <div class="lb-dot"></div>
+  <span id="lang-label">മലയാളം</span>
+</button>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-redline"></div>
+  <div class="hero-stamp">CLASSIFIED · EDUCATIONAL</div>
+  <div class="hero-warn">⚠ FOR EDUCATIONAL USE ONLY</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">SALMAN HASHIR &nbsp;·&nbsp; INVESTIGATIVE STUDY</div>
+    <h1 class="hero-title"><span class="red">DARK</span><br>WORSHIP</h1>
+    <p class="hero-sub">Ancient Gods, Satan, Elite Networks, Real Cases &amp; How to Protect Yourself</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">CHAPTERS</span>
+        <span class="hero-meta-val">21</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">PARTS</span>
+        <span class="hero-meta-val">04</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">YEAR</span>
+        <span class="hero-meta-val">2025 – 2026</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">PURPOSE</span>
+        <span class="hero-meta-val">EDUCATION · AWARENESS</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══════════════ WARNING BANNER ══════════════ -->
+<div id="warning-banner">
+  <div class="wb-icon">⚠</div>
+  <div class="wb-text">
+    <strong>IMPORTANT NOTICE</strong>
+    This book is written entirely for educational, historical, and research purposes. The author strongly advises against participating in any of the rituals or practices described within. The goal of this study is to help readers <em>recognise and avoid exploitation</em> — not to promote or glorify dark ideologies in any form. Every case cited is real. Every historical event has sources.
+  </div>
+</div>
+
+<!-- ══════════════ TOC ══════════════ -->
+<section id="toc">
+  <div class="toc-inner">
+    <div class="toc-header"><span class="toc-label">TABLE OF CONTENTS</span></div>
+    <div class="toc-parts">
+
+      <div>
+        <div class="toc-part-title">PART ONE — THE ANCIENT GODS</div>
+        <div class="toc-items">
+          <a class="toc-item" onclick="goTo('ch1')"><span class="toc-n">CH 01</span><span class="toc-name">Baal: The Ancient Lord</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch2')"><span class="toc-n">CH 02</span><span class="toc-name">Moloch: The Devourer of Children</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch3')"><span class="toc-n">CH 03</span><span class="toc-name">Prophet Elijah (AS): The Defeat of Baal</span><span class="toc-arrow">→</span></a>
+        </div>
+      </div>
+
+      <div>
+        <div class="toc-part-title">PART TWO — SATAN: IDENTITY &amp; WORSHIP</div>
+        <div class="toc-items">
+          <a class="toc-item" onclick="goTo('ch4')"><span class="toc-n">CH 04</span><span class="toc-name">Satan: Who Is He?</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch5')"><span class="toc-n">CH 05</span><span class="toc-name">Seven Types of Satan Worshippers</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch6')"><span class="toc-n">CH 06</span><span class="toc-name">Rituals &amp; Dark Ceremonies</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch7')"><span class="toc-n">CH 07</span><span class="toc-name">Symbols of Darkness</span><span class="toc-arrow">→</span></a>
+        </div>
+      </div>
+
+      <div>
+        <div class="toc-part-title">PART THREE — ELITE NETWORKS</div>
+        <div class="toc-items">
+          <a class="toc-item" onclick="goTo('ch8')"><span class="toc-n">CH 08</span><span class="toc-name">Bohemian Grove</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch9')"><span class="toc-n">CH 09</span><span class="toc-name">Jeffrey Epstein: The Island &amp; The Questions</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch10')"><span class="toc-n">CH 10</span><span class="toc-name">Secret Societies</span><span class="toc-arrow">→</span></a>
+        </div>
+      </div>
+
+      <div>
+        <div class="toc-part-title">PART FOUR — REAL CASES, CULTS &amp; PROTECTION</div>
+        <div class="toc-items">
+          <a class="toc-item" onclick="goTo('ch11')"><span class="toc-n">CH 11</span><span class="toc-name">India: Ritual Murders</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch12')"><span class="toc-n">CH 12</span><span class="toc-name">Global Cases</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch13')"><span class="toc-n">CH 13</span><span class="toc-name">Black Metal: Music &amp; Darkness</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch14')"><span class="toc-n">CH 14</span><span class="toc-name">Arch of Baal: Modern Revival?</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch15')"><span class="toc-n">CH 15</span><span class="toc-name">Internet, Dark Web &amp; Modern Cults</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch16')"><span class="toc-n">CH 16</span><span class="toc-name">Protection: Faith &amp; Reason</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch17')"><span class="toc-n">CH 17</span><span class="toc-name">Jonestown &amp; Heaven's Gate</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch18')"><span class="toc-n">CH 18</span><span class="toc-name">NXIVM: The Face of a Modern Cult</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch19')"><span class="toc-n">CH 19</span><span class="toc-name">Superstition in Kerala</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch20')"><span class="toc-n">CH 20</span><span class="toc-name">Sihr, Jinn &amp; Islamic Defence</span><span class="toc-arrow">→</span></a>
+          <a class="toc-item" onclick="goTo('ch21')"><span class="toc-n">CH 21</span><span class="toc-name">Escaping a Cult</span><span class="toc-arrow">→</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ INTRODUCTION ══════════════ -->
+<main>
+<div class="chapter visible" id="intro" style="padding-top:5rem;">
+  <div class="ch-header">
+    <div class="ch-num">00</div>
+    <div class="ch-meta">
+      <div class="ch-tag">INTRODUCTION</div>
+      <h2 class="ch-title">The World Beneath the Surface</h2>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">There is a world hiding just beneath the surface of history — one that most textbooks skip over, that teachers tend to avoid, and that people would rather not think about. It is the world of dark worship.</p>
+  <p class="prose text-content">Ancient gods who demanded blood. Secret organisations that gather in shadows. Cults that transformed faith into chains. Human beings who committed acts of terror in their obsession for power — these are the subjects of this study.</p>
+  <p class="prose text-content">This book was not written to frighten you. Its purpose is to arm you with knowledge — to help you live with awareness, to recognise exploitation before it reaches you. Every case mentioned here is real. Every historical event has sources you can verify.</p>
+  <blockquote class="text-content">"To understand evil, you must first stop pretending it does not exist."<cite>— Salman Hashir</cite></blockquote>
+</div>
+
+<!-- PART 1 -->
+<div class="part-divider" id="part1">
+  <div class="part-num">01</div>
+  <div class="part-info">
+    <div class="part-tag">PART ONE</div>
+    <div class="part-title-text">THE ANCIENT GODS</div>
+  </div>
+</div>
+
+<!-- CH 1 -->
+<article class="chapter" id="ch1">
+  <div class="ch-header">
+    <div class="ch-num">01</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER ONE</div>
+      <h2 class="ch-title">Baal: The Ancient Lord</h2>
+      <p class="ch-subtitle">The storm god who ruled the ancient Near East for 1,700 years</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">The name <em>Baal</em> simply means "Lord" or "Owner" in Canaanite languages. But behind this simple title lay one of the most complex and terrifying divine systems of the ancient world.</p>
+  <p class="prose text-content">In the territories of modern-day Israel, Lebanon, Syria, and Jordan, Baal was worshipped as the god of storms, thunder, rain, and the fertility of the earth. In an agricultural society entirely dependent on rainfall, the deity who controlled the weather was, in effect, the controller of life itself.</p>
+  <div class="insight">
+    <p><strong>Historical Context:</strong> Baal worship dominated the region for approximately 1,700 years — from around 2000 BCE to 300 BCE. At its peak, nearly every major city in the Levant had a temple dedicated to Baal. This was not a fringe religion; it was the mainstream faith of an entire civilisation.</p>
+  </div>
+  <div class="sec-title">BAAL'S MANY FACES</div>
+  <p class="prose text-content">Baal was not a single, unified deity — the name functioned as a general title. The most powerful form was <em>Baal Hadad</em>, the storm god. <em>Baal Zebul</em>, worshipped in the Philistine city of Ekron, became "Beelzebul" in Christian tradition — a title of Satan himself. The Bible mentions Baal more than 90 times, reflecting how deeply this god's influence penetrated the lives of those surrounding ancient Israel.</p>
+</article>
+
+<!-- CH 2 -->
+<article class="chapter" id="ch2">
+  <div class="ch-header">
+    <div class="ch-num">02</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER TWO</div>
+      <h2 class="ch-title">Moloch: The Devourer of Children</h2>
+      <p class="ch-subtitle">The god who demanded the most precious sacrifice of all</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">Of all the deities described in ancient texts, Moloch is the most horrifying — the one who demanded the most precious possible sacrifice: the lives of children. The very name is a theological insult. The word <em>Melek</em> (meaning "king" or "owner") was combined with <em>Bosheth</em> (meaning "shame"), transforming this deity into "the shameful owner" — a deliberate act of condemnation by those who recorded it.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 ARCHAEOLOGICAL EVIDENCE — TOPHET, TUNIS (EXCAVATED 20TH CENTURY)</div>
+    <p>In modern Tunisia, archaeologists excavated a site called the Tophet — whose very name means "place of burning." Used from approximately 800 BCE to 146 BCE, this sacred site yielded over 20,000 urns. Inside each urn: the charred remains of infants and young children.</p>
+    <p>Oxford University researchers analysed these remains in 2014 and found evidence that healthy children had been deliberately sacrificed in ritual ceremonies. This is no longer a matter of debate among historians — ritual child sacrifice took place here, on a massive scale, for centuries.</p>
+  </div>
+  <div class="case-file">
+    <div class="case-file-title">📍 THE VALLEY OF HINNOM — JERUSALEM</div>
+    <p>South of Jerusalem lay the Valley of Hinnom, once a site of Tophet rituals. According to 2 Kings 23:10, King Josiah deliberately desecrated the site so that no child could ever again be sacrificed there. The Hebrew name for that valley — "Gei Hinnom" — was later transformed into "Jahannam" — the word used in Islamic and Jewish traditions for Hell itself. The geography of ancient horror became the language of divine punishment.</p>
+  </div>
+</article>
+
+<!-- CH 3 -->
+<article class="chapter" id="ch3">
+  <div class="ch-header">
+    <div class="ch-num">03</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER THREE</div>
+      <h2 class="ch-title">Prophet Elijah (AS): The Defeat of Baal</h2>
+      <p class="ch-subtitle">One man against 450 — the most dramatic confrontation in ancient history</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">In the long history of conflict between monotheism and Baal worship, one single moment stands above all others in its drama and theological weight. The Hebrew name <em>Eliyahu</em> — meaning "My God is Yahweh" — known in Arabic as <em>Ilyas</em> — belongs to the central figure of that moment.</p>
+  <blockquote class="text-content">"Ilyas was indeed one of the messengers. He said to his people: 'Will you not fear God? Do you call upon Baal and abandon the best of creators?'"<cite>— Quran 37:123–126</cite></blockquote>
+  <div class="case-file">
+    <div class="case-file-title">📍 MOUNT CARMEL — THE MOST DRAMATIC CONFRONTATION IN HISTORY</div>
+    <p>Israel's King Ahab had married the Phoenician princess Jezebel and made Baal worship the official state religion. On one side: 450 prophets of Baal. On the other: a single man — Prophet Elijah (AS).</p>
+    <p>The Baal prophets danced, screamed, and cut themselves with blades for hours. Nothing happened. Then Elijah offered a single, quiet prayer. Fire descended from the sky, consuming the sacrifice, the wood, the stones, the soil, and the water that had been poured around it. The crowd fell to the ground: <em>"He is God! He is God!"</em> — 1 Kings 18.</p>
+  </div>
+</article>
+
+<!-- PART 2 -->
+<div class="part-divider" id="part2">
+  <div class="part-num">02</div>
+  <div class="part-info">
+    <div class="part-tag">PART TWO</div>
+    <div class="part-title-text">SATAN — IDENTITY &amp; WORSHIP</div>
+  </div>
+</div>
+
+<!-- CH 4 -->
+<article class="chapter" id="ch4">
+  <div class="ch-header">
+    <div class="ch-num">04</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER FOUR</div>
+      <h2 class="ch-title">Satan: Who Is He?</h2>
+      <p class="ch-subtitle">What Islam, Christianity, and Judaism actually say</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="sec-title">THE ISLAMIC PERSPECTIVE</div>
+  <p class="prose text-content">In Islamic theology, Iblis began as a Jinn — a being created from smokeless fire. Through long ages of devotion, he rose to a position of honour among the angels. But when God created Adam (AS), arrogance destroyed him.</p>
+  <blockquote class="text-content">"When We told the angels to bow to Adam, all of them bowed — except Iblis. He refused, was arrogant, and became a disbeliever."<cite>— Quran 2:34</cite></blockquote>
+  <p class="prose text-content">After his expulsion, God permitted him to attempt to mislead humanity until the Day of Judgement. Critically, Satan does not use force — he plants whispers, exploits weak moments, and amplifies doubts. Remembrance of God and seeking refuge in Him render Satan powerless.</p>
+  <div class="sec-title">THE CHRISTIAN PERSPECTIVE</div>
+  <p class="prose text-content"><em>Lucifer</em> — from the Latin meaning "light-bearer." In Isaiah 14:12, he is described as having been cast down from heaven like lightning. A supreme angel who rebelled against God through pride.</p>
+  <div class="sec-title">THE JEWISH PERSPECTIVE</div>
+  <p class="prose text-content"><em>Ha-Satan</em> — meaning "the adversary" or "the accuser." In the Book of Job, Satan appears not as God's enemy but as a kind of prosecuting attorney in the divine court — an instrument within God's order. Over time, this image evolved into an independent evil force.</p>
+</article>
+
+<!-- CH 5 -->
+<article class="chapter" id="ch5">
+  <div class="ch-header">
+    <div class="ch-num">05</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER FIVE</div>
+      <h2 class="ch-title">Seven Types of Satan Worshippers</h2>
+      <p class="ch-subtitle">A landscape far more complex than popular culture suggests</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">Modern Satanism is not a single, uniform movement. It ranges from purely atheistic philosophy to genuine supernatural devotion. Understanding these distinctions is essential — the differences are real, and they matter.</p>
+  <div class="type-grid">
+    <div class="type-card">
+      <div class="type-card-num">01</div>
+      <div class="type-card-title">LaVeyan Satanism</div>
+      <div class="type-card-body">Founded April 30, 1966 by Anton LaVey. Fundamentally an atheistic philosophy. Satan is a symbol only — not a supernatural being. The core idea: "I am my own god." LaVey was a showman — oboist, circus lion tamer, police photographer. He died in 1997 in a Catholic hospital — one of history's ironies.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-num">02</div>
+      <div class="type-card-title">Theistic Satanism</div>
+      <div class="type-card-body">True believers in Satan as a real supernatural deity worthy of worship. Expressed through small groups, online communities, and solitary practitioners. Some members within this category view killing as a service to Satan — documented ritual murder cases in India and Kerala trace back to this ideology.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-num">03</div>
+      <div class="type-card-title">Luciferianism</div>
+      <div class="type-card-body">Rather than viewing Lucifer as a symbol of darkness, Luciferians see him as "the light-bearer" — representing wisdom, enlightenment, and the pursuit of forbidden knowledge. Islamic theology does not recognise this distinction — Iblis is a singular entity.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-num">04</div>
+      <div class="type-card-title">Temple of Set</div>
+      <div class="type-card-body">Founded in 1975 by Michael Aquino, who broke away from the Church of Satan. Core belief: Satan's true name is Set — the Egyptian god of chaos. Aquino simultaneously held a high rank in the US Army and led this order — a combination that raised serious and documented questions.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-num">05</div>
+      <div class="type-card-title">Order of Nine Angles</div>
+      <div class="type-card-body">This is not a theological discussion group. It is a terror theology that justifies murder, violence, and the destruction of Western civilisation. Its ideology demands that members commit <em>actual killings</em> for "spiritual advancement." The FBI designated it a terrorist organisation in 2020. Multiple UK murder convictions are directly linked to it.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-num">06</div>
+      <div class="type-card-title">The Satanic Temple</div>
+      <div class="type-card-body">Founded in America in 2013. Over 700,000 members. Fundamentally an atheistic, political activist organisation. Satanic imagery is used as a legal and political tool to challenge Christian privilege in public spaces — Oklahoma Capitol's Baphomet statue and After School Satan Clubs are examples of this strategy.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-num">07</div>
+      <div class="type-card-title">Joy of Satan Ministries</div>
+      <div class="type-card-body">Founded in the early 2000s by Andrea Herrington. Its mythology is extraordinary: Satan is actually the Sumerian god Enki — a benevolent extraterrestrial who created the human race. Combined with Nazism. Designated a hate group by the Southern Poverty Law Center. Actively targets young people online.</div>
+    </div>
+  </div>
+</article>
+
+<!-- CH 6 -->
+<article class="chapter" id="ch6">
+  <div class="ch-header">
+    <div class="ch-num">06</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER SIX</div>
+      <h2 class="ch-title">Rituals &amp; Dark Ceremonies</h2>
+      <p class="ch-subtitle">What the historical record actually shows</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="sec-title">THE BLACK MASS</div>
+  <p class="prose text-content">The ceremony most associated with Satanic worship is the Black Mass — a ritual combining blasphemy, inversion, and transgression. The historical reality differs significantly from popular imagination.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 THE AFFAIR OF THE POISONS — FRANCE, 1677–1682</div>
+    <p>The most historically documented Black Mass scandal in existence. Madame de Montespan, the favourite mistress of French King Louis XIV, commissioned multiple Black Masses in order to maintain her hold on the king's affections.</p>
+    <p>A defrocked priest named Étienne Guibourg used a naked woman as the altar. The investigation resulted in 36 executions and 319 imprisonments or exiles. When the investigation reached the king's own mistress, Louis XIV had all records sealed. The public did not learn of this until 1900, when the archives were finally opened.</p>
+  </div>
+</article>
+
+<!-- CH 7 -->
+<article class="chapter" id="ch7">
+  <div class="ch-header">
+    <div class="ch-num">07</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER SEVEN</div>
+      <h2 class="ch-title">Symbols of Darkness</h2>
+      <p class="ch-subtitle">What these symbols actually mean — and what they don't</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="sec-title">THE PENTAGRAM</div>
+  <p class="prose text-content">The five-pointed star is perhaps the most misunderstood symbol in popular culture. It appears in Sumerian inscriptions as early as 3000 BCE. The Pythagoreans used it as a symbol of health and mathematical beauty. It was not connected to darkness until 1855, when the occultist Eliphas Lévi combined the inverted pentagram with the image of a goat to create the Baphomet — at which point a millennia-old symbol of geometry was repurposed into an emblem of the occult.</p>
+  <div class="sec-title">THE NUMBER 666</div>
+  <div class="insight">
+    <p><strong>666 vs. 616:</strong> Revelation 13:18 states "the number of the beast is 666." The majority of Biblical scholars interpret this as <em>gematria</em> — the ancient practice of assigning numerical values to letters. The most convincing identification: when "Nero Caesar" is written in Hebrew letters and their numerical values are added, the sum equals 666. Some of the oldest surviving manuscripts of Revelation show "616" instead — also a reference to Nero in Latin form. This was a political code, not a supernatural curse.</p>
+  </div>
+</article>
+
+<!-- PART 3 -->
+<div class="part-divider" id="part3">
+  <div class="part-num">03</div>
+  <div class="part-info">
+    <div class="part-tag">PART THREE</div>
+    <div class="part-title-text">ELITE NETWORKS</div>
+  </div>
+</div>
+
+<!-- CH 8 -->
+<article class="chapter" id="ch8">
+  <div class="ch-header">
+    <div class="ch-num">08</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER EIGHT</div>
+      <h2 class="ch-title">Bohemian Grove</h2>
+      <p class="ch-subtitle">Power, secrecy, and the owl in the California redwoods</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">In the redwood forests of Monte Rio, California — 75 miles north of San Francisco — lies 2,700 acres of private land. For over 150 years, it has hosted the summer gathering of the world's most powerful people. This is not a conspiracy theory. It is a documented historical fact.</p>
+  <p class="prose text-content">Confirmed attendees include US Presidents Hoover, Nixon, Ford, Reagan, George H.W. Bush, and George W. Bush, along with CIA Directors, Secretaries of Defense, corporate titans, and Nobel laureates. Every July, a two-week encampment takes place here, away from any public oversight.</p>
+  <div class="sec-title">THE CREMATION OF CARE</div>
+  <p class="prose text-content">The gathering opens with a ritual called the <em>Cremation of Care</em>, conducted before a 40-foot concrete Owl statue. An effigy labelled "Dull Care" — representing responsibility and worldly worries — is burned. The message: for these two weeks, the burdens of power are set aside. Walter Cronkite, the legendary American broadcaster, served as the voice of this ceremony for decades.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 THE MANHATTAN PROJECT DISCUSSION — 1942</div>
+    <p>The decision to develop the atomic bomb was discussed at Bohemian Grove before the Manhattan Project was formally authorised. The most consequential military decision in human history was debated in private, among unelected men, with no public scrutiny whatsoever.</p>
+  </div>
+</article>
+
+<!-- CH 9 -->
+<article class="chapter" id="ch9">
+  <div class="ch-header">
+    <div class="ch-num">09</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER NINE</div>
+      <h2 class="ch-title">Jeffrey Epstein: The Island &amp; The Questions</h2>
+      <p class="ch-subtitle">The most secretive figure in modern American history</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">Jeffrey Edward Epstein (1953–2019) was one of the most mysterious figures in modern American history. Without even a college degree, he became a billionaire and cultivated extraordinarily close relationships with the world's most powerful people. How he accumulated his wealth was never satisfactorily explained.</p>
+  <p class="prose text-content">In 1998, he purchased Little St. James Island for $7.95 million. In 2008, he received a plea deal for sexual exploitation of children — serving only 13 months, with remarkable privileges. In 2019, federal sex trafficking charges were filed. On August 10, 2019, he was officially declared dead by suicide in his prison cell, under circumstances that remain bitterly disputed.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 VIRGINIA GIUFFRE VS. PRINCE ANDREW</div>
+    <p>Virginia Giuffre was recruited into Epstein's network at age 17. Under sworn oath, she testified that she had been trafficked to Prince Andrew on three separate occasions. Prince Andrew denied all allegations. In February 2022, an out-of-court settlement was reached for approximately £12 million. King Charles III subsequently stripped Andrew of his military titles and royal patronages.</p>
+  </div>
+</article>
+
+<!-- CH 10 -->
+<article class="chapter" id="ch10">
+  <div class="ch-header">
+    <div class="ch-num">10</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER TEN</div>
+      <h2 class="ch-title">Secret Societies</h2>
+      <p class="ch-subtitle">What is real, what is documented, and what is myth</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="sec-title">SKULL AND BONES</div>
+  <p class="prose text-content">Founded in 1832 at Yale University, Skull and Bones is the most powerful and most discussed secret society in America. Exactly 15 third-year students are invited each year. Two Bush presidents, John Kerry, multiple Supreme Court justices, and CIA directors are among its alumni — confirming that this invitation carries extraordinary weight.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 GERONIMO'S SKULL — THE ALLEGATION</div>
+    <p>A 1918 member letter — whose authenticity historians have confirmed — alleges that Skull and Bones members dug up the grave of Apache leader Geronimo and brought his skull to their clubhouse. Geronimo's family filed a lawsuit in 2009. Yale denied the allegation. The letter has been authenticated. The case remains unresolved.</p>
+  </div>
+  <div class="sec-title">FREEMASONRY</div>
+  <p class="prose text-content">Approximately 6 million members worldwide. US Founding Fathers George Washington and Benjamin Franklin were Freemasons. The Eye of Providence on the US Dollar and Masonic symbolism in Washington DC's layout are documented facts. However, modern Freemasonry functions primarily as a charitable and fraternal organisation — there is no documentary evidence of the coordinated global control that conspiracy theories allege.</p>
+  <div class="sec-title">THE ILLUMINATI — REALITY VS. MYTH</div>
+  <p class="prose text-content">The Bavarian Illuminati was founded on May 1, 1776 by Adam Weishaupt. At its peak it had approximately 2,000 members. In 1785, the Bavarian government banned it and the organisation collapsed — this is documented historical fact. The "Modern Illuminati" — the idea of a surviving group secretly controlling world governments — has no documentary evidence whatsoever.</p>
+  <div class="insight">
+    <p><strong>The Bilderberg Group:</strong> Unlike the Illuminati, the Bilderberg Group is real, ongoing, and genuinely secretive. Founded in 1954. Annual meetings gather approximately 150 Western political, business, and academic leaders. No official minutes are published. Press access is prohibited. It is not a conspiracy theory — it is simply an extremely private gathering of extremely powerful people.</p>
+  </div>
+</article>
+
+<!-- PART 4 -->
+<div class="part-divider" id="part4">
+  <div class="part-num">04</div>
+  <div class="part-info">
+    <div class="part-tag">PART FOUR</div>
+    <div class="part-title-text">REAL CASES, CULTS &amp; PROTECTION</div>
+  </div>
+</div>
+
+<!-- CH 11 -->
+<article class="chapter" id="ch11">
+  <div class="ch-header">
+    <div class="ch-num">11</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER ELEVEN</div>
+      <h2 class="ch-title">India: Ritual Murders</h2>
+      <p class="ch-subtitle">When superstition turns lethal</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="sec-title">KERALA</div>
+  <p class="prose text-content">Kerala contains a profound contradiction. It has India's highest literacy rate, universal healthcare, and strong social development indicators — and yet shocking ritual murder cases continue to emerge here with disturbing regularity. This proves a critical point: literacy alone does not guarantee depth of critical thinking.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 THE ELANTHOOR HUMAN SACRIFICE — KERALA, 2022</div>
+    <p>October 2022: Two lottery ticket sellers, Padma (52) and Roselyn (47), were lured to a house under false pretences for a ritual purpose. Mohammed Shafi (68, a Kerala Government employee) was responsible for luring the victims. Bhagaval Singh and his wife Laila had commissioned the act, seeking wealth through ritual. The victims' bodies were cut into 56 pieces and buried on the property. Both the Kerala High Court and the Supreme Court of India took special notice of this case.</p>
+  </div>
+  <div class="case-file">
+    <div class="case-file-title">📍 ELANTHOOR 1997 — THE SAME VILLAGE, 25 YEARS EARLIER</div>
+    <p>In 1997, in the very same village, a four-and-a-half-year-old girl named Ashwani was ritually sacrificed. Her father, a homeopathic practitioner, committed the act believing it would lead him to buried treasure. He received a life sentence. The same location, a generation apart, two ritual murders — a pattern that should disturb any thoughtful reader.</p>
+  </div>
+  <div class="case-file">
+    <div class="case-file-title">📍 KAMAKHYA TEMPLE DECAPITATION — ASSAM, 2019</div>
+    <p>At the Kamakhya Temple in Guwahati — one of India's most sacred Shakti shrines — a ritual murder took place. Twelve individuals were involved in the planning. The Central Bureau of Investigation took over the case in 2023.</p>
+  </div>
+  <div class="case-file">
+    <div class="case-file-title">📍 DR. NARENDRA DABHOLKAR — THE MURDER OF A RATIONALIST, MAHARASHTRA 2013</div>
+    <p>Dr. Dabholkar devoted 30 years of his life to fighting the forces of superstition. On August 20, 2013 — the very day the Maharashtra Black Magic Prevention Act was being passed — he was shot dead during his morning walk in Pune. In 2023, Sachin Andure and Sharad Kalaskar, linked to Hindu extremist organisations, were sentenced to life imprisonment for the murder.</p>
+  </div>
+</article>
+
+<!-- CH 12 -->
+<article class="chapter" id="ch12">
+  <div class="ch-header">
+    <div class="ch-num">12</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER TWELVE</div>
+      <h2 class="ch-title">Global Cases</h2>
+      <p class="ch-subtitle">Documented cases of ritual violence from around the world</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="case-file">
+    <div class="case-file-title">📍 BEASTS OF SATAN — ITALY, 1998–2004</div>
+    <p>In the early 1990s, a heavy metal music scene northeast of Milan became the birthplace of one of Italy's most notorious Satanic cults. On January 17, 1998, Fabio Tollis (16) and Chiara Marino (19) were taken into a forest, attacked, and buried alive. Italy subsequently created a dedicated occult crimes investigation unit in direct response to this case.</p>
+  </div>
+  <div class="case-file">
+    <div class="case-file-title">📍 ADOLFO CONSTANZO — MATAMOROS MURDERS, MEXICO, 1989</div>
+    <p>Adolfo Constanzo claimed to be able to offer supernatural protection to drug cartels. In March 1989, Texas university student Mark Kilroy (21) was abducted from Matamoros and ritually sacrificed. When police reached the scene, they found 15 bodies, a ritual cauldron, and human remains. Surrounded by police, Constanzo, aged 26, asked a follower to shoot him.</p>
+  </div>
+  <div class="case-file">
+    <div class="case-file-title">📍 THE WEST MEMPHIS THREE — ARKANSAS, 1993</div>
+    <p>May 1993: three 8-year-old children were murdered in West Memphis. Police pursued a Satanic cult theory. Damien Echols (18), Jason Baldwin (16), and Jessie Misskelley (17) were arrested on the basis that they wore black clothing and listened to heavy metal music. In 2011, new DNA testing found none of their DNA at the crime scene — but did find DNA belonging to one victim's stepfather. These three young men spent 18 years in prison for crimes they did not commit. It remains one of the most tragic documented examples of Satanic panic.</p>
+  </div>
+</article>
+
+<!-- CH 13 -->
+<article class="chapter" id="ch13">
+  <div class="ch-header">
+    <div class="ch-num">13</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER THIRTEEN</div>
+      <h2 class="ch-title">Black Metal: Music &amp; Darkness</h2>
+      <p class="ch-subtitle">When the theatrical became genuinely violent</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">In the Norwegian Black Metal scene of the 1990s, the connection between music and actual violence was not metaphorical. Churches burned. People died.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 VARG VIKERNES &amp; THE BLACK METAL MURDERS — NORWAY, 1992–1996</div>
+    <p>Between 1992 and 1996, more than 50 churches were burned across Norway. The Fantoft Stave Church in Bergen — a medieval wooden structure built in 1150 CE — was reduced to ash in 1992. In August 1993, Varg Vikernes stabbed fellow musician Øystein Aarseth 23 times, killing him. Vikernes served 21 years and was released in 2009. The vocalist of the band Mayhem had earlier died from a self-inflicted gunshot wound; the guitarist Euronymous photographed the body, collected skull fragments, and used them to make jewellery — one of which was used as an album cover.</p>
+  </div>
+  <p class="prose text-content">There is a clear distinction between theatrical Satanism in music and actual belief — musical preference alone is not evidence of criminal guilt. The West Memphis Three case proved this at devastating cost.</p>
+</article>
+
+<!-- CH 14 -->
+<article class="chapter" id="ch14">
+  <div class="ch-header">
+    <div class="ch-num">14</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER FOURTEEN</div>
+      <h2 class="ch-title">Arch of Baal: Modern Revival?</h2>
+      <p class="ch-subtitle">Separating documented fact from conspiracy theory</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">Palmyra — in modern Syria — is an ancient city whose temples survived for 2,000 years. In 2015, ISIS captured the city and systematically destroyed its ancient structures: the Temple of Bel, the Temple of Baalshamin, and the Arch of Triumph were deliberately blown up, filmed, and used as propaganda.</p>
+  <p class="prose text-content">In April 2016, a 1:3 scale replica of the Palmyra Arch was erected in London's Trafalgar Square, then in New York's Times Square. This was a joint project by Harvard, Oxford, and the Dubai Museum — explicitly a statement against cultural destruction by ISIS.</p>
+  <div class="insight">
+    <p><strong>Conspiracy Theory vs. Reality:</strong> The conspiracy claim is that global elites are re-erecting a gateway to Baal. The reality: the arch was not the entrance to any Baal temple — it was a Roman-era triumphal arch on Palmyra's main street. There is no documentary evidence of occult intent. However, from Islamic and Christian eschatological perspectives, the reappearance of such symbols does generate deep and legitimate theological discussions that should not be dismissed.</p>
+  </div>
+</article>
+
+<!-- CH 15 -->
+<article class="chapter" id="ch15">
+  <div class="ch-header">
+    <div class="ch-num">15</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER FIFTEEN</div>
+      <h2 class="ch-title">Internet, Dark Web &amp; Modern Cults</h2>
+      <p class="ch-subtitle">How technology changed recruitment forever</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">The internet has fundamentally transformed the way occult groups operate, recruit, and radicalise. Today, a curious 14-year-old sitting alone in their bedroom anywhere in the world can access dark content and connect with dangerous communities globally — without a single adult in the room being aware of it.</p>
+  <div class="sec-title">KERALA — ONLINE GROUPS</div>
+  <p class="prose text-content">Kerala Police and social researchers have documented active online Satanic communities specifically targeting Kerala youth. WhatsApp groups and Discord servers operating in Malayalam share dark rituals, self-initiation guides, and radicalisation content.</p>
+  <div class="warn-box">
+    <p><strong>Warning Signs in Teenagers:</strong></p>
+    <ul class="dossier-list" style="margin-top:.7rem;">
+      <li>Sudden secrecy about online activities</li>
+      <li>Adopting an occult "name" or identity</li>
+      <li>Sudden interest in blood, self-harm, or ritual wounds</li>
+      <li>Repeatedly referencing a specific dark group by name</li>
+      <li>Sudden change in friend group centred on occult interests</li>
+    </ul>
+  </div>
+</article>
+
+<!-- CH 16 -->
+<article class="chapter" id="ch16">
+  <div class="ch-header">
+    <div class="ch-num">16</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER SIXTEEN</div>
+      <h2 class="ch-title">Protection: Faith &amp; Reason</h2>
+      <p class="ch-subtitle">How to protect yourself and those you love</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="sec-title">ISLAMIC PROTECTION</div>
+  <p class="prose text-content">Islam provides a complete framework for protection against supernatural harm. These are not rituals of fear — they are daily practices of conscious remembrance and divine connection:</p>
+  <ul class="dossier-list">
+    <li>Begin every action with <em>Bismillah</em></li>
+    <li>Morning and evening adhkar: Ayat al-Kursi (2:255), Surah Al-Ikhlas, Al-Falaq, An-Nas — each three times</li>
+    <li>Seeking refuge from Satan: <em>A'udhu billahi min al-Shaitan al-rajeem</em></li>
+    <li>Regular recitation of the Quran at home — especially Surah Al-Baqarah</li>
+  </ul>
+  <div class="warn-box">
+    <p><strong>How to Identify Fraudulent Ruqyah Practitioners:</strong></p>
+    <ul class="dossier-list" style="margin-top:.7rem;">
+      <li>Demanding large sums of money</li>
+      <li>Asking for hair, clothing, or blood</li>
+      <li>Providing amulets with unknown inscriptions</li>
+      <li>Claiming to use jinn for healing — this is strictly forbidden in Islam</li>
+    </ul>
+    <p style="margin-top:.8rem; font-size:.78rem; color:var(--fog);">Authentic Ruqyah uses only the Quran, verified hadith, and permissible supplications. Nothing more.</p>
+  </div>
+  <div class="sec-title">CULT RECRUITMENT — WARNING SIGNS</div>
+  <ul class="dossier-list">
+    <li><strong>Love bombing:</strong> Sudden, overwhelming affection and immediate acceptance from the group</li>
+    <li><strong>"Us vs. them" framing:</strong> Family, friends, and old beliefs are "wrong"; only the group has "the truth"</li>
+    <li><strong>Secrecy requirement:</strong> You must not tell outsiders about the group's activities</li>
+    <li><strong>Progressive commitment:</strong> Small requests at first, then gradually escalating demands</li>
+    <li><strong>Isolation:</strong> Time spent with non-members is actively discouraged</li>
+  </ul>
+</article>
+
+<!-- CH 17 -->
+<article class="chapter" id="ch17">
+  <div class="ch-header">
+    <div class="ch-num">17</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER SEVENTEEN</div>
+      <h2 class="ch-title">Jonestown &amp; Heaven's Gate</h2>
+      <p class="ch-subtitle">Mass death cults — and why educated people joined them</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="case-file">
+    <div class="case-file-title">📍 JONESTOWN MASSACRE — GUYANA, NOVEMBER 18, 1978</div>
+    <p>918 people lost their lives in a single day at the Jonestown settlement in Guyana. Although reported as a "mass suicide," investigators concluded that many of the dead were actually murdered — including 304 children who could not have made any voluntary choice.</p>
+    <p>Jim Jones founded the Peoples Temple in the 1950s, preaching racial equality and Christian socialism, initially doing genuine charity work. By the 1970s he had more than 20,000 followers in California. His paranoia, drug abuse, and use of violence gradually escalated. In 1977, he moved his community to an isolated jungle commune in Guyana. When US Congressman Leo Ryan visited to investigate and was killed at the airstrip, Jones ordered the poisoned punch to be distributed. His followers did not question him. They had been prepared for years.</p>
+  </div>
+  <div class="case-file">
+    <div class="case-file-title">📍 HEAVEN'S GATE — CALIFORNIA, MARCH 1997</div>
+    <p>39 members of the Heaven's Gate cult died in a ritual suicide. Leaders Marshall Applewhite and Bonnie Nettles taught that human bodies were merely containers — and that a spacecraft following the Hale-Bopp comet would come to collect the souls of members who shed their physical forms. The members were highly educated and technologically sophisticated. Education, it must be noted, does not eliminate vulnerability to cult manipulation.</p>
+  </div>
+</article>
+
+<!-- CH 18 -->
+<article class="chapter" id="ch18">
+  <div class="ch-header">
+    <div class="ch-num">18</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER EIGHTEEN</div>
+      <h2 class="ch-title">NXIVM: The Face of a Modern Cult</h2>
+      <p class="ch-subtitle">Self-help as a mask for exploitation</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">NXIVM was founded in 1998 in Albany, New York by Keith Raniere and Nancy Salzman. On the surface: "Executive Success Programs" — self-improvement and leadership training for professionals. In reality: a sophisticated system of manipulation and exploitation.</p>
+  <div class="case-file">
+    <div class="case-file-title">📍 NXIVM — THE FULL PICTURE</div>
+    <p>Keith Raniere was known as "Vanguard." Workshops cost $3,000 or more. Gradually, questioning Raniere's teachings was reframed as an "ethical breach." Within NXIVM existed a secret inner sorority called DOS. Women were designated as "slaves" to "masters." Initiation required members to have Raniere's initials permanently branded onto their skin. Members were required to submit "collateral" — compromising photographs and documents — as insurance against leaving. The actress Allison Mack was a DOS recruiter.</p>
+    <p>In 2019, Keith Raniere was convicted of sex trafficking and racketeering and sentenced to 120 years in prison. Allison Mack received three years.</p>
+  </div>
+  <p class="prose text-content">NXIVM's crucial lesson: it was not only the vulnerable or the poor who fell into this cult. Wealthy, educated, and famous people were equally susceptible. This was not a failure of intelligence — it was testament to the extraordinary depth of sophisticated psychological manipulation.</p>
+</article>
+
+<!-- CH 19 -->
+<article class="chapter" id="ch19">
+  <div class="ch-header">
+    <div class="ch-num">19</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER NINETEEN</div>
+      <h2 class="ch-title">Superstition in Kerala</h2>
+      <p class="ch-subtitle">Deep roots that high literacy has failed to sever</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">In Kerala, practices of black magic, sorcery, and malevolent spirit worship are ancient customs with roots that run centuries deep. High literacy and modern education have repeatedly proven insufficient as an antidote to these beliefs.</p>
+  <div class="sec-title">COMMON PRACTICES AND HOW THEY EXPLOIT</div>
+  <ul class="dossier-list">
+    <li><strong>Koodotram / Mantravada (Black Magic):</strong> Hiring practitioners to harm enemies. Documented pattern: practitioners receive large sums, deliver nothing.</li>
+    <li><strong>Vasheekaranam (Enchantment):</strong> Rituals claimed to "control" romantic partners — practitioners exploiting romantic desperation.</li>
+    <li><strong>Naga Dosha / Pitru Dosha (Ancestral Curse):</strong> Identifying a "curse" and then demanding expensive rituals to remove it — exploitation of genuine belief systems.</li>
+    <li><strong>Online Fraud:</strong> Malayalam WhatsApp and Telegram channels where practitioners demand advance payment and then disappear.</li>
+  </ul>
+  <div class="sec-title">LEGAL PROTECTION</div>
+  <p class="prose text-content">The Maharashtra Black Magic Prevention Act (2013) — achieved at the cost of Dr. Dabholkar's life — is India's most powerful legal instrument against these practices. Following the Elanthoor case, demands for a Kerala Anti-Superstition Bill have grown significantly louder. The Kerala Sastra Sahitya Parishad and Yukthivadi Sangham continue to provide education, exposure, and legal support.</p>
+</article>
+
+<!-- CH 20 -->
+<article class="chapter" id="ch20">
+  <div class="ch-header">
+    <div class="ch-num">20</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER TWENTY</div>
+      <h2 class="ch-title">Sihr, Jinn &amp; Islamic Defence</h2>
+      <p class="ch-subtitle">What Islam says about magic, jinn, and spiritual protection</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <div class="sec-title">SIHR — THE ISLAMIC VIEW</div>
+  <p class="prose text-content">In Islam, Sihr (black magic) is a major sin. The Quran in Al-Baqarah 2:102 describes Harut and Marut — two angels in Babylon who taught magic — but who first gave a clear warning: "We are only a trial — do not disbelieve." The Prophet Muhammad ﷺ listed Sihr among the seven most destructive sins (Bukhari, Muslim).</p>
+  <div class="sec-title">JINN — WHAT ISLAM TEACHES</div>
+  <p class="prose text-content">Jinn are real beings, created from smokeless fire (Quran 55:15). They possess free will — there are believing jinn and disbelieving jinn. Surah Al-Jinn (Chapter 72) of the Quran is devoted entirely to them. The summoning of jinn is strictly forbidden — any practitioner who claims to work with them has sold their faith to do so.</p>
+  <div class="sec-title">RUQYAH — A COMPLETE GUIDE</div>
+  <table class="ruqyah-table">
+    <thead>
+      <tr><th>VERSE / SURAH</th><th>PURPOSE</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Al-Fatiha</td><td>Recite 7 times over affected area</td></tr>
+      <tr><td>Ayat al-Kursi (2:255)</td><td>Most powerful single verse for protection</td></tr>
+      <tr><td>Al-Baqarah final 2 verses (2:285–286)</td><td>General spiritual protection</td></tr>
+      <tr><td>Al-Ikhlas, Al-Falaq, An-Nas</td><td>Each recited 3 times — comprehensive shield</td></tr>
+      <tr><td>Al-A'raf 7:117–122</td><td>Moses vs. Pharaoh's magicians — nullification of magic</td></tr>
+      <tr><td>Yunus 10:81–82</td><td>Direct nullification of Sihr</td></tr>
+      <tr><td>Ta-Ha 20:69</td><td>"Magic cannot succeed wherever it is practised"</td></tr>
+    </tbody>
+  </table>
+</article>
+
+<!-- CH 21 -->
+<article class="chapter" id="ch21">
+  <div class="ch-header">
+    <div class="ch-num">21</div>
+    <div class="ch-meta">
+      <div class="ch-tag">CHAPTER TWENTY-ONE</div>
+      <h2 class="ch-title">Escaping a Cult</h2>
+      <p class="ch-subtitle">A practical guide for those who need it</p>
+    </div>
+  </div>
+  <div class="ch-rule"></div>
+  <p class="prose text-content">Leaving a cult is not a simple decision. Members have received years of psychological conditioning. Identity, relationships, beliefs, and sometimes livelihood are all tied to the group. Leaving can feel like losing everything you are.</p>
+  <div class="sec-title">ARE YOU IN A CULT? WARNING SIGNS</div>
+  <ul class="dossier-list">
+    <li>The leader is considered infallible — questioning them is punished</li>
+    <li>Family and friends outside the group are described as "dangerous" — contact is discouraged</li>
+    <li>Questioning the doctrine is treated as a spiritual failure</li>
+    <li>Financial demands gradually escalate</li>
+    <li>Major life decisions cannot be made without the group's approval</li>
+    <li>Confessions and secrets are systematically collected — potential blackmail material</li>
+  </ul>
+  <div class="sec-title">EXIT STRATEGY — STEP BY STEP</div>
+  <ul class="dossier-list">
+    <li><strong>Step 1:</strong> Do not announce an abrupt exit. Plan quietly.</li>
+    <li><strong>Step 2:</strong> Establish a trusted contact outside the group — a family member, old friend, or counsellor.</li>
+    <li><strong>Step 3:</strong> Secure your passport, ID, and financial accounts.</li>
+    <li><strong>Step 4:</strong> Exit quietly. Avoid confrontation — a dramatic exit triggers a group response.</li>
+    <li><strong>Step 5:</strong> Seek professional help: cult exit counsellors, ICSA (International Cultic Studies Association).</li>
+    <li><strong>Step 6:</strong> Allow yourself time to recover. It may take months or years. That is completely acceptable.</li>
+  </ul>
+  <blockquote class="text-content">To survivors: this was not a failure of your intelligence. Cults use sophisticated psychological techniques specifically designed to override normal human defences. Recovery is possible. Millions have survived and flourished.</blockquote>
+</article>
+</main>
+
+<!-- ══════════════ CONCLUSION ══════════════ -->
+<section id="conclusion">
+  <div class="conclusion-inner">
+    <div class="ch-tag" style="color:var(--red);letter-spacing:.35em;font-size:.55rem;margin-bottom:1rem;">CONCLUSION</div>
+    <h2 class="ch-title" style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);margin-bottom:1.5rem;">Two Possibilities &amp; One Thread</h2>
+    <p class="prose text-content">In this study we have travelled a vast distance — from the clay tablets of ancient Babylon to the servers of the Dark Web; from a lone prophet standing on Mount Carmel to a Caribbean island where the world's most powerful gathered alongside a convicted child trafficker.</p>
+    <p class="prose text-content">One thread connects everything: the human capacity to sacrifice the weak for the benefit of the powerful — and the religious and ideological systems built to justify it. That capacity is not ancient history. It is operating right now, in new forms, using new tools.</p>
+    <p class="prose text-content">Prophet Elijah (AS) asked one question on that mountain: "Can you serve two masters?" That question remains entirely relevant today.</p>
+    <blockquote class="text-content">"Whoever saves one soul — it is as though he has saved all of mankind."<cite>— Quran 5:32</cite></blockquote>
+  </div>
+</section>
+
+<!-- ══════════════ SOURCES ══════════════ -->
+<section id="sources">
+  <div class="sources-inner">
+    <div class="toc-header"><span class="toc-label">SOURCES &amp; REFERENCES</span></div>
+    <div class="sources-grid">
+      <div>
+        <div class="source-cat-title">SCRIPTURE SOURCES</div>
+        <div class="source-item">Holy Quran — Surah As-Saffat (37:123–132)</div>
+        <div class="source-item">Holy Quran — Al-Baqarah (2:34, 102)</div>
+        <div class="source-item">Holy Quran — Al-Jinn (72)</div>
+        <div class="source-item">Bible — 1 Kings 17–19, 2 Kings 23</div>
+        <div class="source-item">Bible — Leviticus 18:21, Revelation 13:18</div>
+        <div class="source-item">Sahih Al-Bukhari &amp; Sahih Muslim — on Sihr, Ruqyah, Iblis</div>
+      </div>
+      <div>
+        <div class="source-cat-title">HISTORICAL SOURCES</div>
+        <div class="source-item">Smith, M. (1990). The Early History of God. Harper &amp; Row.</div>
+        <div class="source-item">Day, J. (1989). Molech: A God of Human Sacrifice. Cambridge University Press.</div>
+        <div class="source-item">Ugaritic Texts / KTU — discovered 1929, ancient Canaanite mythological corpus.</div>
+      </div>
+      <div>
+        <div class="source-cat-title">CASE &amp; LEGAL SOURCES</div>
+        <div class="source-item">Maharashtra Prevention of Black Magic Act (2013)</div>
+        <div class="source-item">Kerala Police Annual Reports (2017–2023)</div>
+        <div class="source-item">Elanthoor Case: Kerala Police FIR No. 987/2022</div>
+        <div class="source-item">West Memphis Three: DNA Evidence Reports, 2011</div>
+        <div class="source-item">United States v. Raniere, EDNY 2019</div>
+        <div class="source-item">Jonestown: FBI RYMUR Files, declassified 1978</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>DARK WORSHIP</span> &nbsp;·&nbsp; Salman Hashir &nbsp;·&nbsp; 2025–2026 &nbsp;·&nbsp; Educational &amp; Research Use Only
+  <span>"The greatest weapon against darkness is the light of knowledge."</span>
+</footer>
+
+<script>
+// ── Progress bar ──
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// ── Scroll to section ──
+function goTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Intersection observer for reveal ──
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06 });
+document.querySelectorAll('.chapter, .part-divider').forEach(el => revealObs.observe(el));
+
+// ── Toast ──
+function showToast(msg, dur = 3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+// ── Language state ──
+let isML = false;
+const originals = new Map();
+const mlCache = new Map();
+
+async function toggleLang() {
+  const btn = document.getElementById('lang-btn');
+  const lbl = document.getElementById('lang-label');
+  if (!isML) {
+    isML = true;
+    btn.classList.add('active');
+    lbl.textContent = 'English';
+    await translatePage();
+  } else {
+    isML = false;
+    btn.classList.remove('active');
+    lbl.textContent = 'മലയാളം';
+    restoreEnglish();
+    document.body.classList.remove('malayalam-mode');
+    showToast('Switched to English');
+  }
+}
+
+function restoreEnglish() {
+  originals.forEach((html, el) => { el.innerHTML = html; });
+}
+
+// Google Translate free endpoint
+async function gtranslate(text) {
+  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=' + encodeURIComponent(text);
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+    let out = '';
+    if (json && json[0]) json[0].forEach(chunk => { if (chunk[0]) out += chunk[0]; });
+    return out || text;
+  } catch { return text; }
+}
+
+async function translatePage() {
+  const loader = document.getElementById('loader');
+  const lbar   = document.getElementById('lbar');
+  const lmsg   = document.getElementById('loader-msg');
+  loader.classList.add('on');
+
+  const els = Array.from(document.querySelectorAll('.text-content, .prose, .case-file p, .insight p, .warn-box p, .warn-box li, .toc-name, .ch-title, .ch-subtitle, .part-title-text, .type-card-body, .type-card-title, .source-item, .wb-text, blockquote'));
+
+  // Save originals
+  els.forEach(el => { if (!originals.has(el)) originals.set(el, el.innerHTML); });
+
+  const toTranslate = els.filter(el => !mlCache.has(el) && el.innerText.trim().length > 0);
+  const total = toTranslate.length;
+  let done = 0;
+
+  for (const el of toTranslate) {
+    const pct = Math.round((done / total) * 100);
+    lmsg.textContent = `TRANSLATING — ${pct}%`;
+    lbar.style.width = pct + '%';
+
+    const translated = await gtranslate(el.innerText.trim());
+    mlCache.set(el, translated);
+    done++;
+    await new Promise(r => setTimeout(r, 55));
+  }
+
+  lmsg.textContent = 'TRANSLATING — 100%';
+  lbar.style.width = '100%';
+
+  // Apply
+  els.forEach(el => {
+    if (mlCache.has(el)) el.textContent = mlCache.get(el);
+  });
+
+  document.body.classList.add('malayalam-mode');
+  await new Promise(r => setTimeout(r, 400));
+  loader.classList.remove('on');
+  showToast('മലയാളത്തിലേക്ക് മാറ്റി ✓');
+}
+</script>
+</body>
+</html>

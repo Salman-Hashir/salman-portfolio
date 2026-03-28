@@ -41,12 +41,13 @@ const About = () => {
                 variants={fadeUp}
                 style={{
                   padding: '1.5rem',
-                  border: '1px solid rgba(201,168,76,0.1)',
-                  background: 'rgba(201,168,76,0.02)',
-                  transition: 'border-color 0.3s, background 0.3s'
+                  border: 'var(--brutal-border)',
+                  background: 'var(--black)',
+                  boxShadow: '4px 4px 0px var(--neon-cyan)',
+                  transition: 'all 0.2s cubic-bezier(0.25, 1, 0.5, 1)'
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'; e.currentTarget.style.background = 'rgba(201,168,76,0.05)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(201,168,76,0.1)'; e.currentTarget.style.background = 'rgba(201,168,76,0.02)'; }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translate(4px, 4px)'; e.currentTarget.style.boxShadow = '0px 0px 0px transparent'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translate(0, 0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--neon-cyan)'; }}
               >
                 <span className="label" style={{ display: 'block', marginBottom: '0.8rem', letterSpacing: '0.15em' }}>{skill.name}</span>
                 <span style={{ fontSize: '0.85rem', fontWeight: 300, color: 'var(--muted)', lineHeight: 1.6, display: 'block' }}>{skill.tags}</span>

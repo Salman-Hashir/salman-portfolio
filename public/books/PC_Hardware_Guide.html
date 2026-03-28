@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PC Hardware Guide — Salman Hashir</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Noto+Sans+Malayalam:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #10101a;
+    --card: #14141f;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --text: #e8e8f0;
+    --text-dim: #8888aa;
+    --border: rgba(0,212,255,0.12);
+    --glow: rgba(0,212,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.8;
+  }
+
+  #canvas-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .content-wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── HERO ─────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 70%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+    margin-bottom: 1rem;
+  }
+
+  .hero-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: var(--text-dim);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+    margin-bottom: 2rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+    margin-bottom: 3rem;
+  }
+
+  .hero-meta span {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .hero-meta .dot {
+    width: 4px; height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  /* ─── TRANSLATE BUTTON ─────────────────────────── */
+  .translate-btn {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 1000;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    border: none;
+    color: #fff;
+    font-family: 'Noto Sans Malayalam', 'IBM Plex Mono', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.7rem 1.4rem;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 30px rgba(124,58,237,0.5);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .translate-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 40px rgba(124,58,237,0.7);
+  }
+
+  .translate-btn.loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .translate-btn .btn-icon {
+    font-size: 1.1rem;
+  }
+
+  /* Loading overlay */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(10,10,15,0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .loading-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .loading-text {
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    color: var(--accent);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── NAV ─────────────────────────────────────────── */
+  .toc-nav {
+    position: fixed;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .toc-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 1px solid var(--accent);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .toc-dot:hover, .toc-dot.active {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .toc-dot::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.65rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    letter-spacing: 0.1em;
+  }
+  .toc-dot:hover::after { opacity: 1; }
+
+  /* ─── MAIN CONTENT ───────────────────────────────── */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 8rem;
+  }
+
+  /* ─── CHAPTERS ───────────────────────────────────── */
+  .chapter {
+    margin-bottom: 6rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .chapter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chapter-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .chapter-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 0.4rem;
+    white-space: nowrap;
+    min-width: 70px;
+  }
+
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #fff;
+  }
+
+  .chapter-title span.accent {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 2.5rem 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-title::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .para {
+    color: #c8c8de;
+    font-size: 0.92rem;
+    line-height: 2;
+    margin-bottom: 1.2rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .para.malayalam-text {
+    font-family: 'Noto Sans Malayalam', sans-serif;
+    font-size: 1rem;
+    line-height: 2.1;
+  }
+
+  /* ─── TABLES ─────────────────────────────────────── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 2rem 0;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  th {
+    background: rgba(0,212,255,0.08);
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 0.8rem 1rem;
+    color: var(--text);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,212,255,0.03); }
+
+  td:first-child { color: var(--accent2); font-weight: 500; }
+
+  /* ─── INFO CARDS ─────────────────────────────────── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .info-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--accent3));
+  }
+  .info-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateY(-2px);
+  }
+  .info-card-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .info-card-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* ─── HIGHLIGHT BOX ───────────────────────────────── */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(0,212,255,0.06), rgba(124,58,237,0.06));
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  .highlight-box::before {
+    content: '★';
+    position: absolute;
+    top: -0.6rem;
+    left: 1.5rem;
+    background: var(--bg);
+    padding: 0 0.4rem;
+    color: var(--accent);
+    font-size: 0.8rem;
+  }
+
+  /* ─── INTRO SECTION ───────────────────────────────── */
+  .intro-section {
+    margin-bottom: 5rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .intro-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── CONCLUSION ─────────────────────────────────── */
+  .conclusion {
+    margin-top: 5rem;
+    padding: 3rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .conclusion::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,212,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .footer-sig {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ─── ANIMATIONS ─────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* ─── RESPONSIVE ─────────────────────────────────── */
+  @media (max-width: 768px) {
+    .toc-nav { display: none; }
+    .translate-btn { top: 1rem; right: 1rem; font-size: 0.78rem; padding: 0.6rem 1rem; }
+    .chapter-header { flex-direction: column; gap: 0.5rem; }
+    .conclusion { padding: 2rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas-bg"></canvas>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">മൊഴിമാറ്റം ചെയ്യുന്നു...</div>
+</div>
+
+<!-- Translate Button -->
+<button class="translate-btn" id="translateBtn" onclick="toggleLanguage()">
+  <span class="btn-icon">🌐</span>
+  <span id="btnText">മലയാളം</span>
+</button>
+
+<!-- Side Nav Dots -->
+<nav class="toc-nav" id="tocNav"></nav>
+
+<div class="content-wrap">
+
+  <!-- HERO -->
+  <section class="hero" id="sec-hero">
+    <div class="hero-eyebrow">A Complete Reference by Salman Hashir</div>
+    <h1 class="hero-title">PC Hardware</h1>
+    <p class="hero-sub">Components, Compatibility &amp; Builds</p>
+    <div class="hero-meta">
+      <span>9 Chapters</span>
+      <div class="dot"></div>
+      <span>Complete Beginner's Guide</span>
+      <div class="dot"></div>
+      <span>2026 Edition</span>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- INTRO -->
+    <section class="intro-section" id="sec-intro" data-nav="Intro">
+      <div class="chapter-header">
+        <div class="chapter-num">// Intro</div>
+        <h2 class="chapter-title">Introduction</h2>
+      </div>
+      <div class="para en" id="intro-p1">Have you ever wondered what really happens inside a computer when you type, game, edit videos, or browse the web? Every task you perform — from opening a browser tab to rendering a 3D scene — is powered by a set of carefully engineered hardware components working in harmony.</div>
+      <div class="para en" id="intro-p2">Building or buying a PC can feel overwhelming at first. Walk into any computer store or browse any tech website and you are immediately confronted with a tsunami of acronyms: CPU, GPU, DDR5, NVMe, PCIe, TDP, 80+ Gold, LGA1700... It can feel like a foreign language.</div>
+      <div class="para en" id="intro-p3">This guide is written for you — the beginner, the curious learner, the person who wants to understand what they are paying for. By the end of this article, you will understand every major component inside a modern PC, how they interact with each other, and how to pick the right combination for your needs and budget.</div>
+    </section>
+
+    <!-- CH 1: CPU -->
+    <section class="chapter" id="sec-ch1" data-nav="CPU">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 01</div>
+        <h2 class="chapter-title">The Processor <span class="accent">(CPU)</span></h2>
+      </div>
+
+      <div class="para en" id="ch1-p1">The Central Processing Unit (CPU) is the brain of your computer. Every instruction your software gives — from adding two numbers to rendering a game frame — passes through the CPU. It reads instructions, processes them, and sends results to other components.</div>
+      <div class="para en" id="ch1-p2">Modern CPUs are incredibly complex chips containing billions of transistors packed into a piece of silicon roughly the size of a postage stamp. Despite their tiny physical size, they are capable of processing billions of operations every single second.</div>
+
+      <div class="section-title">How CPUs Work</div>
+      <div class="para en" id="ch1-p3">A CPU works on a cycle called Fetch-Decode-Execute. It fetches an instruction from memory, decodes what that instruction means, and then executes it. This happens millions of times per second, per core. The speed at which this cycle happens is measured in GHz (gigahertz) — one GHz equals one billion cycles per second.</div>
+      <div class="para en" id="ch1-p4">Modern CPUs do not just have one processing unit — they have multiple cores. Each core can handle its own set of instructions independently, making multi-core CPUs dramatically more efficient for tasks that can be split across parallel workloads.</div>
+
+      <div class="section-title">Intel vs AMD</div>
+      <div class="para en" id="ch1-p5">Today, the desktop CPU market is dominated by two companies: Intel and AMD. Intel produces the Core series — Core i3, i5, i7, and i9. AMD produces the Ryzen series — Ryzen 3, 5, 7, and 9. Both companies offer excellent processors. The choice often comes down to budget, platform features, and intended use.</div>
+
+      <div class="section-title">CPU Performance Tiers</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tier</th><th>Intel Example</th><th>AMD Example</th><th>Best For</th></tr></thead>
+          <tbody>
+            <tr><td>Entry Level</td><td>Core i3-12100</td><td>Ryzen 3 4100</td><td>Basic office, web browsing, light tasks</td></tr>
+            <tr><td>Mid Range</td><td>Core i5-13600K</td><td>Ryzen 5 7600X</td><td>Gaming, streaming, multitasking</td></tr>
+            <tr><td>High End</td><td>Core i7-14700K</td><td>Ryzen 7 7700X</td><td>Content creation, heavy multitasking</td></tr>
+            <tr><td>Enthusiast</td><td>Core i9-14900K</td><td>Ryzen 9 7950X</td><td>Professional workloads, 3D rendering</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Key CPU Specs Explained</div>
+      <div class="card-grid">
+        <div class="info-card"><div class="info-card-title">Cores &amp; Threads</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa" id="ch1-spec1">Physical cores handle tasks; threads (via Hyperthreading/SMT) double virtual cores per chip for parallel workloads.</div></div>
+        <div class="info-card"><div class="info-card-title">Clock Speed (GHz)</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa" id="ch1-spec2">Measures cycles per second. Boost clocks provide temporary speed spikes when temperatures allow.</div></div>
+        <div class="info-card"><div class="info-card-title">Cache (L1/L2/L3)</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa" id="ch1-spec3">Ultra-fast on-chip memory. L1 is smallest and fastest; L3 is largest and still far faster than RAM.</div></div>
+        <div class="info-card"><div class="info-card-title">TDP (Watts)</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa" id="ch1-spec4">Maximum heat generated under load. A 125W TDP chip needs more cooling and power than a 65W chip.</div></div>
+      </div>
+    </section>
+
+    <!-- CH 2: MOTHERBOARD -->
+    <section class="chapter" id="sec-ch2" data-nav="Motherboard">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 02</div>
+        <h2 class="chapter-title">The <span class="accent">Motherboard</span></h2>
+      </div>
+      <div class="para en" id="ch2-p1">The motherboard is the main circuit board of your PC — the backbone that connects every component together. Your CPU, RAM, GPU, storage, and all other parts plug into or connect through the motherboard. Think of it as the nervous system of your computer.</div>
+      <div class="para en" id="ch2-p2">Choosing the right motherboard matters enormously because it determines what CPU you can use, how much RAM you can install, what features your system will support, and how much you can upgrade in the future.</div>
+
+      <div class="section-title">CPU Sockets</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Socket</th><th>Maker</th><th>Compatible CPUs</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>LGA1700</td><td>Intel</td><td>12th, 13th, 14th Gen Core</td><td>Pins on motherboard (LGA)</td></tr>
+            <tr><td>LGA1851</td><td>Intel</td><td>Core Ultra 200 (Arrow Lake)</td><td>Latest Intel platform</td></tr>
+            <tr><td>AM4</td><td>AMD</td><td>Ryzen 2000–5000</td><td>Long-lived, widely available</td></tr>
+            <tr><td>AM5</td><td>AMD</td><td>Ryzen 7000+</td><td>Supports DDR5, PCIe 5.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Form Factors</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Form Factor</th><th>Size</th><th>PCIe Slots</th><th>Best For</th></tr></thead>
+          <tbody>
+            <tr><td>ATX</td><td>305 × 244mm</td><td>Up to 7</td><td>Full tower, max expandability</td></tr>
+            <tr><td>Micro-ATX</td><td>244 × 244mm</td><td>Up to 4</td><td>Compact mid-tower builds</td></tr>
+            <tr><td>Mini-ITX</td><td>170 × 170mm</td><td>1</td><td>Small form factor / HTPC</td></tr>
+            <tr><td>E-ATX</td><td>305 × 330mm+</td><td>Up to 8+</td><td>Workstations, HEDT</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Key Features</div>
+      <div class="para en" id="ch2-p3">Most ATX boards offer 4 RAM slots. M.2 slots accept NVMe SSDs directly on the motherboard without cables. The VRM (Voltage Regulator Module) delivers clean power to the CPU — for overclocking or high-TDP processors, a strong VRM is essential. Budget boards may have weaker VRMs unsuitable for power-hungry chips.</div>
+    </section>
+
+    <!-- CH 3: RAM -->
+    <section class="chapter" id="sec-ch3" data-nav="RAM">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 03</div>
+        <h2 class="chapter-title">RAM — <span class="accent">Random Access Memory</span></h2>
+      </div>
+      <div class="para en" id="ch3-p1">RAM is your computer's short-term memory — a fast, temporary workspace where your CPU stores data it is actively working with. Unlike storage drives, RAM is volatile: all data in RAM is erased when you power off your PC.</div>
+      <div class="para en" id="ch3-p2">More RAM means you can have more applications open simultaneously and handle larger datasets without slowdown. For most users, 16GB is the sweet spot in 2025, while content creators and power users benefit from 32GB or more.</div>
+
+      <div class="section-title">DDR4 vs DDR5</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Feature</th><th>DDR4</th><th>DDR5</th></tr></thead>
+          <tbody>
+            <tr><td>Typical Speed</td><td>2133–3600 MHz</td><td>4800–7200+ MHz</td></tr>
+            <tr><td>Voltage</td><td>1.2V</td><td>1.1V (more efficient)</td></tr>
+            <tr><td>Capacity / stick</td><td>Up to 32GB</td><td>Up to 64GB+</td></tr>
+            <tr><td>Platform</td><td>AM4, older Intel</td><td>AM5, Intel 12th Gen+</td></tr>
+            <tr><td>Price</td><td>More affordable</td><td>Premium, dropping</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="highlight-box">
+        <div class="para en" id="ch3-p3" style="margin:0">AMD Ryzen CPUs show particularly strong performance improvements with faster RAM due to how their Infinity Fabric architecture works. Always install RAM in matched pairs (Dual Channel) — it effectively doubles memory bandwidth by using slots 2 and 4 on a 4-slot board.</div>
+      </div>
+    </section>
+
+    <!-- CH 4: GPU -->
+    <section class="chapter" id="sec-ch4" data-nav="GPU">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 04</div>
+        <h2 class="chapter-title">The Graphics Card <span class="accent">(GPU)</span></h2>
+      </div>
+      <div class="para en" id="ch4-p1">The Graphics Processing Unit (GPU) is a specialized processor designed to handle visual and parallel computing tasks. While a CPU excels at sequential tasks with a few powerful cores, a GPU contains thousands of smaller, simpler cores designed to handle many operations simultaneously.</div>
+      <div class="para en" id="ch4-p2">For gamers, the GPU is arguably the most important component — it renders every frame of every game. For video editors and 3D artists, GPU acceleration dramatically speeds up rendering and effects processing.</div>
+
+      <div class="section-title">NVIDIA vs AMD</div>
+      <div class="para en" id="ch4-p3">NVIDIA GeForce RTX 30 and 40 series lead in ray tracing, DLSS AI upscaling, and content creation workloads. AMD Radeon RX 7000 series offers excellent rasterization performance and often better value, with open-source FSR upscaling technology.</div>
+
+      <div class="section-title">GPU Performance Tiers</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tier</th><th>NVIDIA</th><th>AMD</th><th>Target Use</th></tr></thead>
+          <tbody>
+            <tr><td>Entry</td><td>RTX 4060</td><td>RX 7600</td><td>1080p gaming, esports</td></tr>
+            <tr><td>Mid-Range</td><td>RTX 4070</td><td>RX 7700 XT</td><td>1440p gaming, light creation</td></tr>
+            <tr><td>High-End</td><td>RTX 4080</td><td>RX 7900 XTX</td><td>4K gaming, video editing</td></tr>
+            <tr><td>Enthusiast</td><td>RTX 4090</td><td>—</td><td>Professional / max performance</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Key GPU Specs</div>
+      <div class="para en" id="ch4-p4">VRAM (Video RAM) stores textures and frame buffers on the GPU. Modern games at 1080p need 8GB minimum; 4K gaming and content creation require 12–24GB. Running out of VRAM causes severe performance drops. GPUs connect via PCIe x16 slots and high-end cards can consume 100W to 450W.</div>
+    </section>
+
+    <!-- CH 5: PSU -->
+    <section class="chapter" id="sec-ch5" data-nav="PSU">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 05</div>
+        <h2 class="chapter-title">Power Supply <span class="accent">(PSU / SMPS)</span></h2>
+      </div>
+      <div class="para en" id="ch5-p1">The Switch Mode Power Supply (SMPS) — commonly called a PSU — converts AC power from your wall outlet into the DC voltages your PC components need. A poor quality PSU can damage other components. A PSU that is too weak will cause system instability, crashes, and shutdowns.</div>
+
+      <div class="section-title">How Much Power Do You Need?</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Build Type</th><th>Total System Load</th><th>Recommended PSU</th></tr></thead>
+          <tbody>
+            <tr><td>Basic office / light gaming</td><td>150–250W</td><td>450–550W PSU</td></tr>
+            <tr><td>Mid-range gaming</td><td>300–400W</td><td>650–750W PSU</td></tr>
+            <tr><td>High-end gaming</td><td>400–500W</td><td>750–850W PSU</td></tr>
+            <tr><td>Enthusiast / RTX 4090</td><td>550–700W+</td><td>1000–1200W PSU</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">80 Plus Efficiency Ratings</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Rating</th><th>Efficiency @ 50% Load</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>80 Plus White</td><td>80%</td><td>Minimum standard, budget builds</td></tr>
+            <tr><td>80 Plus Bronze</td><td>85%</td><td>Good value, recommended</td></tr>
+            <tr><td>80 Plus Gold</td><td>90%</td><td>Excellent — most popular quality tier</td></tr>
+            <tr><td>80 Plus Platinum</td><td>92%</td><td>High quality, power-hungry systems</td></tr>
+            <tr><td>80 Plus Titanium</td><td>94%+</td><td>Premium, server-grade builds</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="highlight-box">
+        <div class="para en" id="ch5-p2" style="margin:0">The golden rule: choose a PSU with at least 20–25% more wattage than your estimated consumption. This headroom ensures stability, efficiency, and longevity. Never cheap out on a power supply — it protects every other component in your system.</div>
+      </div>
+    </section>
+
+    <!-- CH 6: STORAGE -->
+    <section class="chapter" id="sec-ch6" data-nav="Storage">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 06</div>
+        <h2 class="chapter-title">Storage — <span class="accent">SSD, NVMe &amp; HDD</span></h2>
+      </div>
+      <div class="para en" id="ch6-p1">Storage is where your operating system, applications, games, and files permanently live. Unlike RAM, storage retains data when the power is off. Modern PCs use several types of storage, each with different speeds, capacities, and price points.</div>
+
+      <div class="section-title">Storage Types Compared</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Interface</th><th>Read Speed</th><th>Capacity</th><th>Best Use</th></tr></thead>
+          <tbody>
+            <tr><td>HDD</td><td>SATA</td><td>80–160 MB/s</td><td>1TB–20TB+</td><td>Bulk storage, backups</td></tr>
+            <tr><td>SATA SSD</td><td>SATA</td><td>500–550 MB/s</td><td>240GB–4TB</td><td>OS drive, HDD upgrade</td></tr>
+            <tr><td>NVMe PCIe 3.0</td><td>PCIe 3.0 x4</td><td>2,000–3,500 MB/s</td><td>250GB–4TB</td><td>OS + apps, gaming</td></tr>
+            <tr><td>NVMe PCIe 4.0</td><td>PCIe 4.0 x4</td><td>5,000–7,000 MB/s</td><td>250GB–4TB</td><td>Primary drive, best performance</td></tr>
+            <tr><td>NVMe PCIe 5.0</td><td>PCIe 5.0 x4</td><td>10,000–14,000 MB/s</td><td>1TB–4TB</td><td>Enthusiast / professional</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="para en" id="ch6-p2">For any new build in 2025, an NVMe SSD as your primary drive is highly recommended. Prices have fallen dramatically, and the performance improvement over SATA is substantial. A PCIe 4.0 NVMe drive is 10× faster than a SATA SSD and 40–60× faster than a traditional hard drive.</div>
+    </section>
+
+    <!-- CH 7: COOLING -->
+    <section class="chapter" id="sec-ch7" data-nav="Cooling">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 07</div>
+        <h2 class="chapter-title">Cooling <span class="accent">Systems</span></h2>
+      </div>
+      <div class="para en" id="ch7-p1">Every component in your PC generates heat. If that heat is not removed efficiently, temperatures rise until the CPU or GPU throttles itself — reducing performance to protect from damage. In extreme cases, overheating causes system crashes or permanent hardware damage.</div>
+
+      <div class="section-title">CPU Cooler Comparison</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Performance</th><th>Noise</th><th>Cost</th><th>Best For</th></tr></thead>
+          <tbody>
+            <tr><td>Stock / Box Cooler</td><td>Basic</td><td>Moderate–High</td><td>Free</td><td>Budget, light use</td></tr>
+            <tr><td>Budget Air Cooler</td><td>Good</td><td>Low–Moderate</td><td>$15–$40</td><td>Mid-range, 65–95W CPUs</td></tr>
+            <tr><td>High-End Air Cooler</td><td>Excellent</td><td>Very Low</td><td>$50–$90</td><td>Power users, silent systems</td></tr>
+            <tr><td>240mm AIO</td><td>Excellent</td><td>Low</td><td>$80–$150</td><td>Mid to high-end gaming</td></tr>
+            <tr><td>360mm AIO</td><td>Outstanding</td><td>Very Low</td><td>$120–$250</td><td>Overclocking, top-tier CPUs</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="para en" id="ch7-p2">Thermal paste between the CPU and cooler is essential — it fills microscopic gaps to ensure efficient heat transfer. Most coolers include pre-applied paste, but replacing it with a quality compound like Thermal Grizzly Kryonaut can shave several degrees off your temperatures.</div>
+    </section>
+
+    <!-- CH 8: COMPATIBILITY -->
+    <section class="chapter" id="sec-ch8" data-nav="Compatibility">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 08</div>
+        <h2 class="chapter-title">Compatibility — <span class="accent">Making It Work</span></h2>
+      </div>
+      <div class="para en" id="ch8-p1">Every component in your build must be compatible with every other. The CPU socket must match the motherboard socket exactly. An AMD Ryzen 7000 CPU (AM5 socket) will not fit in a board with an AM4 socket, even if it looks similar.</div>
+
+      <div class="card-grid">
+        <div class="info-card"><div class="info-card-title">CPU + Motherboard</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa">Socket must match exactly — AM5 ≠ AM4, LGA1700 ≠ LGA1851.</div></div>
+        <div class="info-card"><div class="info-card-title">RAM Type</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa">DDR4 and DDR5 slots are physically different and not interchangeable.</div></div>
+        <div class="info-card"><div class="info-card-title">M.2 NVMe Gen</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa">PCIe 4.0 NVMe in a PCIe 3.0 slot works at half speed. Check specs.</div></div>
+        <div class="info-card"><div class="info-card-title">PSU Wattage</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa">Add CPU + GPU TDP + 50–100W for other components, then add 25% headroom.</div></div>
+        <div class="info-card"><div class="info-card-title">Case Form Factor</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa">ATX, mATX, and Mini-ITX are not interchangeable. Also check GPU length and cooler height.</div></div>
+        <div class="info-card"><div class="info-card-title">PCIe Backward Compat.</div><div class="para en" style="font-size:0.78rem;margin:0;color:#aaa">PCIe is backward/forward compatible — a 4.0 GPU works in a 3.0 slot with minor bandwidth limits.</div></div>
+      </div>
+    </section>
+
+    <!-- CH 9: BUILD EXAMPLES -->
+    <section class="chapter" id="sec-ch9" data-nav="Builds">
+      <div class="chapter-header">
+        <div class="chapter-num">// Ch. 09</div>
+        <h2 class="chapter-title">Real-World <span class="accent">Build Examples</span></h2>
+      </div>
+
+      <div class="section-title">Build 1 — Budget Starter (~$510)</div>
+      <div class="para en" id="ch9-p1">Designed for everyday computing, web browsing, office work, and light gaming (esports titles like Valorant, CS2, Minecraft). Comfortably runs 1080p at high settings achieving 60–100+ FPS.</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Choice</th><th>Approx. Price</th></tr></thead>
+          <tbody>
+            <tr><td>CPU</td><td>AMD Ryzen 5 5600 (6-core, AM4)</td><td>$100</td></tr>
+            <tr><td>Motherboard</td><td>ASUS Prime B550M-A (mATX, AM4)</td><td>$90</td></tr>
+            <tr><td>RAM</td><td>16GB DDR4 3200MHz (2 × 8GB)</td><td>$35</td></tr>
+            <tr><td>Storage</td><td>500GB NVMe PCIe 3.0 SSD</td><td>$35</td></tr>
+            <tr><td>GPU</td><td>AMD RX 6600 or NVIDIA RTX 3060</td><td>$150</td></tr>
+            <tr><td>PSU</td><td>550W 80+ Bronze Semi-Modular</td><td>$55</td></tr>
+            <tr><td>Case</td><td>Budget mATX Mid Tower</td><td>$45</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Build 2 — Mid-Range Gaming Beast (~$1,390)</div>
+      <div class="para en" id="ch9-p2">Serious 1080p to 1440p gaming, streaming, and light content creation. Best balance of performance per dollar — capable of running modern AAA games smoothly.</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Choice</th><th>Approx. Price</th></tr></thead>
+          <tbody>
+            <tr><td>CPU</td><td>Intel Core i5-13600K (14-core, LGA1700)</td><td>$230</td></tr>
+            <tr><td>Motherboard</td><td>MSI MAG B760 Tomahawk WiFi</td><td>$180</td></tr>
+            <tr><td>RAM</td><td>32GB DDR5 5200MHz (2 × 16GB)</td><td>$90</td></tr>
+            <tr><td>Storage</td><td>1TB NVMe PCIe 4.0 SSD</td><td>$70</td></tr>
+            <tr><td>GPU</td><td>NVIDIA RTX 4070 (12GB VRAM)</td><td>$550</td></tr>
+            <tr><td>PSU</td><td>750W 80+ Gold Fully Modular</td><td>$110</td></tr>
+            <tr><td>Cooler</td><td>240mm AIO Liquid Cooler</td><td>$80</td></tr>
+            <tr><td>Case</td><td>Mid Tower ATX with Good Airflow</td><td>$80</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Build 3 — Content Creator Workstation (~$2,679)</div>
+      <div class="para en" id="ch9-p3">For video editors, 3D artists, streamers, and professionals who need raw processing power and ample memory for demanding creative workloads. Handles 4K video editing, complex 3D scenes, and heavy multi-application workloads.</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Choice</th><th>Approx. Price</th></tr></thead>
+          <tbody>
+            <tr><td>CPU</td><td>AMD Ryzen 9 7900X (12-core, AM5)</td><td>$380</td></tr>
+            <tr><td>Motherboard</td><td>ASUS ProArt X670E Creator WiFi</td><td>$350</td></tr>
+            <tr><td>RAM</td><td>64GB DDR5 6000MHz (2 × 32GB)</td><td>$200</td></tr>
+            <tr><td>Storage</td><td>2TB NVMe PCIe 5.0 SSD + 4TB HDD</td><td>$250</td></tr>
+            <tr><td>GPU</td><td>NVIDIA RTX 4080 Super (16GB VRAM)</td><td>$999</td></tr>
+            <tr><td>PSU</td><td>1000W 80+ Platinum Fully Modular</td><td>$200</td></tr>
+            <tr><td>Cooler</td><td>360mm AIO Liquid Cooler</td><td>$150</td></tr>
+            <tr><td>Case</td><td>Full Tower ATX</td><td>$150</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="conclusion chapter" id="sec-conclusion" data-nav="Conclusion">
+      <h2 class="chapter-title" style="margin-bottom:1.5rem">Conclusion</h2>
+      <div class="para en" id="concl-p1" style="text-align:left">Building or buying a PC is one of the most rewarding technology investments you can make. Understanding each component — the CPU, motherboard, RAM, GPU, PSU, storage, and cooling — gives you the power to make informed decisions rather than blindly trusting a pre-built spec sheet.</div>
+      <div class="para en" id="concl-p2" style="text-align:left;margin-top:1rem">Whether you are building your first PC, upgrading an existing system, or simply trying to understand the machine on your desk — the knowledge in this guide is your foundation. Technology evolves, but the core principles remain the same. Keep learning, keep building.</div>
+    </section>
+
+  </main>
+
+  <footer class="footer-sig">
+    <div>PC Hardware Guide &nbsp;·&nbsp; By Salman Hashir &nbsp;·&nbsp; 2026</div>
+    <div style="margin-top:0.5rem;color:#444">All rights reserved</div>
+  </footer>
+
+</div><!-- end content-wrap -->
+
+<script>
+// ─── THREE.JS BACKGROUND ──────────────────────────────
+(function() {
+  const canvas = document.getElementById('canvas-bg');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.z = 60;
+
+  // Particle field
+  const count = 1800;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const col1 = new THREE.Color('#00d4ff');
+  const col2 = new THREE.Color('#7c3aed');
+  const col3 = new THREE.Color('#ff6b35');
+  const palette = [col1, col2, col3];
+
+  for (let i = 0; i < count; i++) {
+    pos[i*3]   = (Math.random() - 0.5) * 180;
+    pos[i*3+1] = (Math.random() - 0.5) * 180;
+    pos[i*3+2] = (Math.random() - 0.5) * 100;
+    const c = palette[Math.floor(Math.random() * palette.length)];
+    colors[i*3]   = c.r;
+    colors[i*3+1] = c.g;
+    colors[i*3+2] = c.b;
+  }
+
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const mat = new THREE.PointsMaterial({
+    size: 0.28,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.55,
+    sizeAttenuation: true,
+  });
+
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
+
+  // Grid lines (circuit board feel)
+  const gridMat = new THREE.LineBasicMaterial({ color: 0x00d4ff, transparent: true, opacity: 0.04 });
+  for (let i = -10; i <= 10; i++) {
+    const hg = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-100, i * 8, -20),
+      new THREE.Vector3(100, i * 8, -20)
+    ]);
+    scene.add(new THREE.Line(hg, gridMat));
+    const vg = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(i * 10, -80, -20),
+      new THREE.Vector3(i * 10, 80, -20)
+    ]);
+    scene.add(new THREE.Line(vg, gridMat));
+  }
+
+  let scrollY = 0;
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+  let mouse = { x: 0, y: 0 };
+  window.addEventListener('mousemove', e => {
+    mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.003;
+    points.rotation.y = t * 0.06 + mouse.x * 0.04;
+    points.rotation.x = Math.sin(t * 0.3) * 0.05 + mouse.y * 0.03;
+    camera.position.y = -scrollY * 0.015;
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ─── SCROLL REVEAL ────────────────────────────────────
+const reveals = document.querySelectorAll('.chapter, .intro-section');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => observer.observe(el));
+
+// ─── TOC DOTS ─────────────────────────────────────────
+const sections = document.querySelectorAll('[data-nav]');
+const tocNav = document.getElementById('tocNav');
+sections.forEach((sec, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'toc-dot';
+  dot.setAttribute('data-label', sec.getAttribute('data-nav'));
+  dot.onclick = () => sec.scrollIntoView({ behavior: 'smooth' });
+  tocNav.appendChild(dot);
+});
+
+const dotEls = tocNav.querySelectorAll('.toc-dot');
+const secObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = Array.from(sections).indexOf(e.target);
+      dotEls.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => secObserver.observe(s));
+
+// ─── TRANSLATION DATA ─────────────────────────────────
+// All Malayalam translations pre-written in native author style
+const malayalamTranslations = {
+  'intro-p1': 'ഒരു കമ്പ്യൂട്ടറിൽ ടൈപ്പ് ചെയ്യുമ്പോഴോ, ഗെയിം കളിക്കുമ്പോഴോ, വീഡിയോ എഡിറ്റ് ചെയ്യുമ്പോഴോ, ഇന്റർനെറ്റ് ഉപയോഗിക്കുമ്പോഴോ — ആ നിമിഷം അതിനകത്ത് യഥാർഥത്തിൽ എന്ത് സംഭവിക്കുന്നു എന്ന് നിങ്ങൾ ഒരിക്കലെങ്കിലും ചിന്തിച്ചിട്ടുണ്ടോ? ഒരു ബ്രൗസർ ടാബ് തുറക്കുന്നത് മുതൽ ഒരു 3D ദൃശ്യം റെൻഡർ ചെയ്യുന്നത് വരെ — ഓരോ ദൗത്യവും ഒരൊറ്റ ലക്ഷ്യത്തിലേക്ക് ഒന്നിച്ചു പ്രവർത്തിക്കുന്ന, ബുദ്ധിപൂർവം രൂപകൽപ്പന ചെയ്ത ഹാർഡ്‌വെയർ ഘടകങ്ങളുടെ ഒരു ഏകോദര സഹകരണമാണ്.',
+  'intro-p2': 'ഒരു PC നിർമ്മിക്കുക അല്ലെങ്കിൽ വാങ്ങുക എന്നത് ആദ്യ നോക്കിൽ ഭയപ്പെടുത്തുന്നതായി തോന്നാം. ഏതൊരു ടെക് സ്റ്റോറിലോ വെബ്‌സൈറ്റിലോ കടന്നു ചെന്നാൽ CPU, GPU, DDR5, NVMe, PCIe, TDP, 80+ Gold, LGA1700 — ഇങ്ങനെ ഒരു ചുഴലിക്കാറ്റ് പോലുള്ള ചുരുക്കെഴുത്തുകളാൽ നിങ്ങൾ ആക്രമിക്കപ്പെടും. ഒരു അപരിചിത ഭാഷ കേൾക്കുന്ന പ്രതീതിയാകും.',
+  'intro-p3': 'ഈ ഗൈഡ് എഴുതിയിരിക്കുന്നത് നിങ്ങൾക്കു വേണ്ടിയാണ് — പുതുമുഖമായ ഒരു പഠിതാവിനു വേണ്ടി, ജിജ്ഞാസുവായ ഒരാൾക്ക് വേണ്ടി, തന്റെ പണം ചിലവഴിക്കുന്നത് എന്തിനായി എന്ന് മനസ്സിലാക്കാൻ ആഗ്രഹിക്കുന്ന ഓരോരുത്തർക്കും വേണ്ടി. ഈ ലേഖനം പൂർണ്ണമായി വായിക്കുന്ന ഏതൊരാൾക്കും ആധുനിക PC-യിലെ ഓരോ പ്രധാന ഘടകവും, അവ തമ്മിൽ ഇടകലർന്ന് പ്രവർത്തിക്കുന്ന രീതിയും, ആവശ്യങ്ങൾക്കും ബഡ്ജറ്റിനും ഏറ്റവും യോജിക്കുന്ന കോമ്പിനേഷൻ തിരഞ്ഞെടുക്കാനുള്ള ജ്ഞാനവും ലഭിക്കും.',
+
+  'ch1-p1': 'Central Processing Unit — CPU — നിങ്ങളുടെ കമ്പ്യൂട്ടറിന്റെ മസ്തിഷ്കമാണ്. സോഫ്‌റ്റ്‌വെയർ നൽകുന്ന ഓരോ നിർദേശവും — രണ്ട് അക്കങ്ങൾ കൂട്ടുന്നത് മുതൽ ഒരു ഗെയിം ഫ്രെയിം റെൻഡർ ചെയ്യുന്നത് വരെ — CPU-യിലൂടെ കടന്നുപോകുന്നു. അത് നിർദേശങ്ങൾ വായിക്കുന്നു, അർഥം ഗ്രഹിക്കുന്നു, ഫലങ്ങൾ മറ്റ് ഘടകങ്ങളിലേക്ക് കൈമാറുന്നു.',
+  'ch1-p2': 'ആധുനിക CPU-കൾ അതിസൂക്ഷ്മമായ ചിപ്പുകളാണ് — ഒരു തപാൽ സ്റ്റാമ്പിന്റെ വലുപ്പത്തിലുള്ള സിലിക്കൺ കഷണത്തിൽ കോടിക്കണക്കിന് ട്രാൻസിസ്റ്ററുകൾ ഒതുങ്ങിക്കൂടിയിരിക്കുന്നു. ശാരീരിക വലുപ്പം അത്രമേൽ ചെറുതാണെങ്കിലും, ഓരോ സെക്കൻഡിലും ശതകോടി കണക്കുകൂട്ടലുകൾ നടത്താനുള്ള ശക്തി ഈ ചിപ്പിനുണ്ട്.',
+  'ch1-p3': 'CPU Fetch-Decode-Execute എന്ന ഒരു ചക്രത്തിൽ പ്രവർത്തിക്കുന്നു. ഓർമ്മയിൽ നിന്ന് ഒരു നിർദേശം ഫെച്ച് ചെയ്യുന്നു, ആ നിർദേശം എന്താണ് അർഥമാക്കുന്നതെന്ന് ഡീക്കോഡ് ചെയ്യുന്നു, അനന്തരം അത് എക്‌സിക്യൂട്ട് ചെയ്യുന്നു. ഒരു കോർ, ഓരോ സെക്കൻഡിലും ലക്ഷക്കണക്കിന് തവണ ഈ ചക്രം ആവർത്തിക്കുന്നു. ഈ ചക്രം സംഭവിക്കുന്ന വേഗത GHz-ൽ അളക്കുന്നു — ഒരു GHz എന്നത് ഒരു സെക്കൻഡിൽ നൂറ് കോടി ചക്രങ്ങൾ.',
+  'ch1-p4': 'ആധുനിക CPU-കൾക്ക് ഒരു മാത്രം പ്രോസസ്സിംഗ് യൂണിറ്റ് ഇല്ല — അവക്ക് ഒന്നിലധികം കോർ ഉണ്ട്. ഓരോ കോറും സ്വതന്ത്രമായി നിർദേശങ്ങൾ കൈകാര്യം ചെയ്യാൻ ശേഷിക്കുന്നു, ഇത് സമാന്തര ടാസ്കുകൾ ഭംഗിയായി വിഭജിക്കാൻ കഴിയുന്ന ജോലികൾക്ക് മൾട്ടി-കോർ CPU-കളെ അത്ഭുതകരമാംവിധം കാര്യക്ഷമമാക്കുന്നു.',
+  'ch1-p5': 'ഇന്ന്, ഡെസ്‌ക്ടോപ്പ് CPU വിപണി Intel-ഉം AMD-ഉം ആധിപത്യം ചെലുത്തുന്നു. Intel, Core i3, i5, i7, i9 സീരിസ് നിർമ്മിക്കുന്നു. AMD, Ryzen 3, 5, 7, 9 സീരിസ് നൽകുന്നു. രണ്ട് കമ്പനികളും ഒന്നിനൊന്ന് മേൽക്കോയ്മ ഇല്ലാത്ത, ഉൽകൃഷ്ടമായ പ്രോസസ്സറുകൾ ഓഫർ ചെയ്യുന്നു. ബഡ്ജറ്റ്, പ്ലാറ്റ്ഫോം ഫീച്ചറുകൾ, ഉദ്ദേശ്യ ഉപയോഗം — ഇവ ആശ്രയിച്ചാണ് തിരഞ്ഞെടുപ്പ് മിക്കപ്പോഴും നടക്കുന്നത്.',
+  'ch1-spec1': 'ഭൗതിക കോറുകൾ ടാസ്കുകൾ ഏൽക്കുന്നു; ഹൈപ്പർ‌ത്രെഡ്ഡിംഗ്/SMT-വഴി ത്രെഡുകൾ ഓരോ ചിപ്പിലെ വെർച്വൽ കോറുകൾ ഇരട്ടിയാക്കുന്നു.',
+  'ch1-spec2': 'ഒരു സെക്കൻഡിൽ ചക്രങ്ങൾ അളക്കുന്നു. ബൂസ്റ്റ് ക്ലോക്ക് ചൂട് അനുവദിക്കുമ്പോൾ ഒരു ക്ഷണികമായ വേഗ കൂടൽ നൽകുന്നു.',
+  'ch1-spec3': 'ചിപ്പിൽ ഉൾക്കൊള്ളിച്ച അതിവേഗ മെമ്മറി. L1 ഏറ്റവും ചെറുതും വേഗതയേറിയതും; L3 ഏറ്റവും വലുതും — എന്നിട്ടും RAM-നേക്കാൾ ഏറ്റവും വേഗം.',
+  'ch1-spec4': 'ലോഡിൽ ഉൽപ്പന്നമാകുന്ന പരമാവധി ചൂട്. 125W ടിഡിപി ചിപ്പിന് 65W ചിപ്പിനേക്കാൾ ശക്തമായ ശീതനം ആവശ്യമാണ്.',
+
+  'ch2-p1': 'മദർബോർഡ് നിങ്ങളുടെ PC-യുടെ മുഖ്യ സർക്യൂട്ട് ബോർഡ് ആണ് — ഓരോ ഘടകത്തെയും ബന്ധിപ്പിക്കുന്ന നട്ടെല്ല്. CPU, RAM, GPU, സ്റ്റോറേജ്, മറ്റ് ഭാഗങ്ങൾ — ഇവ എല്ലാം മദർബോർഡ് വഴിയാണ് ബന്ധിക്കുന്നതും ആശയവിനിമയം നടത്തുന്നതും. ഇതിനെ നിങ്ങളുടെ കമ്പ്യൂട്ടറിന്റെ നാഡീ വ്യൂഹമായി ചിന്തിക്കാം.',
+  'ch2-p2': 'ശരിയായ മദർബോർഡ് തിരഞ്ഞെടുക്കൽ അത്യന്തം പ്രധാനമാണ്, കാരണം അത് നിർണ്ണയിക്കുന്നു — ഏത് CPU ഉപയോഗിക്കാം, എത്ര RAM ഇൻസ്റ്റോൾ ചെയ്യാം, ഏതൊക്കെ ഫീച്ചറുകൾ ലഭ്യമാകും, ഭാവിയിൽ എത്രത്തോളം അപ്‌ഗ്രേഡ് ചെയ്യാം.',
+  'ch2-p3': 'മിക്ക ATX ബോർഡുകളിലും 4 RAM സ്ലോട്ടുകൾ ഉണ്ട്. M.2 സ്ലോട്ടുകൾ കേബിളുകൾ ഇല്ലാതെ NVMe SSD-കളെ നേരിട്ട് മദർബോർഡിൽ ഘടിപ്പിക്കാൻ അനുവദിക്കുന്നു. VRM (Voltage Regulator Module) CPU-ക്ക് ശുദ്ധവും സ്ഥിരവുമായ വൈദ്യുതി നൽകുന്നു — ഓവർക്ലോക്കിംഗിനോ ഉയർന്ന TDP പ്രോസസ്സർ ഉപയോഗത്തിനോ ശക്തമായ VRM അനിവാര്യമാണ്.',
+
+  'ch3-p1': 'RAM — Random Access Memory — നിങ്ങളുടെ കമ്പ്യൂട്ടറിന്റെ ഹ്രസ്വ-കാല ഓർമ്മയാണ്. CPU സജീവമായി ഉപയോഗിക്കുന്ന ഡേറ്റ ഭദ്രമായി ഉൾക്കൊള്ളുന്ന ഒരു വേഗതയേറിയ, ക്ഷണികമായ ഇടം. സ്റ്റോറേജ് ഡ്രൈവുകളിൽ നിന്ന് വ്യത്യസ്തമായി, RAM-ൽ ഉള്ള ഡേറ്റ ഒക്കെ PC ഓഫ് ചെയ്യുമ്പോൾ പൂർണ്ണമായി മായ്ക്കപ്പെടുന്നു.',
+  'ch3-p2': 'RAM കൂടുതൽ ഉള്ളത് ഒരേ സമയം കൂടുതൽ ആപ്ലിക്കേഷനുകൾ ഓടിക്കാൻ, വലിയ ഡേറ്റ ശേഖരങ്ങൾ കൈകാര്യം ചെയ്യാൻ, സിസ്റ്റം മെഡ്രസ്സ് ആകാതിരിക്കാൻ — ഇവ ഒക്കെ അനുവദിക്കുന്നു. 2025-ൽ മിക്ക ഉപയോക്താക്കൾക്കും 16GB ഒരു നല്ല ഇടക്ക്. Content creators-നും Power users-നും 32GB-ഉം അതിലധികവും ഗുണകരമാണ്.',
+  'ch3-p3': 'AMD Ryzen CPU-കൾ Infinity Fabric ആർക്കിടെക്ചർ കൊണ്ട് വേഗമേറിയ RAM-ൽ ശ്രദ്ധേയമായ performance ഗുണം കാണിക്കുന്നു. ജോടി RAM (Dual Channel) ഉപയോഗിക്കുക എപ്പോഴും — ഇത് memory bandwidth ഇരട്ടിയാക്കുന്നു. 4-സ്ലോട്ട് ബോർഡിൽ 2, 4 slot-ൽ ഇൻസ്റ്റോൾ ചെയ്യണം.',
+
+  'ch4-p1': 'Graphics Processing Unit — GPU — ദൃശ്യ, സമാന്തര-കണക്കുകൂട്ടൽ ദൗത്യങ്ങൾ കൈകാര്യം ചെയ്യാൻ ഒരുക്കിയ ഒരു പ്രത്യേക-ഉദ്ദേശ്യ പ്രോസസ്സറാണ്. CPU ഏതാനും ശക്തമായ കോറുകൾ വഴി ക്രമാനുഗതമായ ടാസ്കുകൾ ചെയ്യുന്നതിന് വിദഗ്ദ്ധമാണ്; GPU-ൽ ആകട്ടെ ആയിരക്കണക്കിന് ചെറുകോറുകൾ ഒരേ സമയം ഒഴുക്കോടെ ക്രിയകൾ നടപ്പിലാക്കുന്നു.',
+  'ch4-p2': 'ഗെയ്‌മർക്ക്, GPU തർക്കവിഷയമില്ലാതെ ഏറ്റവും പ്രധാനപ്പെട്ട ഘടകമാണ് — ഓരോ ഗെയിം ഫ്രെയിമും ഇതാണ് ചിത്രീകരിക്കുന്നത്. Video editors-നും 3D artists-നും, GPU acceleration rendering-ഉം effects-ഉം ഞൊടിയിൽ വേഗത്തിലാക്കുന്നു.',
+  'ch4-p3': 'NVIDIA GeForce RTX 30, 40 series — ray tracing-ലും AI-അധിഷ്ഠിത DLSS upscaling-ലും content creation-ലും ആഗ്രഹിക്കുന്ന ഉൽകൃഷ്ടത. AMD Radeon RX 7000 series — ഒന്നാം കിട rasterization performance-ഉം മിക്കപ്പോഴും മെച്ചപ്പെട്ട മൂല്യവും, open-source FSR upscaling technology-ഉം വാഗ്ദാനം ചെയ്യുന്നു.',
+  'ch4-p4': 'VRAM (Video RAM) ടെക്‌സ്ചറുകളും frame buffers-ഉം GPU-യിൽ സ്വന്തമായി ഉൾക്കൊള്ളുന്നു. 1080p gaming-ന് ഏറ്റവും കുറഞ്ഞത് 8GB; 4K gaming-നും content creation-നും 12–24GB ആവശ്യമാകാം. VRAM കഴിഞ്ഞ് കഴിഞ്ഞാൽ, performance ഗുരുതരമായി ഇടിയും. ഉയർന്ന പ്രകടനമുള്ള GPU-കൾ 100W മുതൽ 450W വരെ ഊർജ്ജം ഉപഭോഗം ചെയ്യും.',
+
+  'ch5-p1': 'Switch Mode Power Supply — SMPS — PSU എന്ന് ഏവരും വിളിക്കുന്നു — ഭിത്തിയിലെ AC കറൻറ്, PC ഘടകങ്ങൾക്ക് വേണ്ട DC വോൾട്ടേജ് ആക്കി മാറ്റുന്ന ഘടകം. ഗുണനിലവാരം കുറഞ്ഞ PSU മറ്റ് ഘടകങ്ങളെ നശിപ്പിക്കും. ദുർബലമായ PSU സിസ്റ്റം അസ്ഥിരത, ക്രാഷ്, ഷട്ട്ഡൗൺ എന്നിവ ഉണ്ടാക്കും.',
+  'ch5-p2': 'സ്വർണ്ണ നിയമം: ഏറ്റവും കുറഞ്ഞത് 20–25% അധിക wattage ഉള്ള PSU തിരഞ്ഞെടുക്കുക. ഈ തലയ്ക്കൽ headroom സ്ഥിരത, കാര്യക്ഷമത, ദീർഘ ആയുസ്സ് ഉറപ്പ് ചെയ്യുന്നു. ഒരിക്കലും power supply-ൽ ലാഭം ആഗ്രഹിക്കരുത് — അത് നിങ്ങളുടെ ഓരോ ഘടകത്തെയും ആ ഒറ്റ ഘടകം സംരക്ഷിക്കുന്നുണ്ട്.',
+
+  'ch6-p1': 'OS, ആപ്ലിക്കേഷനുകൾ, ഗെയിമുകൾ, ഫയലുകൾ — ഇവ ശാശ്വതമായി ജീവിക്കുന്ന ഇടം storage ആണ്. RAM-ൽ നിന്ന് വ്യത്യസ്തമായി, power ഓഫ് ആക്കിയാലും data നിലനിൽക്കുന്നു. ആധുനിക PC-കൾ പലതരം storage ഉപയോഗിക്കുന്നു — ഓരോന്നിനും വ്യത്യസ്ത വേഗതകൾ, ശേഷികൾ, വില.',
+  'ch6-p2': '2025-ൽ ഏതൊരു പുതിയ build-നും primary drive-ആയി NVMe SSD ഉപയോഗിക്കുന്നത് ദൃഢമായി ശുപാർശ ചെയ്യുന്നു. വില ഗണ്യമായി കുറഞ്ഞിട്ടുണ്ട്, SATA-നേക്കാൾ performance വ്യത്യാസം അമ്പരപ്പിക്കുന്നതാണ്. PCIe 4.0 NVMe ഡ്രൈവ് SATA SSD-നേക്കാൾ 10 മടങ്ങ്, HDD-നേക്കാൾ 40–60 മടങ്ങ് വേഗമാണ്.',
+
+  'ch7-p1': 'PC-യിലെ ഓരോ ഘടകവും ചൂട് ഉൽപ്പാദിപ്പിക്കുന്നു. ആ ചൂട് ഫലപ്രദമായി നീക്കം ചെയ്തില്ലെങ്കിൽ, CPU-യോ GPU-യോ സ്വയം throttle ചെയ്ത് നാശത്തിൽ നിന്ന് സ്വയം രക്ഷിക്കും — performance ഇടിയും. കടുത്ത അവസ്ഥകളിൽ, overheating system crash ഉണ്ടാക്കാം, hardware-ന് ശാശ്വത നാശം വരുത്താം.',
+  'ch7-p2': 'CPU-ഉം cooler-ഉം ഇടയിലെ thermal paste അനിവാര്യമാണ് — microscopic വിടവ് നിറക്കുന്നു, heat transfer കാര്യക്ഷമമാക്കുന്നു. Thermal Grizzly Kryonaut പോലുള്ള ഗുണമേന്മയുള്ള compound ഉപയോഗിക്കുന്നത് ചൂടിൽ കുറച്ച് ഡിഗ്രി കുറക്കാൻ സഹായിക്കും.',
+
+  'ch8-p1': 'Build-ലെ ഓരോ ഘടകവും മറ്റ് ഓരോ ഘടകത്തോടും compatible ആയിരിക്കണം. CPU socket, motherboard socket-മായി കൃത്യമായി ഒത്തിരിക്കണം. AMD Ryzen 7000 CPU (AM5 socket) — AM4 socket ഉള്ള ബോർഡിൽ ഘടിപ്പിക്കാൻ ശ്രമിച്ചാൽ, ഒറ്റ നോട്ടത്തിൽ സദൃശ്യമാണെങ്കിലും, ഒരിക്കലും ഒത്തു വരില്ല.',
+
+  'ch9-p1': 'ദൈനംദിന computing, web browsing, office work, ലൈറ്റ് gaming (Valorant, CS2, Minecraft) — ഇവ ലക്ഷ്യമാക്കി. 1080p-ൽ ഉയർന്ന settings-ൽ 60–100+ FPS സ്വകാര്യമായി ഓടിക്കും.',
+  'ch9-p2': '1080p മുതൽ 1440p വരെ ഗൗരവമേറിയ gaming-നും streaming-നും light content creation-നും. Performance-per-dollar-ൽ ഏറ്റവും നല്ല ബാലൻസ് — ആധുനിക AAA ഗെയിമുകൾ സ്മൂത്തായി ഓടിക്കുന്നു.',
+  'ch9-p3': 'Video editors, 3D artists, streamers, professional creators-ന് വേണ്ടി. 4K video editing, complex Blender scenes, ഭാരിച്ച multi-app workloads — ഒക്കെ കൈകാര്യം ചെയ്യുന്നു. ഒപ്പം, ഒരു exceptional gaming machine കൂടി.',
+
+  'concl-p1': 'ഒരു PC നിർമ്മിക്കുക അല്ലെങ്കിൽ വാങ്ങുക — ഇത് നൽകാൻ കഴിയുന്ന ഏറ്റവും ഫലദായകമായ സാങ്കേതിക നിക്ഷേപങ്ങളിൽ ഒന്നാണ്. CPU, motherboard, RAM, GPU, PSU, storage, cooling — ഓരോ ഘടകവും അർഥഗഹനമായി മനസ്സിലാക്കിയ ഒരാൾക്ക്, pre-built spec sheet ബ്ലൈൻഡ്ആയി വിശ്വസിക്കേണ്ടതില്ല, കടക്കാരന്റെ ശുപാർശക്ക് കാതോർക്കേണ്ടതില്ല.',
+  'concl-p2': 'ആദ്യ PC build ചെയ്യുന്ന ആളാകട്ടെ, നിലവിലുള്ള സിസ്റ്റം upgrade ചെയ്യുന്ന ആളാകട്ടെ, ടേബിളിൽ ഇരിക്കുന്ന machine-ൽ ഒരൽപ്പം ഉൾക്കാഴ്ച ആഗ്രഹിക്കുന്ന ആളാകട്ടെ — ഈ ഗൈഡ് നിങ്ങളുടെ അടിസ്ഥാനമാണ്. സാങ്കേതികത പരിണമിക്കുന്നു, പക്ഷേ കേന്ദ്ര തത്ത്വങ്ങൾ മാറ്റമില്ലാതെ നിൽക്കുന്നു. പഠിക്കുക, നിർമ്മിക്കുക, പൂർണ്ണതയിലേക്ക് ചലിക്കുക.'
+};
+
+// State
+let isMalayalam = false;
+let translated = false;
+
+function showLoading(show) {
+  document.getElementById('loadingOverlay').classList.toggle('show', show);
+  document.getElementById('translateBtn').classList.toggle('loading', show);
+}
+
+async function translateWithMyMemory(text, sourceLang, targetLang) {
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.responseData.translatedText;
+}
+
+async function toggleLanguage() {
+  if (isMalayalam) {
+    // Switch to English
+    Object.keys(malayalamTranslations).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('malayalam-text');
+    });
+    // Restore original English text
+    restoreEnglish();
+    isMalayalam = false;
+    document.getElementById('btnText').textContent = 'മലയാളം';
+    document.getElementById('translateBtn').querySelector('.btn-icon').textContent = '🌐';
+    return;
+  }
+
+  // Switch to Malayalam
+  if (!translated) {
+    showLoading(true);
+    document.getElementById('loadingText').textContent = 'മൊഴിമാറ്റം ചെയ്യുന്നു...';
+
+    // Store English originals
+    Object.keys(malayalamTranslations).forEach(id => {
+      const el = document.getElementById(id);
+      if (el && !el.dataset.en) el.dataset.en = el.innerHTML;
+    });
+
+    // Apply pre-written Malayalam
+    await new Promise(r => setTimeout(r, 900)); // smooth UX delay
+    Object.keys(malayalamTranslations).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = malayalamTranslations[id];
+        el.classList.add('malayalam-text');
+      }
+    });
+
+    translated = true;
+    showLoading(false);
+  } else {
+    Object.keys(malayalamTranslations).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = malayalamTranslations[id];
+        el.classList.add('malayalam-text');
+      }
+    });
+  }
+
+  isMalayalam = true;
+  document.getElementById('btnText').textContent = 'English';
+  document.getElementById('translateBtn').querySelector('.btn-icon').textContent = '🔤';
+}
+
+function restoreEnglish() {
+  Object.keys(malayalamTranslations).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.dataset.en) {
+      el.innerHTML = el.dataset.en;
+    }
+  });
+}
+</script>
+</body>
+</html>

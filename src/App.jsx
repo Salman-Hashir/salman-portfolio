@@ -7,9 +7,10 @@ import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Writings from './components/Writings';
-import BlogsAndReports from './components/BlogsAndReports';
+
 import Contact from './components/Contact';
 import Marquee from './components/Marquee';
+import Spotlight from './components/Spotlight';
 
 function App() {
   useEffect(() => {
@@ -38,6 +39,7 @@ function App() {
 
   return (
     <Layout>
+      <Spotlight />
       <Navigation />
       <Hero />
       <Marquee text="AVAILABLE FOR NEW PROJECTS" />
@@ -46,7 +48,7 @@ function App() {
       <Marquee text="CREATIVE DEVELOPMENT & ENGINEERING" />
       <Projects />
       <Writings />
-      <BlogsAndReports />
+
       <Contact />
     </Layout>
   )

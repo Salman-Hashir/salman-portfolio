@@ -38,10 +38,14 @@ const Experience = () => {
             key={index}
             initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeUp}
             style={{
-              padding: '3rem 0',
-              borderBottom: '1px solid rgba(201,168,76,0.1)',
-              borderTop: index === 0 ? '1px solid rgba(201,168,76,0.1)' : 'none'
+              padding: '2.5rem',
+              border: 'var(--brutal-border)',
+              background: 'var(--black)',
+              boxShadow: index === 0 ? '8px 8px 0px var(--neon-pink)' : '8px 8px 0px var(--neon-cyan)',
+              marginBottom: '2rem',
+              transition: 'all 0.2s ease',
             }}
+            whileHover={{ transform: 'translate(4px, 4px)', boxShadow: '0px 0px 0px transparent' }}
             className="tl-item grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8"
           >
             <div>
@@ -49,8 +53,8 @@ const Experience = () => {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{job.location}</span>
             </div>
             <div>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 700, color: 'var(--white)', marginBottom: '0.4rem', textTransform: 'uppercase' }}>{job.role}</h3>
-              <div className="label" style={{ color: 'var(--gold-dim)', marginBottom: '1.5rem', letterSpacing: '0.2em' }}>{job.company}</div>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 900, color: 'var(--white)', marginBottom: '0.4rem', textTransform: 'uppercase' }}>{job.role}</h3>
+              <div className="label" style={{ color: index === 0 ? 'var(--neon-pink)' : 'var(--neon-cyan)', marginBottom: '1.5rem', letterSpacing: '0.2em' }}>{job.company}</div>
               <p className="body-text">{job.desc}</p>
             </div>
           </motion.div>

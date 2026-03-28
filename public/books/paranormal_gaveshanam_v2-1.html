@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paranormal Gaveshanam — Salman Hashir</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Noto+Serif+Malayalam:wght@300;400;600;700&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #070809;
+  --bg2:       #0c0d10;
+  --surface:   #101318;
+  --surface2:  #161a22;
+  --surface3:  #1c2030;
+  --border:    #232836;
+  --border2:   #2e3548;
+  --red:       #9e2020;
+  --red2:      #c03030;
+  --red-glow:  rgba(158,32,32,0.22);
+  --red-dim:   #6a1515;
+  --gold:      #c4a24a;
+  --gold2:     #e4c870;
+  --gold3:     #f0dca0;
+  --cream:     #e8e2d8;
+  --muted:     #6a6860;
+  --muted2:    #8a8880;
+  --green:     #2d6b50;
+  --green2:    #4a9b72;
+  --text:      #ccc8be;
+  --text2:     #b0aa9e;
+  --purple:    #4a2a6a;
+  --purple2:   #7a4aaa;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 17.5px;
+  line-height: 1.9;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ============ AMBIENT BACKGROUND ============ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 50% at 50% -10%, rgba(120,15,15,0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 70% at 90% 80%, rgba(60,8,8,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 5% 60%, rgba(40,20,60,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 30% at 50% 110%, rgba(80,10,10,0.2) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Grain texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+/* Floating particles canvas */
+#particles-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ============ LANG BAR ============ */
+#lang-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 3000;
+  height: 52px;
+  background: rgba(7,8,9,0.96);
+  border-bottom: 1px solid rgba(158,32,32,0.25);
+  backdrop-filter: blur(20px) saturate(1.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+
+.bar-brand {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.lang-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.lang-pill {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 5px 16px;
+  border-radius: 2px;
+  border: none;
+  background: transparent;
+  color: var(--muted2);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.lang-pill.active {
+  background: var(--red-dim);
+  color: var(--cream);
+  box-shadow: 0 0 16px var(--red-glow), inset 0 0 0 1px rgba(176,48,48,0.4);
+}
+
+.lang-pill:not(.active):hover {
+  color: var(--gold);
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 24px 80px;
+  overflow: hidden;
+}
+
+/* Vignette circle behind hero */
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120,20,20,0.18) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+  animation: hBreath 8s ease-in-out infinite;
+}
+
+@keyframes hBreath {
+  0%,100% { transform: translate(-50%,-55%) scale(1); opacity: 0.7; }
+  50%      { transform: translate(-50%,-55%) scale(1.15); opacity: 1; }
+}
+
+/* Decorative ritual circles */
+.ritual-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(176,48,48,0.1);
+  pointer-events: none;
+}
+.ritual-ring:nth-child(1) { width: 500px; height: 500px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: spin 60s linear infinite; }
+.ritual-ring:nth-child(2) { width: 650px; height: 650px; top: 50%; left: 50%; transform: translate(-50%,-50%); border-color: rgba(201,168,76,0.07); animation: spin 90s linear infinite reverse; }
+.ritual-ring:nth-child(3) { width: 800px; height: 800px; top: 50%; left: 50%; transform: translate(-50%,-50%); border-color: rgba(80,10,10,0.08); animation: spin 120s linear infinite; }
+
+@keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+/* Eye SVG */
+.eye-wrap {
+  width: 88px; height: 88px;
+  margin: 0 auto 36px;
+  position: relative;
+}
+.eye-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(176,48,48,0.2) 0%, transparent 70%);
+  animation: eyePulse 4s ease-in-out infinite;
+}
+.eye-wrap svg {
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 0 24px rgba(176,48,48,.8));
+  animation: eyePulse 4s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes eyePulse {
+  0%,100% { filter: drop-shadow(0 0 16px rgba(176,48,48,.65)); }
+  50%      { filter: drop-shadow(0 0 40px rgba(201,168,76,.9)) drop-shadow(0 0 8px rgba(176,48,48,.4)); }
+}
+
+.hero-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 7px;
+  color: var(--red2);
+  text-transform: uppercase;
+  margin-bottom: 22px;
+  opacity: 0.9;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.6rem, 8vw, 6rem);
+  font-weight: 900;
+  line-height: 1.02;
+  color: var(--cream);
+  text-shadow: 0 4px 60px rgba(0,0,0,0.9), 0 0 80px rgba(120,20,20,0.3);
+  margin-bottom: 6px;
+  letter-spacing: -1px;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold2);
+  text-shadow: 0 0 50px rgba(201,168,76,0.5);
+}
+
+.hero-sub {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  font-style: italic;
+  color: var(--muted2);
+  margin-top: 12px;
+  margin-bottom: 38px;
+  letter-spacing: 0.3px;
+  max-width: 520px;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+  border: 1px solid rgba(201,168,76,0.18);
+}
+
+.meta-pill {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 10px 24px;
+  border-right: 1px solid rgba(201,168,76,0.18);
+  opacity: 0.85;
+}
+.meta-pill:last-child { border-right: none; }
+
+/* Decorative rule */
+.hero-rule {
+  width: 1px;
+  height: 90px;
+  background: linear-gradient(180deg, transparent, var(--red2) 50%, transparent);
+  margin: 50px auto 0;
+  opacity: 0.6;
+}
+
+/* Scroll cue */
+.scroll-cue {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.4;
+  animation: floatCue 2.5s ease-in-out infinite;
+}
+.scroll-cue span {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.scroll-cue::after {
+  content: '';
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(180deg, var(--muted), transparent);
+}
+@keyframes floatCue { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(8px);} }
+
+/* ============ TOC ============ */
+.toc-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto 90px;
+  padding: 0 24px;
+}
+
+.section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  text-align: center;
+  margin-bottom: 28px;
+}
+.section-label::before, .section-label::after {
+  content: '—';
+  margin: 0 12px;
+  opacity: 0.4;
+}
+
+.toc-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.toc-list li { background: var(--surface); }
+
+.toc-list a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--surface);
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 14.5px;
+  transition: all 0.25s;
+  border-left: 2px solid transparent;
+  height: 100%;
+}
+
+.toc-list a:hover {
+  border-left-color: var(--red2);
+  background: var(--surface2);
+  color: var(--cream);
+  padding-left: 26px;
+}
+
+.toc-list a .num {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: var(--red2);
+  letter-spacing: 2px;
+  flex-shrink: 0;
+  opacity: 0.9;
+  min-width: 24px;
+}
+
+/* ============ MAIN CONTAINER ============ */
+.container {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============ SECTION ============ */
+.section {
+  margin-bottom: 100px;
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.section.visible { opacity: 1; transform: none; }
+
+/* Section heading */
+.sec-head {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.sec-head::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 1px;
+  background: var(--red2);
+}
+
+.sec-roman {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--red2);
+  text-transform: uppercase;
+  padding-top: 8px;
+  opacity: 0.85;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.sec-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.45rem, 3.5vw, 2.1rem);
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.2;
+}
+
+.sec-head h2 small {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--muted2);
+  margin-top: 5px;
+  letter-spacing: 1px;
+}
+
+p { margin-bottom: 20px; }
+strong { color: var(--cream); }
+em { color: var(--gold2); font-style: italic; }
+
+h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin: 38px 0 16px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ============ CARDS ============ */
+.card {
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(22,26,34,0.8) 100%);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--red2);
+  border-radius: 2px;
+  padding: 26px 30px;
+  margin: 24px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 0% 0%, rgba(158,32,32,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.card.gold-card {
+  border-left-color: var(--gold);
+}
+.card.gold-card::before {
+  background: radial-gradient(ellipse 80% 80% at 0% 0%, rgba(196,162,74,0.07) 0%, transparent 60%);
+}
+.card.green-card {
+  border-left-color: var(--green2);
+}
+.card h3 { margin-top: 0; }
+
+/* ============ STAGE CARDS ============ */
+.stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 24px 28px;
+  margin: 14px 0;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.stage::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--red2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.stage:hover {
+  border-color: rgba(176,48,48,0.4);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 0 40px rgba(158,32,32,0.04);
+  transform: translateX(4px);
+}
+.stage:hover::before { opacity: 1; }
+
+.stage-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--red2);
+  margin-bottom: 8px;
+  display: block;
+  opacity: 0.85;
+}
+
+.stage h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.07rem;
+  color: var(--cream);
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+/* ============ CASE CARDS ============ */
+.case {
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 32px 0;
+  transition: box-shadow 0.35s, border-color 0.35s;
+  position: relative;
+}
+
+.case::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red-dim), var(--red2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.case:hover {
+  box-shadow: 0 16px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(158,32,32,0.25);
+  border-color: rgba(176,48,48,0.3);
+}
+.case:hover::before { opacity: 1; }
+
+.case-head {
+  background: linear-gradient(90deg, var(--surface2), var(--surface));
+  border-bottom: 1px solid var(--border);
+  padding: 18px 26px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.case-badge {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--red-dim);
+  border: 1px solid rgba(176,48,48,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px var(--red-glow);
+}
+
+.case-head h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--cream);
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+.case-head h3::after { display: none; }
+
+.case-body { padding: 24px 26px; }
+
+/* ============ DETAIL TABLE ============ */
+.dtable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 20px;
+  font-size: 14.5px;
+}
+.dtable tr { border-bottom: 1px solid rgba(35,40,54,0.8); }
+.dtable tr:last-child { border-bottom: none; }
+.dtable td:first-child {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--red2);
+  padding: 10px 18px 10px 0;
+  width: 140px;
+  vertical-align: top;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+.dtable td:last-child { padding: 10px 0; color: var(--text); }
+
+/* ============ BULLET LIST ============ */
+.blist { list-style: none; padding: 0; margin: 16px 0; }
+.blist li {
+  padding: 8px 0 8px 26px;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.035);
+  font-size: 16px;
+  line-height: 1.7;
+}
+.blist li::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: 18px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--red2);
+  opacity: 0.75;
+  box-shadow: 0 0 6px rgba(176,48,48,0.5);
+}
+
+/* ============ GRID ============ */
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px,1fr));
+  gap: 1px;
+  margin: 24px 0;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.gcard {
+  background: var(--surface);
+  padding: 22px 24px;
+  transition: background 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.gcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 0% 100%, rgba(158,32,32,0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gcard:hover { background: var(--surface2); }
+.gcard:hover::before { opacity: 1; }
+
+.gcard-icon { font-size: 24px; margin-bottom: 10px; display: block; }
+
+.gcard h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+/* ============ COMPARE TABLE ============ */
+.ctable-wrap { overflow-x: auto; margin: 22px 0; }
+.ctable {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 14.5px;
+}
+.ctable thead th {
+  background: var(--surface2);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--red-dim);
+  white-space: nowrap;
+}
+.ctable tbody tr { transition: background 0.15s; }
+.ctable tbody tr:hover { background: rgba(176,48,48,0.07); }
+.ctable tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.ctable tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.ctable tbody td:first-child {
+  color: var(--gold);
+  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  font-size: 13.5px;
+}
+
+/* ============ WARNING / NOTE ============ */
+.wbox {
+  background: rgba(158,32,32,0.07);
+  border: 1px solid rgba(158,32,32,0.28);
+  border-left: 4px solid var(--red2);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  font-size: 15.5px;
+  position: relative;
+}
+.wbox::before {
+  content: '⚠';
+  position: absolute;
+  top: 16px; right: 18px;
+  font-size: 14px;
+  opacity: 0.3;
+}
+
+.nbox {
+  background: rgba(45,107,80,0.07);
+  border: 1px solid rgba(45,107,80,0.22);
+  border-left: 4px solid var(--green2);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  font-size: 15.5px;
+  font-style: italic;
+  color: #b0ccc0;
+}
+
+/* ============ CONCLUSION ============ */
+.conclusion {
+  background: linear-gradient(135deg, var(--surface2) 0%, rgba(22,10,10,0.9) 100%);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--red2);
+  border-radius: 3px;
+  padding: 50px 48px;
+  text-align: center;
+  margin: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+.conclusion::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(120,20,20,0.1) 0%, transparent 70%);
+}
+.conclusion h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 900;
+  color: var(--cream);
+  margin-bottom: 26px;
+  position: relative;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 40px 24px;
+  border-top: 1px solid var(--border);
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+footer span { color: var(--red2); margin: 0 8px; opacity: 0.7; }
+
+/* ============ DIVIDER ============ */
+.ritual-divider {
+  text-align: center;
+  margin: 50px 0 40px;
+  position: relative;
+}
+.ritual-divider::before, .ritual-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 60px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border));
+}
+.ritual-divider::before { left: 0; }
+.ritual-divider::after { right: 0; background: linear-gradient(270deg, transparent, var(--border)); }
+.ritual-divider-sym {
+  font-size: 14px;
+  color: var(--red2);
+  opacity: 0.5;
+  letter-spacing: 8px;
+}
+
+/* ============ MALAYALAM FONT OVERRIDE ============ */
+body.lang-ml {
+  font-family: 'Noto Serif Malayalam', serif;
+  font-size: 17px;
+  line-height: 2.0;
+}
+body.lang-ml h1, body.lang-ml h2, body.lang-ml h3, body.lang-ml h4 {
+  font-family: 'Noto Serif Malayalam', serif;
+}
+body.lang-ml .hero h1 { font-size: clamp(2rem, 6vw, 4.5rem); }
+body.lang-ml .sec-head h2 { font-size: clamp(1.3rem, 3vw, 1.8rem); }
+body.lang-ml .sec-roman, body.lang-ml .gcard h4, body.lang-ml .stage-tag,
+body.lang-ml .bar-brand, body.lang-ml .section-label, body.lang-ml .meta-pill,
+body.lang-ml .dtable td:first-child, body.lang-ml .lang-pill {
+  font-family: 'Cinzel', serif;
+  letter-spacing: normal;
+}
+
+/* ============ LANG CONTENT ============ */
+[data-en], [data-ml] { display: block; }
+.lang-en, .lang-ml-text { }
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:640px){
+  .hero { padding: 80px 16px 60px; }
+  .container { padding: 0 14px 70px; }
+  .case-body, .card { padding: 16px 18px; }
+  .conclusion { padding: 32px 20px; }
+  .meta-pill { font-size: 9px; padding: 8px 14px; }
+  .sec-head { grid-template-columns: 1fr; gap: 8px; }
+  .sec-roman { padding-top: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 8px; text-align: left; }
+  #lang-bar { padding: 0 16px; }
+  .bar-brand { display: none; }
+  .grid2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<!-- LANG BAR -->
+<div id="lang-bar">
+  <span class="bar-brand">Paranormal Gaveshanam</span>
+  <div class="lang-toggle-wrap">
+    <button class="lang-pill active" id="btn-en" onclick="setLang('en')">English</button>
+    <button class="lang-pill" id="btn-ml" onclick="setLang('ml')">മലയാളം</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="ritual-ring"></div>
+  <div class="ritual-ring"></div>
+  <div class="ritual-ring"></div>
+
+  <div class="eye-wrap">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer eye -->
+      <path d="M5 40 C20 14 60 14 75 40 C60 66 20 66 5 40Z" stroke="#9e2020" stroke-width="1.2" fill="none"/>
+      <!-- Lashes -->
+      <line x1="40" y1="6" x2="40" y2="18" stroke="#c4a24a" stroke-width="0.8" opacity="0.6"/>
+      <line x1="40" y1="62" x2="40" y2="74" stroke="#c4a24a" stroke-width="0.8" opacity="0.6"/>
+      <line x1="14" y1="14" x2="22" y2="22" stroke="#c4a24a" stroke-width="0.8" opacity="0.35"/>
+      <line x1="58" y1="58" x2="66" y2="66" stroke="#c4a24a" stroke-width="0.8" opacity="0.35"/>
+      <line x1="66" y1="14" x2="58" y2="22" stroke="#c4a24a" stroke-width="0.8" opacity="0.35"/>
+      <line x1="22" y1="58" x2="14" y2="66" stroke="#c4a24a" stroke-width="0.8" opacity="0.35"/>
+      <!-- Iris -->
+      <circle cx="40" cy="40" r="12" fill="rgba(158,32,32,0.15)" stroke="#9e2020" stroke-width="1"/>
+      <!-- Pupil -->
+      <circle cx="40" cy="40" r="6" fill="#0c0d10"/>
+      <circle cx="40" cy="40" r="5.5" fill="none" stroke="#6a1515" stroke-width="0.5"/>
+      <!-- Highlight -->
+      <circle cx="42.5" cy="37.5" r="2" fill="#c4a24a" opacity="0.85"/>
+      <circle cx="37" cy="42" r="0.8" fill="#c4a24a" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <p class="hero-eyebrow lang-en">Classified Research Document</p>
+  <p class="hero-eyebrow lang-ml-text" style="display:none;">ഗോപ്യ ഗവേഷണ രേഖ</p>
+
+  <h1 class="lang-en">Paranormal<br><em>Investigation Studies</em></h1>
+  <h1 class="lang-ml-text" style="display:none;">പരാനോർമൽ<br><em>ഗവേഷണ പഠനം</em></h1>
+
+  <p class="hero-sub lang-en">Kerala &amp; Global Real Case Studies — Ghosts, Possession &amp; Exorcism</p>
+  <p class="hero-sub lang-ml-text" style="display:none;">കേരളവും ആഗോള യഥാർഥ കേസ് പഠനങ്ങളും — പ്രേതങ്ങൾ, ആത്മബാധ &amp; മന്ത്രവാദം</p>
+
+  <div class="hero-meta">
+    <div class="meta-pill lang-en">Prepared by Salman Hashir</div>
+    <div class="meta-pill lang-ml-text" style="display:none;">സൽമാൻ ഹാഷിർ</div>
+    <div class="meta-pill">2025</div>
+    <div class="meta-pill lang-en">Paranormal Research</div>
+    <div class="meta-pill lang-ml-text" style="display:none;">പരാനോർമൽ ഗവേഷണം</div>
+  </div>
+  <div class="hero-rule"></div>
+
+  <div class="scroll-cue"><span>Scroll</span></div>
+</header>
+
+<!-- TOC -->
+<nav class="toc-wrap">
+  <span class="section-label lang-en">Research Sections</span>
+  <span class="section-label lang-ml-text" style="display:none;">ഗവേഷണ വിഭാഗങ്ങൾ</span>
+  <ul class="toc-list">
+    <li><a href="#s1"><span class="num">I</span><span class="lang-en">Paranormal — An Introduction</span><span class="lang-ml-text" style="display:none;">പരാനോർമൽ — ആമുഖം</span></a></li>
+    <li><a href="#s2"><span class="num">II</span><span class="lang-en">Possession Stages &amp; Symptoms</span><span class="lang-ml-text" style="display:none;">ആത്മബാധ — ഘട്ടങ്ങൾ</span></a></li>
+    <li><a href="#s3"><span class="num">III</span><span class="lang-en">Real Case Studies — Kerala</span><span class="lang-ml-text" style="display:none;">കേരള കേസ് പഠനങ്ങൾ</span></a></li>
+    <li><a href="#s4"><span class="num">IV</span><span class="lang-en">Real Case Studies — Global</span><span class="lang-ml-text" style="display:none;">ആഗോള കേസ് പഠനങ്ങൾ</span></a></li>
+    <li><a href="#s5"><span class="num">V</span><span class="lang-en">Multi-Religion Exorcism</span><span class="lang-ml-text" style="display:none;">ബഹുമത ഭൂതോച്ചാടനം</span></a></li>
+    <li><a href="#s6"><span class="num">VI</span><span class="lang-en">Kerala Specific Rituals</span><span class="lang-ml-text" style="display:none;">കേരളത്തിലെ ആചാരങ്ങൾ</span></a></li>
+    <li><a href="#s7"><span class="num">VII</span><span class="lang-en">Scientific &amp; Psychological Analysis</span><span class="lang-ml-text" style="display:none;">ശാസ്ത്രീയ വിശകലനം</span></a></li>
+    <li><a href="#s8"><span class="num">VIII</span><span class="lang-en">How to Sense Paranormal Presence</span><span class="lang-ml-text" style="display:none;">സാന്നിധ്യം തിരിച്ചറിയൽ</span></a></li>
+  </ul>
+</nav>
+
+<main class="container">
+
+<!-- ===== SECTION I ===== -->
+<section class="section" id="s1">
+  <div class="sec-head">
+    <span class="sec-roman">I</span>
+    <h2>
+      <span class="lang-en">Paranormal — An Introduction <small>ആമുഖം</small></span>
+      <span class="lang-ml-text" style="display:none;">പരാനോർമൽ — ഒരു ആമുഖം <small>An Introduction</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <p>The word <em>"paranormal"</em> is derived from the Greek prefix <em>"para"</em> meaning <em>"beyond,"</em> combined with <em>"normal."</em> It refers to all experiences and phenomena that exist outside the accepted boundaries of established science — things that current scientific frameworks cannot fully explain, measure, or replicate under controlled conditions.</p>
+    <p>Paranormal phenomena include ghosts and apparitions, poltergeists (invisible disruptive forces), demonic possession, Extra Sensory Perception (ESP), and reincarnation. These experiences have been documented across every known culture and civilization throughout recorded human history.</p>
+    <div class="card gold-card">
+      <h3 style="margin-top:0;">Global Belief Statistics</h3>
+      <p>A major global poll conducted in 2021 revealed that <strong>41% of people worldwide believe in ghosts</strong>, and <strong>20% report having personally experienced a paranormal encounter.</strong> In Kerala — a land of ancient civilization and deep-rooted spiritual traditions — these experiences carry a unique cultural and spiritual dimension found nowhere else in the world.</p>
+    </div>
+    <h3>Categories of Paranormal Phenomena</h3>
+    <div class="grid2">
+      <div class="gcard"><span class="gcard-icon">👻</span><h4>Apparitions / Ghosts</h4><p style="font-size:15px;">Visible spirit forms, shadow figures, and energy imprints of deceased individuals. The most commonly reported paranormal category worldwide.</p></div>
+      <div class="gcard"><span class="gcard-icon">😈</span><h4>Demonic Entities</h4><p style="font-size:15px;">Non-human evil spirits capable of inducing possession. The most severe category — rare but extremely intense when genuinely documented.</p></div>
+      <div class="gcard"><span class="gcard-icon">💥</span><h4>Poltergeists</h4><p style="font-size:15px;">Characterized by physical disruptions — objects moving, loud noises, and unexplained physical disturbances. Moderately documented across cultures.</p></div>
+      <div class="gcard"><span class="gcard-icon">🌿</span><h4>Elemental Spirits</h4><p style="font-size:15px;">Nature-bound spirits such as Kerala's <em>Yakshi</em>, the Islamic <em>Jinn</em>, and Celtic <em>Faeries</em>. Deeply culture-specific.</p></div>
+      <div class="gcard"><span class="gcard-icon">🔁</span><h4>Residual Hauntings</h4><p style="font-size:15px;">Repeated energy imprints from past traumatic events — playing like a recorded loop with no intelligence. Common in old buildings.</p></div>
+      <div class="gcard"><span class="gcard-icon">🗣️</span><h4>Intelligent Hauntings</h4><p style="font-size:15px;">Spirits actively aware of and responsive to the living — capable of communication attempts. Less common but significantly more intense.</p></div>
+    </div>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <p>ഗ്രീക്ക് ഭാഷയിൽ <em>"para"</em> എന്നാൽ <em>"അതിനപ്പുറം"</em> എന്നർഥം. <em>"paranormal"</em> എന്ന പദം ഉത്ഭവിക്കുന്നത് ഈ ഗ്രീക്ക് ഉപസർഗ്ഗത്തിൽ നിന്നാണ് — "normal" ന്റെ അതിർത്തിക്കുമപ്പുറം നിലനിൽക്കുന്ന സകലതും. ഇന്നത്തെ ശാസ്ത്രത്തിന്റെ അളവുകോൽ കൊണ്ടു തൊടാൻ, അളക്കാൻ, നിർണ്ണയിക്കാൻ കഴിയാത്ത അനുഭവങ്ങളും പ്രതിഭാസങ്ങളും — അതാണ് പരാനോർമൽ.</p>
+    <p>പ്രേതങ്ങൾ, ആവേശം, ഭൂതോച്ചാടനം, ദൈവദർശനം, പുനർജന്മം — ഇവയൊക്കെ ഈ വൃത്തത്തിൽ ഉൾപ്പെടുന്നു. ചരിത്രം രേഖപ്പെടുത്തിയ ഏതൊരു നാഗരികതയിലും ഈ അനുഭവങ്ങളുടെ ആഴമേറിയ അടയാളങ്ങൾ ഉണ്ട്.</p>
+    <div class="card gold-card">
+      <h3 style="margin-top:0;">ആഗോള വിശ്വാസ സ്ഥിതിവിവരം</h3>
+      <p>2021-ൽ നടത്തിയ ഒരു ആഗോള സർവ്വേ വ്യക്തമാക്കി — <strong>ലോകജനതയുടെ 41% പ്രേതങ്ങളിൽ വിശ്വസിക്കുന്നു</strong>. <strong>20% പേർ ജീവിതത്തിൽ നേരിട്ടൊരു പരാനോർമൽ അനുഭവം ഉണ്ടായതായി സ്വയം സമ്മതിക്കുന്നു.</strong> ആയിരം വർഷങ്ങൾ പഴക്കമുള്ള ആത്മീയ പാരമ്പര്യം ഉള്ള കേരളത്തിൽ ഈ ലോകം ഇനിയും കൂടുതൽ ഗഹനമാണ്.</p>
+    </div>
+    <h3>പരാനോർമൽ പ്രതിഭാസങ്ങളുടെ വർഗ്ഗീകരണം</h3>
+    <div class="grid2">
+      <div class="gcard"><span class="gcard-icon">👻</span><h4>പ്രേതങ്ങൾ / ദൃശ്യരൂപങ്ങൾ</h4><p style="font-size:15px;">മൃതരുടെ ദൃശ്യ ആത്മരൂപങ്ങൾ, നിഴൽ ശരീരങ്ങൾ. ലോകത്ത് ഏറ്റവുമധികം റിപ്പോർട്ട് ചെയ്യപ്പെടുന്ന പ്രതിഭാസം.</p></div>
+      <div class="gcard"><span class="gcard-icon">😈</span><h4>അസുര ശക്തികൾ</h4><p style="font-size:15px;">മനുഷ്യേതര ദുഷ്ടാത്മാക്കൾ — ആവേശം ഉണ്ടാക്കാൻ കഴിവുള്ളവ. അപൂർവ്വം, എന്നാൽ ഏറ്റവും ഭീകരം.</p></div>
+      <div class="gcard"><span class="gcard-icon">💥</span><h4>പോൾട്ടർഗൈസ്റ്റ്</h4><p style="font-size:15px;">വസ്തുക്കൾ ചലിക്കുക, ശബ്ദം, ശാരീരിക ശല്യങ്ങൾ — ദൃശ്യരൂപമില്ലാത്ത ഒരു ആത്മശക്തി.</p></div>
+      <div class="gcard"><span class="gcard-icon">🌿</span><h4>മൂലക ആത്മാക്കൾ</h4><p style="font-size:15px;">യക്ഷി, ജിന്ന്, ഫെയ്‌ക്കൾ — പ്രകൃതിബദ്ധ ആത്മചൈതന്യങ്ങൾ. ഓരോ സംസ്കൃതിയുടെയും തനതായ ഭേദങ്ങൾ.</p></div>
+      <div class="gcard"><span class="gcard-icon">🔁</span><h4>അവശിഷ്ട ഭൂതങ്ങൾ</h4><p style="font-size:15px;">ഒരു ദുരന്ത നിമിഷത്തിന്റെ ആവർത്തന ഓർമ്മ — ബുദ്ധിവൈഭവമില്ലാതെ പഴയ വേദന ആവർത്തിക്കുന്നു.</p></div>
+      <div class="gcard"><span class="gcard-icon">🗣️</span><h4>ബോധമുള്ള ഭൂതങ്ങൾ</h4><p style="font-size:15px;">ജീവനുള്ളവരെ ബോധപൂർവ്വം തിരിച്ചറിയുന്ന, സന്ദേശം കൈമാറാൻ ശ്രമിക്കുന്ന ആത്മാക്കൾ.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="ritual-divider"><span class="ritual-divider-sym">✦ ✦ ✦</span></div>
+
+<!-- ===== SECTION II ===== -->
+<section class="section" id="s2">
+  <div class="sec-head">
+    <span class="sec-roman">II</span>
+    <h2>
+      <span class="lang-en">Possession — Stages &amp; Symptoms <small>ആത്മബാധ — ഘട്ടങ്ങൾ</small></span>
+      <span class="lang-ml-text" style="display:none;">ആത്മബാധ — ഘട്ടങ്ങളും ലക്ഷണങ്ങളും <small>Stages &amp; Symptoms</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <p>Demonic possession is not a sudden event. It is a gradual, calculated process through which an external entity systematically gains control over a person's life. Researchers and religious authorities have identified <strong>five distinct stages</strong> — each progressively more severe and harder to reverse.</p>
+    <div class="stage"><span class="stage-tag">Stage 1</span><h4>Temptation — The Subtle Opening</h4><p>The entity does not attack directly. Instead, it works through the person's existing vulnerabilities — greed, lust, anger, fear, and loneliness — exerting subtle influence. This is the most difficult stage to identify because it closely mimics ordinary human temptation. Those with strong spiritual foundations are most likely to resist here.</p></div>
+    <div class="stage"><span class="stage-tag">Stage 2</span><h4>Infestation — Beginning of Disturbance</h4><p>The person begins feeling profoundly uncomfortable in their own home. Resistance to authority grows, inner restlessness becomes persistent, and violent thoughts begin surfacing. Spiritual authorities identify <em>unforgiveness</em> — persistent, unresolved hatred — as the most significant entry point at this stage.</p></div>
+    <div class="stage"><span class="stage-tag">Stage 3</span><h4>Obsession — Loss of Mental Control</h4><p>Characterized by "Diabolic Obsession" — sudden, irrational, obsessive thoughts the victim cannot control. This stage overlaps heavily with symptoms of mental illness, making accurate psychiatric diagnosis extremely challenging.</p></div>
+    <div class="stage"><span class="stage-tag">Stage 4</span><h4>Oppression — Physical Attack</h4><p>The demonic spirit begins "familiarization" — becoming the victim's constant companion. The primary goal is to completely break the victim's free will.</p>
+      <ul class="blist">
+        <li>Sleep paralysis and recurring vivid nightmares of a threatening presence</li>
+        <li>Unexplained physical marks — scratches and bruises with no known cause</li>
+        <li>Electronic devices malfunctioning specifically around this person</li>
+        <li>Animals becoming visibly disturbed, refusing to be near the victim</li>
+        <li>Simultaneous disasters — financial collapse, relationship breakdown, physical illness</li>
+      </ul>
+    </div>
+    <div class="stage"><span class="stage-tag">Stage 5</span><h4>Full Possession — Complete Takeover</h4><p>The victim enters a trance and loses consciousness entirely. The Catholic Church officially recognizes these signs of genuine demonic possession:</p>
+      <ul class="blist">
+        <li><strong>Xenoglossy:</strong> Suddenly speaking languages never learned or studied</li>
+        <li><strong>Superhuman strength:</strong> Multiple adults required to physically restrain the person</li>
+        <li><strong>Knowledge of hidden facts</strong> the person has absolutely no natural access to</li>
+        <li><strong>Aversion to sacred objects</strong> — burns, blisters, or extreme terror at crosses or holy water</li>
+        <li><strong>Distinct non-human voice</strong> — physically impossible for a single set of vocal cords</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <p>അസുരബാധ ഒരേ നിമിഷത്തിൽ സംഭവിക്കുന്ന ഒന്നല്ല. ഒരു ബാഹ്യ ശക്തി ക്രമേണ, ഒളിഞ്ഞ ചുവടുകൾ വച്ച്, ഒരു വ്യക്തിയുടെ ജീവിതത്തിൽ ആധിപത്യം നേടുന്ന ഒരു ദീർഘ യുദ്ധമാണ്. ഗവേഷകരും മതാധ്യക്ഷന്മാരും <strong>അഞ്ച് വ്യത്യസ്ത ഘട്ടങ്ങൾ</strong> തിരിച്ചറിഞ്ഞിട്ടുണ്ട്.</p>
+    <div class="stage"><span class="stage-tag">ഘട്ടം 1</span><h4>പ്രലോഭനം — ആദ്യ കടന്നുകയറ്റം</h4><p>ആക്രമണം നേരിട്ടല്ല. ദൂഷ്ടശക്തി മനുഷ്യന്റെ ദൗർബ്ബല്യങ്ങളിലൂടെ — അത്യാഗ്രഹം, കോപം, ഭയം, ഏകാന്തത — ഒളിഞ്ഞ സ്വാധീനം ചെലുത്തുന്നു. ശക്തമായ ആത്മീയ അടിത്തറ ഉള്ളവർ ഈ ഘട്ടത്തിൽ തന്നെ ചെറുക്കും.</p></div>
+    <div class="stage"><span class="stage-tag">ഘട്ടം 2</span><h4>ബാധ ആരംഭം — ഭവനത്തിൽ അസ്വസ്ഥത</h4><p>സ്വന്തം വീട്ടിൽ അസ്വസ്ഥത അനുഭവപ്പെടുന്നു. അടക്കാനാകാത്ത ക്ഷോഭം, അധ്യക്ഷത്തോടുള്ള നിരാകരണം, ഇരുണ്ട ചിന്തകൾ. ഇവിടെ ക്ഷമിക്കാനാകാത്ത വിദ്വേഷം ഒരു ദ്വാരം തുറന്നു നൽകുന്നു.</p></div>
+    <div class="stage"><span class="stage-tag">ഘട്ടം 3</span><h4>ഭ്രമം — മനോനിയന്ത്രണം നഷ്ടം</h4><p>നിയന്ത്രിക്കാനാകാത്ത തീവ്ര ചിന്തകൾ, ഭ്രാന്തൻ ആശയങ്ങൾ. ഈ ഘട്ടം മാനസികരോഗ ലക്ഷണങ്ങളോട് ഇത്ര ദൃഢമായി ഒത്തുപോകുന്നു എന്ന് ഒരു ഡോക്ടർ പോലും തിരിച്ചറിയാൻ ബുദ്ധിമുട്ടും.</p></div>
+    <div class="stage"><span class="stage-tag">ഘട്ടം 4</span><h4>ദ്രോഹം — ശാരീരിക ആക്രമണം</h4><p>ദൂഷ്ടശക്തി ഇരയുടെ നിഴൽ ആകുന്നു — ഇച്ഛാശക്തിയെ തകർക്കുക എന്നതാണ് ലക്ഷ്യം.</p>
+      <ul class="blist">
+        <li>ഭീകര സ്വപ്നങ്ങൾ, ഉറക്ക തളർച്ച — ഒരു ഭീഷണ സാന്നിധ്യം നിരന്തരം</li>
+        <li>കാരണമില്ലാത്ത മുറിവുകൾ, ചതവുകൾ ശരീരത്ത്</li>
+        <li>ഇലക്ട്രോണിക് ഉപകരണങ്ങൾ ഈ വ്യക്തിക്ക് ചുറ്റും ആകർഷകമായ പ്രകാരം പ്രവർത്തനം നിർത്തുന്നു</li>
+        <li>മൃഗങ്ങൾ ഇരയിൽ നിന്ന് ഭയന്ന് ഓടിപ്പോകുന്നു</li>
+        <li>ഒരേ സമയം — സാമ്പത്തിക തകർച്ച, ബന്ധ ഭേദം, ശാരീരിക രോഗം</li>
+      </ul>
+    </div>
+    <div class="stage"><span class="stage-tag">ഘട്ടം 5</span><h4>പൂർണ ആവേശം — ശരീരം പൂർണ്ണമായി കൈക്കലാകുന്നു</h4><p>ഇര ബോധം നഷ്ടപ്പെടുന്നു. കത്തോലിക്ക സഭ ഈ ലക്ഷണങ്ങൾ ഔദ്യോഗികമായി അംഗീകരിക്കുന്നു:</p>
+      <ul class="blist">
+        <li><strong>Xenoglossy:</strong> ഒരിക്കലും പഠിക്കാത്ത ഭാഷകൾ ഒഴുക്കോടെ സംസാരിക്കുന്നു</li>
+        <li><strong>അമാനുഷ ബലം:</strong> ഒന്നിലധികം ആളുകൾ ചേർന്ന് ഒരേ ഒരാളെ പിടിക്കാൻ ആകുന്നില്ല</li>
+        <li>ഒരിക്കലും അറിഞ്ഞിട്ടില്ലാത്ത <strong>ഗോപ്യ വിവരങ്ങൾ</strong> ചൊൽ‌ക്കൂടി വരുന്നു</li>
+        <li>ക്രൂശ്, തീർഥം — ഇവ <strong>ദേഹത്ത് ചൂട് ഉണ്ടാക്കുന്ന</strong> ഭൗതിക പ്രതിപ്രവർത്തനം</li>
+        <li>മനുഷ്യ ശബ്ദനാളങ്ങൾക്ക് ഉൽപ്പാദിക്കാൻ ഭൗതികമായി <strong>അസാദ്ധ്യമായ</strong> ശബ്ദം</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="ritual-divider"><span class="ritual-divider-sym">✦ ✦ ✦</span></div>
+
+<!-- ===== SECTION III ===== -->
+<section class="section" id="s3">
+  <div class="sec-head">
+    <span class="sec-roman">III</span>
+    <h2>
+      <span class="lang-en">Real Case Studies — Kerala <small>കേരള കേസുകൾ</small></span>
+      <span class="lang-ml-text" style="display:none;">കേരള കേസ് പഠനങ്ങൾ <small>Real Cases</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <div class="case">
+      <div class="case-head"><div class="case-badge">01</div><h3>Lakkidi Chain Tree — Vythiri, Wayanad</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Location</td><td>Lakkidi Ghat Pass, Wayanad, Kerala</td></tr><tr><td>Entity</td><td>Karinthandan — tribal chieftain spirit</td></tr><tr><td>Anomaly</td><td>Iron chains grow 2–3 cm per year biologically</td></tr><tr><td>Status</td><td>Active — chains replaced multiple times</td></tr></table>
+        <p><strong>History:</strong> During British-era road construction through Lakkidi forest, a tribal guide named Karinthandan led the surveyors through impossible jungle terrain. After completing the work, the British officers betrayed him — he was chained to a tree and killed so he could not reveal the path to others.</p>
+        <p>Before dying, Karinthandan issued a curse: <em>"This path shall never be peaceful. I shall remain bound here — and my chains shall grow."</em></p>
+        <ul class="blist"><li>The iron chains wrapped around the tree grow measurably each year — documented by Forest Department officials</li><li>Multiple chain replacements have been made; each new set begins growing again</li><li>Accidents along the Lakkidi pass are disproportionately high compared to similar ghat roads</li><li>Tribal communities continue performing annual appeasement rituals at the site</li></ul>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">02</div><h3>Kottiyoor Yakshi — Kannur</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Location</td><td>Kottiyoor Forest, Kannur District</td></tr><tr><td>Entity</td><td>Yakshi — Kerala's most feared feminine spirit</td></tr><tr><td>Category</td><td>Shape-shifting predatory spirit</td></tr><tr><td>Status</td><td>Historically documented; appeasement rituals active</td></tr></table>
+        <p>The Yakshi is Kerala's unique feminine spirit — a beautiful woman who appears at crossroads and riverbanks at night. Unlike Western female spirits, the Yakshi is not a ghost of a deceased person but a distinctly non-human entity occupying a liminal space between worlds.</p>
+        <ul class="blist"><li>Consistently reported: an exceptionally beautiful woman standing at forest crossroads after midnight</li><li>Men who follow her are found dead at dawn — blood drained, with no wounds</li><li>She specifically targets lone male travelers on forest roads</li><li>Pala Yakshi — the palm tree Yakshi — only approaches when the pala tree flowers</li></ul>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">03</div><h3>25 GB Bungalow — Bonacaud, Trivandrum</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Location</td><td>Bonacaud Hills, Trivandrum</td></tr><tr><td>Period</td><td>British Raj Era</td></tr><tr><td>Category</td><td>Residual + Child Spirit Haunting</td></tr><tr><td>Status</td><td>Abandoned — no electrical connection</td></tr></table>
+        <p><strong>History:</strong> A British landlord's children died consecutively in this remote hilltop bungalow from unknown diseases. Overcome with grief, the landlord abandoned the property. Decades later, investigators and locals documented extraordinary phenomena.</p>
+        <ul class="blist"><li>Words spoken in a British accent are heard echoing — despite zero electrical connection for decades</li><li>Lights have been observed glowing inside the structure with no power source</li><li>The shadow of a child is seen circling the bungalow at dusk</li><li>Sounds of breaking glass are heard regularly — no glass visible on the premises</li><li>EMF readers spike dramatically specifically in the master bedroom</li></ul>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">04</div><h3>Hymavathi Pond — Kariavattom, Trivandrum</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Location</td><td>Kariavattom, Thiruvananthapuram</td></tr><tr><td>Category</td><td>Double Haunting — Love Tragedy</td></tr><tr><td>Entity</td><td>Black-cloaked tall figure</td></tr><tr><td>Trigger</td><td>Caste-based murder — forbidden love</td></tr></table>
+        <p><strong>The Story:</strong> Hymavathi, from a Namboothiri family, fell deeply in love with a man from a lower caste. Her father discovered the relationship, had the young man killed, and threw his body into the pond. Heartbroken, Hymavathi drowned herself in the same pond.</p>
+        <p><strong>Current Activity:</strong> A tall figure wrapped in a black cloak regularly appears on the bank — then suddenly and completely vanishes. Locals avoid the pond even in broad daylight. Recent renovation attempts were abandoned after workers reported deeply disturbing experiences.</p>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">05</div><h3>Chottanikkara Temple — Ernakulam</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Location</td><td>Chottanikkara, Ernakulam District</td></tr><tr><td>Type</td><td>Positive Exorcism Centre — Temple</td></tr><tr><td>Deity</td><td>Goddess Bhagavathi</td></tr><tr><td>Visitors</td><td>Thousands annually seeking relief</td></tr></table>
+        <p>The Chottanikkara Temple is Kerala's most documented positive exorcism centre. Goddess Bhagavathi is believed to cure mental illness and free individuals from spiritual possession. Victims arriving at the temple often immediately enter a trance state upon crossing the threshold.</p>
+        <ul class="blist"><li>Psychiatric patients have shown dramatic, documented improvement after visiting</li><li>The annual Kavu Bali ritual formally appeases restless spirits</li><li>Detailed case files maintained by the temple administration recording outcomes</li><li>Medical researchers have formally interviewed dozens of "recovered" visitors</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <div class="case">
+      <div class="case-head"><div class="case-badge">01</div><h3>ലക്കിടി ചങ്ങലമരം — വൈത്തിരി, വയനാട്</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>സ്ഥലം</td><td>ലക്കിടി ഘട്ടം, വയനാട്</td></tr><tr><td>ആത്മാവ്</td><td>കരിന്തണ്ടൻ — ആദിവാസി ഗോത്ര നേതാവ്</td></tr><tr><td>അദ്ഭുതം</td><td>ഇരുമ്പ് ചങ്ങലകൾ വർഷം തോറും 2-3 സെ.മി. വളരുന്നു</td></tr><tr><td>അവസ്ഥ</td><td>സജീവം — ചങ്ങലകൾ പലതവണ മാറ്റി</td></tr></table>
+        <p><strong>ചരിത്രം:</strong> ബ്രിട്ടീഷ് ഭരണകാലത്ത് ലക്കിടി വനത്തിലൂടെ റോഡ് നിർമ്മാണം നടന്നു. കരിന്തണ്ടൻ എന്ന ആദിവാസി വഴികാട്ടി ആ ഗഹനവനം ഭേദിക്കാൻ ബ്രിട്ടീഷുകാർക്ക് സഹായം ചെയ്തു. ജോലി കഴിഞ്ഞപ്പോൾ, ഈ വഴി മറ്റുള്ളവർ അറിയരുതെന്ന കരുതലോടെ ബ്രിട്ടീഷ് ഓഫീസർമാർ അദ്ദേഹത്തെ ഒരു മരത്തിൽ ചങ്ങലയിട്ട് കൊന്നു.</p>
+        <p>മരിക്കുന്നതിന് മുൻപ് കരിന്തണ്ടൻ ശപിച്ചു: <em>"ഈ വഴി ഒരിക്കലും ശാന്തമാകില്ല. ഞാൻ ഇവിടെ ചങ്ങലയിൽ ഉണ്ടായിരിക്കും — എന്റെ ചങ്ങലകൾ വളർന്നുകൊണ്ടിരിക്കും."</em></p>
+        <ul class="blist"><li>ഇരുമ്പ് ചങ്ങലകൾ അളക്കാൻ കഴിയുന്ന വേഗത്തിൽ ജൈവികമായി വളരുന്നതായി വനം വകുപ്പ് ഉദ്യോഗസ്ഥർ രേഖപ്പെടുത്തി</li><li>പലതവണ ചങ്ങലകൾ മാറ്റി — ഓരോ പ്രാവശ്യവും പുതിയ ചങ്ങലകളും വളർന്നു</li><li>ലക്കിടി ഘട്ടത്തിൽ അപകടങ്ങൾ അസ്വഭാവികമാം വിധം കൂടുതൽ</li><li>ആദിവാസി സമൂഹം ഇന്നും ദേഷ്യം തണുപ്പിക്കാൻ ആണ്ടുതോറും ആചാരം ചെയ്യുന്നു</li></ul>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">02</div><h3>കൊട്ടിയൂർ യക്ഷി — കണ്ണൂർ</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>സ്ഥലം</td><td>കൊട്ടിയൂർ വനം, കണ്ണൂർ</td></tr><tr><td>ആത്മാവ്</td><td>യക്ഷി — കേരളത്തിന്റെ ഏറ്റവും ഭയഭക്തിദായകമായ സ്ത്രൈണ ആത്മാവ്</td></tr><tr><td>വർഗ്ഗം</td><td>ആകൃതി മാറ്റം ചെയ്യുന്ന ഭക്ഷണ ആത്മാവ്</td></tr><tr><td>അവസ്ഥ</td><td>ഐതിഹ്യം ജീവനുള്ളത്; ആചാരങ്ങൾ സജീവം</td></tr></table>
+        <p>കേരളത്തിന്റെ അദ്വിതീയ ആത്മീയ ജീവിയാണ് യക്ഷി. ഒരു സ്ത്രീ — അസാധാരണ സൗന്ദര്യം ഉള്ള — ഇരുട്ടിൽ നാൽക്കവലകളിലും നദീതീരങ്ങളിലും നിൽക്കുന്നു. ഇവൾ ഒരു മൃതദേഹത്തിന്റെ ആത്മാവല്ല — ലോകങ്ങൾ തമ്മിലുള്ള അതിർവരമ്പിൽ ജനിച്ച ഒരു അ-മാനുഷ ചൈതന്യം.</p>
+        <ul class="blist"><li>അർദ്ധരാത്രിക്ക് ശേഷം വനത്തിലെ നാൽക്കവലകളിൽ അസാധാരണ സൗന്ദര്യമുള്ള ഒരു സ്ത്രീ</li><li>അവളെ പിൻതുടർന്ന പുരുഷന്മാർ പുലർകാലെ ചത്ത് കണ്ടെത്തുന്നു — രക്തം കുടിക്കപ്പെട്ടിരിക്കുന്നു, മുറിവ് ഒന്നുമില്ല</li><li>പാലാ മരം പൂക്കുമ്പോൾ മാത്രം പ്രത്യക്ഷപ്പെടുന്ന "പാലാ യക്ഷി"</li><li>ഏകാകിയായ പുരുഷ സഞ്ചാരികളെ മാത്രം ആകർഷിക്കുന്നു</li></ul>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">03</div><h3>25 GB ബംഗ്ലാവ് — ബൊണക്കാട്, തിരുവനന്തപുരം</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>സ്ഥലം</td><td>ബൊണക്കാട് കുന്ന്, തിരുവനന്തപുരം</td></tr><tr><td>കാലഘട്ടം</td><td>ബ്രിട്ടീഷ് ഭരണകാലം</td></tr><tr><td>വർഗ്ഗം</td><td>അവശിഷ്ട + ശിശു ഭൂതം</td></tr><tr><td>അവസ്ഥ</td><td>ഉപേക്ഷിക്കപ്പെട്ടത് — വൈദ്യുതി ഇല്ല</td></tr></table>
+        <p><strong>ചരിത്രം:</strong> കുന്നിൻ മുകളിലെ ഈ ബംഗ്ലാവിൽ ഒരു ബ്രിട്ടീഷ് ഭൂവുടമയുടെ കുട്ടികൾ അജ്ഞാത രോഗങ്ങളാൽ ഒന്നൊന്നായി മരിച്ചു. ദുഃഖത്തിൽ ഉടഞ്ഞ അദ്ദേഹം ഈ ഭവനം ഉപേക്ഷിച്ചു. പതിറ്റാണ്ടുകൾ കഴിഞ്ഞ് ഗവേഷകരും നാട്ടുകാരും അസാധാരണ പ്രതിഭാസങ്ങൾ രേഖപ്പെടുത്തി.</p>
+        <ul class="blist"><li>ദശകങ്ങളായി വൈദ്യുതിയില്ലാത്ത ഈ ഇടത്ത് ബ്രിട്ടീഷ് ഉച്ചാരണത്തിൽ ശബ്ദം കേൾക്കുന്നു</li><li>വൈദ്യുതി ഇല്ലാതെ ഉള്ളിൽ വെളിച്ചം കത്തുന്നതായി കണ്ടിട്ടുണ്ട്</li><li>പ്രദോഷ വേളയിൽ ഒരു കുട്ടിയുടെ നിഴൽ ബംഗ്ലാവ് ചുറ്റി നടക്കുന്നു</li><li>EMF അളവ് മാസ്റ്റർ ബെഡ്‌റൂമിൽ തീവ്രമായി കൂടുന്നു</li></ul>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">04</div><h3>ഹൈമവതി കുളം — കാര്യവട്ടം, തിരുവനന്തപുരം</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>സ്ഥലം</td><td>കാര്യവട്ടം, തിരുവനന്തപുരം</td></tr><tr><td>വർഗ്ഗം</td><td>ദ്വൈത ഭൂതം — പ്രേമ ദുരന്തം</td></tr><tr><td>ആത്മാവ്</td><td>കറുത്ത ശരീരം മൂടിയ ഉയരമുള്ള ആകൃതി</td></tr></table>
+        <p><strong>കഥ:</strong> നമ്പൂതിരി കുലത്തിൽ പിറന്ന ഹൈമവതി ഒരു അവർണ്ണ യുവാവിനെ പ്രേമിച്ചു. അച്ഛൻ ബന്ധം മനസ്സിലാക്കി, ആ യുവാവിനെ കൊന്ന് കുളത്തിൽ തള്ളി. ഹൈമവതി ദുഃഖം സഹിക്കാനാകാതെ ആ കുളത്തിൽ ചാടി ജീവൻ വെടിഞ്ഞു.</p>
+        <p><strong>ഇന്നത്തെ അനുഭവങ്ങൾ:</strong> കറുത്ത ശരീരം മൂടിയ ഉയർന്ന ഒരു ആകൃതി കുളക്കരയിൽ നിൽക്കുന്നു — പിന്നെ പൊടുന്നനവേ ഇല്ലാതാകുന്നു. ഉച്ചവെളിച്ചത്തിൽ പോലും നാട്ടുകാർ ആ കുളം ഒഴിവാക്കുന്നു.</p>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">05</div><h3>ചോറ്റാനിക്കര ക്ഷേത്രം — എറണാകുളം</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>സ്ഥലം</td><td>ചോറ്റാനിക്കര, എറണാകുളം</td></tr><tr><td>തരം</td><td>ക്ഷേത്ര ഭൂതോച്ചാടന കേന്ദ്രം</td></tr><tr><td>ദേവി</td><td>ഭഗവതി</td></tr></table>
+        <p>കേരളത്തിലെ ഏറ്റവും രേഖപ്പെടുത്തപ്പെട്ട ആത്മീയ ഉദ്ധാരണ കേന്ദ്രമാണ് ചോറ്റാനിക്കര ക്ഷേത്രം. ഭഗവതി മാനസിക രോഗം സുഖപ്പെടുത്തുന്നുവെന്നും ആത്മബാധ ഒഴിപ്പിക്കുന്നുവെന്നും ആഴമേറിയ വിശ്വാസം. ക്ഷേത്ര പ്രവേശനം ചെയ്ത ഉടൻ ഇരകൾ ഭ്രാന്ത് ബാധിതരെ പോലെ ആകുന്നത് ദൃക്‌സാക്ഷികൾ രേഖപ്പെടുത്തിയിട്ടുണ്ട്.</p>
+        <ul class="blist"><li>ഡോക്ടർ ചികിത്സ ഫലം കണ്ടിടങ്ങളിൽ ക്ഷേത്ര ദർശനം ശേഷം ദൃഢ പരിഹാരം</li><li>കാവ് ബലി — ആണ്ടൊടുക്ക് നടക്കുന്ന ആത്മ ആരാധന</li><li>ക്ഷേത്ര ഭരണസമിതി ഫലങ്ങൾ ഡോക്ടർ ഫയലുകൾ പോലെ സൂക്ഷിക്കുന്നു</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ritual-divider"><span class="ritual-divider-sym">✦ ✦ ✦</span></div>
+
+<!-- ===== SECTION IV ===== -->
+<section class="section" id="s4">
+  <div class="sec-head">
+    <span class="sec-roman">IV</span>
+    <h2>
+      <span class="lang-en">Real Case Studies — Global <small>ആഗോള കേസ്സുകൾ</small></span>
+      <span class="lang-ml-text" style="display:none;">ആഗോള കേസ് പഠനങ്ങൾ <small>Global Cases</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <div class="case">
+      <div class="case-head"><div class="case-badge">01</div><h3>Anneliese Michel — Germany (1975–1976)</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Subject</td><td>Anneliese Michel</td></tr><tr><td>Location</td><td>Klingenberg am Main, Bavaria</td></tr><tr><td>Exorcists</td><td>Father Arnold Renz + Father Ernst Alt</td></tr><tr><td>Outcome</td><td>Death by malnutrition — 31 kg</td></tr><tr><td>Film</td><td>The Exorcism of Emily Rose (2005)</td></tr></table>
+        <p><strong>Background:</strong> Anneliese Michel was a deeply devout young Catholic woman who began experiencing seizures and severe depression from 1969. By 1973 she had developed extreme religious aversions — terror at crucifixes, burning sensation from holy water.</p>
+        <p><strong>Evidence:</strong> Six distinct demonic voices were identified in recordings, claiming to be Lucifer, Judas Iscariot, Nero, Cain, Adolf Hitler, and Fleischmann. A total of 67 exorcism sessions over 10 months produced over 40 hours of audio still in existence today.</p>
+        <div class="wbox"><strong>Audio Analysis:</strong> Independent acoustic analysis found that the voice changes in the recordings were physically impossible for a single set of human vocal cords to produce — a fact science has never explained.</div>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">02</div><h3>Roland Doe — USA (1949)</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Subject</td><td>Roland Doe (pseudonym)</td></tr><tr><td>Location</td><td>Maryland → St. Louis, Missouri</td></tr><tr><td>Exorcist</td><td>Father William Bowdern SJ</td></tr><tr><td>Film</td><td>The Exorcist (1973)</td></tr></table>
+        <p>Roland, 14, began experiencing intense paranormal activity after using a Ouija board with his deceased aunt. <strong>Documented Evidence:</strong> Father Bowdern's diary records 26 separate witnesses. The words "HELL" and "EXIT" physically appeared as raised welts on Roland's skin. Levitation was observed. Latin responses were given to Latin prayers — despite Roland having zero Latin education.</p>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">03</div><h3>The Dybbuk Box — USA (2001)</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>Origin</td><td>Portland, Oregon estate sale</td></tr><tr><td>Object</td><td>Antique wine cabinet — 1920s Jewish origin</td></tr><tr><td>Film</td><td>The Possession (2012)</td></tr></table>
+        <p>Every subsequent owner of this cabinet reported consistent experiences: nightmares of an attacking old hag, unexplained bruises, sudden hair loss, and sightings of a shadow figure. One owner developed a rare blood disease that resolved completely after selling the box. Current holder Zak Bagans keeps it in a sealed, restricted room at his haunted museum in Las Vegas.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <div class="case">
+      <div class="case-head"><div class="case-badge">01</div><h3>അനെലിഷ് മൈക്കൽ — ജർമ്മനി (1975–1976)</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>ഇര</td><td>അനെലിഷ് മൈക്കൽ</td></tr><tr><td>സ്ഥലം</td><td>ക്ലിൻഗൻബർഗ്, ബവേറിയ</td></tr><tr><td>ഫലം</td><td>പോഷകക്കുറവ് — 31 കിലോ മാത്രം</td></tr><tr><td>ചലചിത്രം</td><td>The Exorcism of Emily Rose (2005)</td></tr></table>
+        <p><strong>പശ്ചാത്തലം:</strong> അടിയുറച്ച ക്രൈസ്തവ വിശ്വാസിയായ ഒരു യുവതി. 1969 മുതൽ അപസ്മാരവും കഠിന വിഷാദവും. 1973 ആകുമ്പോഴേക്ക് ക്രൂശ് കണ്ടാൽ ഭയം, തീർഥം ഏൽക്കുമ്പോൾ ദേഹം കത്തുന്ന പ്രതീതി.</p>
+        <p><strong>തെളിവ്:</strong> ശബ്ദ രേഖകളിൽ ആറ് വ്യത്യസ്ത അസുര ശബ്ദങ്ങൾ — ലൂസിഫർ, യൂദ, നീറോ, കയേൻ, ഹിറ്റ്‌ലർ, ഫ്ലൈഷ്‌മാൻ എന്നിവർ. 10 മാസം, 67 ഭൂതോച്ചാടനം, 40 മണിക്കൂർ ഓഡിയോ — ഇന്നും ലോകം ഭയത്തോടെ കേൾക്കുന്നു.</p>
+        <div class="wbox"><strong>ശബ്ദ വിശകലനം:</strong> ആ ശബ്ദ രേഖകളിലെ ശബ്ദ ഭേദങ്ങൾ ഒരൊറ്റ മനുഷ്യ കണ്ഠത്തിൽ നിന്ന് ഉൽപ്പന്നം ചെയ്യുന്നത് ഭൗതികമായി അസാദ്ധ്യമാണ് — ഇതുവരെ ശാസ്ത്രം ഉത്തരം കണ്ടെത്തിയിട്ടില്ല.</div>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">02</div><h3>റോളൻഡ് ഡോ — അമേരിക്ക (1949)</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>ഇര</td><td>റോളൻഡ് ഡോ (കൃത്രിമ നാമം)</td></tr><tr><td>സ്ഥലം</td><td>മേരിലാൻഡ് → സെന്റ് ലൂയിസ്</td></tr><tr><td>ചലചിത്രം</td><td>The Exorcist (1973)</td></tr></table>
+        <p>14 വയസ്സുകാരൻ റോളൻഡ് ഒരു Ouija Board ഉപയോഗിച്ചതിന് ശേഷം ആക്രമണം ആരംഭിച്ചു. ഫാദർ ബോഡേൺ 26 ദൃക്‌സാക്ഷികൾ ഉള്ളത് ഡയറിയിൽ രേഖപ്പെടുത്തി. "HELL", "EXIT" എന്ന വാക്കുകൾ റോളൻഡ്ന്റെ ത്വക്കിൽ ഉയർന്ന ചിഹ്നങ്ങളായി ഉദ്ഭവിച്ചു. ലാറ്റിൻ ഭാഷ ഒരിക്കലും പഠിക്കാത്ത ബാലൻ ലാറ്റിൻ പ്രാർഥനകൾക്ക് ലാറ്റിൻ ഉത്തരം നൽകി.</p>
+      </div>
+    </div>
+    <div class="case">
+      <div class="case-head"><div class="case-badge">03</div><h3>ഡിബ്ബൂക്ക് പെട്ടി — അമേരിക്ക (2001)</h3></div>
+      <div class="case-body">
+        <table class="dtable"><tr><td>ഉദ്ഭവം</td><td>പോർട്ട്‌ലൻഡ്, ഓറഗൺ</td></tr><tr><td>ചലചിത്രം</td><td>The Possession (2012)</td></tr></table>
+        <p>ഈ പുരാതന വൈൻ കാബിനറ്റ് ഉടമസ്ഥരായ ഓരോരുത്തർക്കും ഒരേ അനുഭവം — ആക്രമിക്കുന്ന വൃദ്ധ സ്ത്രീ, കാരണമില്ലാത്ത ശരീര ക്ഷതം, നിഴൽ ദർശനം. ഒരു ഉടമ ഈ പെട്ടി വിറ്റ ഉടൻ ഒരു അപൂർവ്വ രക്ത രോഗം — പൂർണ്ണമായി — ഭേദമായി. ഇന്ന് ലാസ് വേഗാസ്സിലെ ഒരു ഭൂതബംഗ്ലാവ് മ്യൂസിയത്തിൽ ഒരു അടച്ചിട്ട മുറിയിൽ ഇത് ഭദ്രമായി ഇരിക്കുന്നു.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ritual-divider"><span class="ritual-divider-sym">✦ ✦ ✦</span></div>
+
+<!-- ===== SECTION V ===== -->
+<section class="section" id="s5">
+  <div class="sec-head">
+    <span class="sec-roman">V</span>
+    <h2>
+      <span class="lang-en">Multi-Religion Exorcism <small>മതങ്ങളിലൂടെ</small></span>
+      <span class="lang-ml-text" style="display:none;">ബഹുമത ഭൂതോച്ചാടനം <small>Multi-Religion</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <p>Exorcism — the practice of expelling a demon, spirit, or evil entity from a person or place — is documented in virtually every major world religion. While methods differ, the fundamental goal is universal: to free an individual from malevolent spiritual influence.</p>
+    <div class="grid2">
+      <div class="gcard"><h4>Catholic — Rituale Romanum</h4><p style="font-size:15px;">A formal sacramental act requiring explicit Bishop permission. Vatican 1999 guidelines mandate medical/psychiatric evaluation first. Four stages: Pretense → Breakpoint → Clash → Expulsion. Key: demanding the demon reveal its name. Vatican offers annual exorcism training since 2019.</p></div>
+      <div class="gcard"><h4>Islamic — Ruqyah</h4><p style="font-size:15px;">Quranic verses recited over the possessed. The healer first identifies spirit type and motivation. Key Surahs: Al-Fatiha, Al-Baqara, Al-Jinn. Room must be purified first.</p></div>
+      <div class="gcard"><h4>Jewish — Dybbuk Exorcism</h4><p style="font-size:15px;">Possession by a human soul unable to cross over due to unresolved sin. Requires 10 men (Minyan) + Rabbi. Shofar blast shocks the entity. Exit through the little toe — leaving a bloody mark.</p></div>
+      <div class="gcard"><h4>Hindu — Tantric Exorcism</h4><p style="font-size:15px;">Atharva Veda is the primary text. Combines Mantra with Yajna (fire sacrifice). Mehandipur Balaji Temple is India's most documented exorcism centre. The Guruti ritual uses a cauldron to capture afflicting spirits.</p></div>
+      <div class="gcard"><h4>Buddhist — Sutra Chanting</h4><p style="font-size:15px;">Metta Sutta and Atanata Sutta as protective chants. Tibetan: Gutor ceremony before New Year purifies negative forces. Buddhism views possession as the result of negative karma.</p></div>
+      <div class="gcard"><h4>Sikhism — No Exorcism</h4><p style="font-size:15px;">Sikhism explicitly prohibits exorcism. The faith teaches that God's presence leaves no space for evil spirits. Reliance on God alone is the teaching.</p></div>
+    </div>
+    <h3>Comparison Table</h3>
+    <div class="ctable-wrap">
+      <table class="ctable">
+        <thead><tr><th>Religion</th><th>Spirit Type</th><th>Exorcist</th><th>Key Tool</th><th>Exit Sign</th></tr></thead>
+        <tbody>
+          <tr><td>Catholic</td><td>Demon</td><td>Bishop-approved Priest</td><td>Holy water, Crucifix</td><td>Scream, then calm</td></tr>
+          <tr><td>Islam</td><td>Jinn / Shayatin</td><td>Imam / Healer</td><td>Quran recitation</td><td>Peace, Bismillah</td></tr>
+          <tr><td>Judaism</td><td>Dybbuk (human soul)</td><td>Rabbi + 9 men</td><td>Shofar, Psalm 91</td><td>Bloody toe</td></tr>
+          <tr><td>Hinduism</td><td>Bhoota / Preta</td><td>Tantric / Mantravadi</td><td>Mantra, Yajna, fire</td><td>Spirit appeased</td></tr>
+          <tr><td>Buddhism</td><td>Karmic spirit</td><td>Monk</td><td>Sutras, incense</td><td>Inner peace</td></tr>
+          <tr><td>Voodoo</td><td>Loa spirit</td><td>Houngan / Mambo</td><td>Ceremony, possession</td><td>Spirit satisfied</td></tr>
+          <tr><td>Sikhism</td><td>N/A — prohibited</td><td>None</td><td>None</td><td>N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <p>ഭൂതോച്ചാടനം — ഒരു വ്യക്തിയിൽ നിന്ന് ദൂഷ്ടാത്മാവിനെ പുറത്ത് കളയുക — ലോകത്തിലെ ഏതാണ്ട് ഓരോ മതത്തിലും രേഖപ്പെടുത്തിയ ഒരു ആചാരം. ഓരോ ആചരണ സമ്പ്രദായവും ഭിന്നമെങ്കിലും ലക്ഷ്യം ഒന്ന് — ദൂഷ്ടശക്തിയുടെ പിടിയിൽ നിന്ന് ഒരു ജീവനെ മോചിക്കുക.</p>
+    <div class="grid2">
+      <div class="gcard"><h4>കത്തോലിക്ക — Rituale Romanum</h4><p style="font-size:15px;">ബിഷപ്പ് അനുമതി നിർബന്ധം. 1999-ലെ വത്തിക്കാൻ മാർഗ്ഗനിർദ്ദേശം — ആദ്യം ഡോക്ടർ. നാല് ഘട്ടം: ഭാവനാടകം → ഉടവ് → ഏറ്റുമുട്ടൽ → നിഷ്കാസനം. ഭൂതത്തിന്റെ പേർ ആവശ്യപ്പെടൽ — ഏറ്റവും നിർണ്ണായക ചുവട്.</p></div>
+      <div class="gcard"><h4>ഇസ്‌ലാം — റുഖ്‌യ</h4><p style="font-size:15px;">ഖുർആൻ ആയത്തുകൾ ഓതൽ. ആദ്യം ജിന്നിന്റെ ഇനം, ലിംഗം, ലക്ഷ്യം കണ്ടെത്തൽ. അൽ-ഫാതിഹ, അൽ-ബഖറ, അൽ-ജിന്ന് — പ്രധാന സൂറതുകൾ.</p></div>
+      <div class="gcard"><h4>ജൂദ — ഡിബ്ബൂക്ക് ഭൂതോച്ചാടനം</h4><p style="font-size:15px;">പാപ ഭാരത്തിൽ ജന്മം ഉപേക്ഷിക്കാനാകാത്ത മൃത ആത്മാ. 10 പുരുഷൻ + ഒരു റബ്ബൈ. ഷൊഫർ (ആടിന്റെ കൊമ്പ്) ശബ്ദം ആത്മാവിനെ ചകിതനാക്കുന്നു. ചെറുകൺ‌വിരൽ തുഞ്ചത്ത് ഭൂതം ഇറങ്ങി — ചോര ഒലിക്കുന്നു.</p></div>
+      <div class="gcard"><h4>ഹിന്ദു — തന്ത്ര ഭൂതോച്ചാടനം</h4><p style="font-size:15px;">അഥർവ്വ വേദം — അടിസ്ഥാന ഗ്രന്ഥം. മന്ത്രം + യജ്ഞം. മേഹന്ദീപൂർ ബാലാജി ക്ഷേത്രം — ഇന്ത്യയിലെ ഏറ്റവും രേഖപ്പെടുത്തപ്പെട്ട കേന്ദ്രം. ഗുരുതി — ആത്മാവിനെ ഉള്ളിലാക്കാൻ ഒരു കലശ.</p></div>
+      <div class="gcard"><h4>ബൗദ്ധ — സൂത്ര ജപം</h4><p style="font-size:15px;">മെത്ത സൂത്ത, അടനാടാ സൂത്ത — രക്ഷാ ജപം. ടിബറ്റൻ ഗ്യൂടോർ ചടങ്ങ് — പുതുവർഷ ദോഷ ശുദ്ധീകരണം. ആത്മബാധ കർമ്മ ഫലം — ബൗദ്ധ ദൃഷ്ടിയിൽ.</p></div>
+      <div class="gcard"><h4>സിഖ് — ഭൂതോച്ചാടനം വിലക്ക്</h4><p style="font-size:15px;">സിഖ് ധർമ്മം ഭൂതോച്ചാടനം അനുവദിക്കുന്നില്ല. ദൈവം സർവ്വവ്യാപകൻ — അതിനാൽ ദൂഷ്ടാത്മാക്കൾക്ക് ഇടമില്ല. ദൈവ ഭരണത്തിൽ ഭരോസ — ഇതൊന്ന് മാത്രം.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="ritual-divider"><span class="ritual-divider-sym">✦ ✦ ✦</span></div>
+
+<!-- ===== SECTION VI ===== -->
+<section class="section" id="s6">
+  <div class="sec-head">
+    <span class="sec-roman">VI</span>
+    <h2>
+      <span class="lang-en">Kerala Specific Rituals <small>കേരള ആചാരങ്ങൾ</small></span>
+      <span class="lang-ml-text" style="display:none;">കേരളത്തിന്റെ ആചാരങ്ങൾ <small>Kerala Rituals</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <p>Kerala has developed a uniquely nuanced set of rituals for dealing with paranormal phenomena. Unlike Western traditions that seek to banish or destroy spirits, Kerala's approach is characterized by a philosophy of <em>appeasement and coexistence</em> — acknowledging the spirit's grievance and redirecting its energy.</p>
+    <div class="card"><h3 style="margin-top:0;">1. Mantravadm — Kerala's Tantric Exorcism</h3><p>Kerala's Mantravadis perform exorcism through ancient tantric practices rooted in the Atharva Veda.</p><ul class="blist"><li><strong>Guruti Ritual:</strong> Offerings made into a sacred cauldron to draw and capture the afflicting entity</li><li><strong>Rice Grain Pass:</strong> Rice passed over the victim's body and thrown into the cauldron</li><li><strong>Kalam Erase:</strong> The victim rolls over a sacred diagram, neutralizing the spirit's influence</li><li><strong>Core Philosophy:</strong> The goal is to <em>relocate</em> the spirit — not to destroy it</li></ul></div>
+    <div class="card"><h3 style="margin-top:0;">2. Theyyam — Living God Possession</h3><p>Performed in Kannur and Kasaragod districts, Theyyam is a unique form of positive, controlled possession found nowhere else in the world. The performer becomes completely possessed by a deity.</p><ul class="blist"><li>Over 400 distinct Theyyam forms exist</li><li>On the ritual day, the performer is literally regarded as a god — all social hierarchy dissolves</li><li>Theyyam is a UNESCO Intangible Cultural Heritage candidate</li></ul></div>
+    <div class="card"><h3 style="margin-top:0;">3. Kavu Rituals — Sacred Grove Ceremonies</h3><p>Kerala's Kavus are ancient systems merging ecological preservation with spiritual protection. Offerings are always bloodless — flowers, milk, and turmeric exclusively.</p></div>
+    <div class="card"><h3 style="margin-top:0;">4. Kolam Thullal — Oracle Possession Ritual</h3><p>Central Kerala's unique tradition in which practitioners deliberately invite deity possession to deliver oracles, heal the sick, and resolve community disputes. This is considered a sacred service — not affliction.</p></div>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <p>കേരളം ആത്മചൈതന്യങ്ങളോട് ഇടപഴകുന്ന ഒരു തനതായ ദർശനം വികസിപ്പിച്ചെടുത്തിട്ടുണ്ട്. പടിഞ്ഞാറൻ ആചാരങ്ങൾ ആത്മാക്കളെ ഭ്രഷ്ട് ചെയ്ത് തുരത്താൻ ശ്രമിക്കുമ്പോൾ, കേരളം <em>ആരാധനയും സഹജീവനവും</em> തിരഞ്ഞെടുക്കുന്നു — ആത്മാവിന്റെ ദുഃഖം കേൾക്കുക, ആ ദുഃഖം ശമിപ്പിക്കുക.</p>
+    <div class="card"><h3 style="margin-top:0;">1. മന്ത്രവാദം — കേരളത്തിന്റെ ഭൂതോച്ചാടനം</h3><p>അഥർവ്വ വേദ മൂലങ്ങളുള്ള ആ ആ പ്രാചീന ആചാരം കേരളത്തിലെ മന്ത്രവാദികൾ — ബ്രാഹ്മണ പരമ്പരകൾ — ജ്ഞാനപ്പൂർണ്ണമായി കൈമാറ്റം ചെയ്ത് ഇന്നും ആചരിക്കുന്നു.</p><ul class="blist"><li><strong>ഗുരുതി:</strong> ദൂഷ്ടശക്തിയെ ആകർഷിക്കാൻ ഒരു കലശത്തിൽ ബലി</li><li><strong>അരി ചൂണ്ടൽ:</strong> ഇരയുടെ ദേഹത്ത് കൂടി അരി കടത്തി കലശത്തിൽ ഇടൽ</li><li><strong>കളം മായ്ക്കൽ:</strong> ഇര ഒരു പൂരിത ചിത്രത്തിൽ ഉരുണ്ട് — ആത്മ ബന്ധം ഛേദിക്കൽ</li><li><strong>ദർശനം:</strong> ആത്മാവിനെ <em>നശിപ്പിക്കുകയല്ല</em> — ഉചിത ഇടത്തിലേക്ക് മടക്കി അയക്കുക</li></ul></div>
+    <div class="card"><h3 style="margin-top:0;">2. തെയ്യം — ജീവിക്കുന്ന ദൈവ ആവേശം</h3><p>കണ്ണൂർ, കാസർഗോഡ് ജില്ലകളിൽ — ലോകത്ത് മറ്റൊരിടത്തും ഇത്ര ജ്ഞാനമേറിയ നിലയിൽ ഇല്ലാത്ത ഒരു ആചാരം. ആ ദിനം, ആ കലാകാരൻ ദൈവം തന്നെയാണ് — ജാതിഭേദം ഇല്ലാതാകുന്നു.</p><ul class="blist"><li>400-ലധികം വ്യത്യസ്ത തെയ്യ രൂപങ്ങൾ</li><li>ആചാര ദിനത്തിൽ കലാകാരൻ ദൈവം — ഊരും ജനതയും ദൈവ ദർശനം</li><li>UNESCO അദൃശ്യ സാംസ്കാരിക പൈതൃക പദ്ദതിക്ക് നോമിനി</li></ul></div>
+    <div class="card"><h3 style="margin-top:0;">3. കാവ് ആചാരങ്ങൾ — ദൈവ ഗ്രാമ ചടങ്ങ്</h3><p>കേരളത്തിലെ കാവുകൾ — ഒരേ സമയം വനസംരക്ഷണവും ആത്മ സംരക്ഷണവും. ഒരു ചൊരിഞ്ഞ ഒരു തുള്ളി ചോര ഇല്ല — മലർ, പാൽ, മഞ്ഞൾ മാത്രം. ആ ഗ്രാമ ദൈവം ഉണർന്നിരിക്കുന്നു — ഭൂമിയും ഗ്രാമവും കാക്കുന്നു.</p></div>
+    <div class="card"><h3 style="margin-top:0;">4. കോലം തുള്ളൽ — ദൈവ ആവേശ ആചാരം</h3><p>ദൈവ ആവേശം ഒരു ശാപമല്ല — ഇവിടെ ഒരു വഴിദീപം. ആ ആചാര ദിനം, ആ ദൈവ ആവേശ ദ്രഷ്ടാ ഒരു ഒറാക്കിൾ, ഒരു രോഗ ശാന്തി കേന്ദ്രം, ഒരു ഗ്രാമ ന്യായ ആസനം — ഒക്കെ ആകുന്നു.</p></div>
+  </div>
+</section>
+
+<div class="ritual-divider"><span class="ritual-divider-sym">✦ ✦ ✦</span></div>
+
+<!-- ===== SECTION VII ===== -->
+<section class="section" id="s7">
+  <div class="sec-head">
+    <span class="sec-roman">VII</span>
+    <h2>
+      <span class="lang-en">Scientific &amp; Psychological Analysis <small>ശാസ്ത്രീയ വിശകലനം</small></span>
+      <span class="lang-ml-text" style="display:none;">ശാസ്ത്രീയ &amp; മനഃശാസ്ത്ര വിശകലനം <small>Scientific Analysis</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <p>Science and psychology offer multiple frameworks for explaining paranormal experiences. These explanations do not definitively deny paranormal phenomena — they offer rigorous alternative interpretations that must be thoroughly considered before reaching supernatural conclusions.</p>
+    <h3>Neurological Explanations</h3>
+    <ul class="blist"><li><strong>Temporal Lobe Epilepsy:</strong> Seizures produce vivid religious experiences, auditory hallucinations, and possession-like altered states</li><li><strong>Sleep Paralysis:</strong> Explains the universal "old hag" phenomenon — body paralyzed while mind remains in semi-dream state</li><li><strong>Pareidolia:</strong> The brain's tendency to find faces in random stimuli — explains why ghost faces are "seen" in shadows</li><li><strong>Hypnagogia:</strong> Hallucinatory experiences in the transitional moment between wakefulness and sleep</li></ul>
+    <h3>Psychological Frameworks</h3>
+    <ul class="blist"><li><strong>Dissociative Identity Disorder (DID):</strong> Multiple distinct personalities can be genuinely mistaken for demonic possession</li><li><strong>Mass Hysteria:</strong> Group paranormal experiences in schools and communities are extensively documented</li><li><strong>Confirmation Bias:</strong> People naturally interpret ambiguous events through the lens of their pre-existing beliefs</li><li><strong>Haunted People Syndrome (HPS):</strong> High stress, unresolved trauma, and strong paranormal beliefs combining to escalate experiences</li></ul>
+    <h3>Environmental Factors</h3>
+    <ul class="blist"><li><strong>Infrasound (18–19 Hz):</strong> Sub-audible sound waves causing feelings of dread and visual disturbances</li><li><strong>Carbon Monoxide:</strong> This odorless toxic gas causes hallucinations — explains numerous "haunted house" cases</li><li><strong>Electromagnetic Fields (EMF):</strong> Strong fields associated with temporal lobe stimulation and the sensation of a "presence"</li><li><strong>Mold &amp; Air Quality:</strong> Toxic environments caused by mold produce significant psychological disturbances</li></ul>
+    <div class="nbox"><strong>Dr. Raymond Moody's Research:</strong> Moody's "Psychomantium" experiments found that 50% of test subjects experienced vivid apparitions when gazing into a mirror in a darkened room while remembering deceased loved ones. Some reported physical touch, familiar smells, and temperature changes.</div>
+    <div class="wbox"><strong>What Science Cannot Yet Explain:</strong> Levitation observed by multiple witnesses in controlled settings. Xenoglossy with verified acoustic evidence. Words physically appearing on skin (Roland Doe case). The Lakkidi Chain Tree growing consistently despite iron binding. "Unexplained" is not a synonym for "supernatural" — but it does mean the boundary of current human knowledge has been reached.</div>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <p>ശാസ്ത്രവും മനഃശാസ്ത്രവും പരാനോർമൽ അനുഭവങ്ങൾക്ക് ഒന്നിലധികം വ്യാഖ്യാനങ്ങൾ നൽകുന്നു. ഈ ഉത്തരങ്ങൾ അതീന്ദ്രിയ ലോകത്തെ ഒറ്റയടിക്ക് നിഷേധിക്കുന്നില്ല — പ്രകൃതി ലോകത്തെ സഹജ വ്യാഖ്യാനങ്ങൾ ആദ്യം ഗൗരവമായി പരിഗണിക്കണം എന്ന് ഓർമ്മിപ്പിക്കുന്നു.</p>
+    <h3>നാഡീ ശാസ്ത്ര വ്യാഖ്യാനങ്ങൾ</h3>
+    <ul class="blist"><li><strong>ടെമ്പോറൽ ലോബ് അപസ്മാരം:</strong> ദൈവ ദർശനം, ഭ്രമ ശ്രവണം, ആത്മ ആവേശ ഭ്രമം — ഒക്കെ ഈ അവസ്ഥ ഉൽപ്പാദിക്കും</li><li><strong>ഉറക്ക തളർച്ച:</strong> "പ്രേതം ഞെക്കി" — ഈ ഭൂഖണ്ഡ ഭേദമില്ലാ ആഗോള അനുഭവം ഇതുകൊണ്ട് വ്യാഖ്യാനിക്കാം</li><li><strong>Pareidolia:</strong> ഏതൊരു ആകൃതിയിലും മുഖം കണ്ടെത്തുന്ന തലച്ചോറ് — നിഴലിൽ പ്രേതമുഖം</li><li><strong>ഉറക്കസ്വപ്ന ഭ്രമം:</strong> ഉണർന്നതും ഉറങ്ങിയതും തമ്മിലുള്ള ആ ക്ഷണ നേരം — ജ്വലിക്കുന്ന ദർശനങ്ങൾ</li></ul>
+    <h3>മനഃശാസ്ത്ര ചട്ടക്കൂടുകൾ</h3>
+    <ul class="blist"><li><strong>ഡിസ്സോസിയേറ്റീവ് ഐഡന്റിറ്റി ഡിസോർഡർ:</strong> ഒന്നിലധികം ഭിന്ന വ്യക്തിത്വങ്ങൾ — ഒരു പരിശീലിത നിരീക്ഷകൻ പോലും ആത്മ ആവേശം എന്ന് തെറ്റിദ്ധരിക്കും</li><li><strong>ജനക്കൂട്ട ഭ്രമം:</strong> വിദ്യാലയങ്ങളിൽ, ഗ്രാമങ്ങളിൽ — കൂട്ടമായ പരാനോർമൽ അനുഭവം ആധികാരികമായി രേഖപ്പെടുത്തിയത്</li><li><strong>ഭൂതബാധ ജനവാദം (HPS):</strong> കഠിന സമ്മർദ്ദം, ഉണർന്ന ആഘാതം, ദൃഢ വിശ്വാസം — ഒക്കെ ചേർന്ന് ആ അനുഭവം ആഴത്തിൽ ഉൽപ്പാദിക്കുന്നു</li></ul>
+    <h3>പരിസ്ഥിതി ഘടകങ്ങൾ</h3>
+    <ul class="blist"><li><strong>Infrasound (18–19 Hz):</strong> ചെവിക്ക് കേൾക്കാനാകാത്ത ശബ്ദ തരംഗങ്ങൾ — ഭയം, ദൃഷ്ടി ഭ്രമം ഉൽപ്പാദിക്കുന്നു</li><li><strong>കാർബൺ മോണോക്സൈഡ്:</strong> ഗന്ധം ഇല്ലാത്ത ഈ വിഷ വാതകം ഭ്രാന്ത് ദർശനം ഉൽപ്പാദിക്കുന്നു</li><li><strong>EMF:</strong> ശക്തമായ വൈദ്യുത കാന്തിക മണ്ഡലം — ഒരു "സാന്നിധ്യം" ഉണ്ട് എന്ന ദൃഢ തോന്നൽ</li></ul>
+    <div class="nbox"><strong>ഡോ. റേമണ്ട് മൂഡിയുടെ ഗവേഷണം:</strong> ഇരുട്ടിൽ ഒരു ദർപ്പണത്തിൽ നോക്കി മൃതരെ ഓർക്കുമ്പോൾ — 50% ആളുകൾ ആ ആത്മാക്കളെ ജ്വലിക്കുന്ന സ്പഷ്ടതയോടെ ദർശിച്ചു. ചിലർ ശാരീരിക സ്പർശം, ഗന്ധം, ഊഷ്മളത — ഒക്കെ അനുഭവിച്ചു.</div>
+    <div class="wbox"><strong>ശാസ്ത്രത്തിന് ഇനിയും ഉത്തരമില്ലാത്തത്:</strong> ഒന്നിലധികം ദൃക്‌സാക്ഷികൾ ഉണ്ടായിരിക്കെ ഭൂ​ഷ്ണം. ഒറ്റ മനുഷ്യ ശബ്ദ കോശത്തിന് ഉൽപ്പാദിക്കാൻ ഭൗതികമായ അസാദ്ധ്യ ശബ്ദ ഭേദം. ത്വക്കിൽ ഉദ്ഭവിക്കുന്ന വാക്കുകൾ. ലക്കിടി ചങ്ങലയുടെ ഒരിക്കലും നിൽക്കാത്ത വളർച്ച. "വ്യാഖ്യാനമില്ല" എന്നതിന്റെ അർഥം "അതീന്ദ്രിയം" എന്നല്ല — ഇന്നത്തെ ശാസ്ത്രം അതിന്റെ അതിർത്തിക്ക് വന്നു നിൽക്കുന്നു.</div>
+  </div>
+</section>
+
+<div class="ritual-divider"><span class="ritual-divider-sym">✦ ✦ ✦</span></div>
+
+<!-- ===== SECTION VIII ===== -->
+<section class="section" id="s8">
+  <div class="sec-head">
+    <span class="sec-roman">VIII</span>
+    <h2>
+      <span class="lang-en">How to Sense Paranormal Presence <small>സാന്നിധ്യം തിരിച്ചറിയൽ</small></span>
+      <span class="lang-ml-text" style="display:none;">പരാനോർമൽ സാന്നിധ്യം തിരിച്ചറിയൽ <small>Sensing a Presence</small></span>
+    </h2>
+  </div>
+
+  <div class="lang-en">
+    <p>The following signs have been documented consistently across independent reports spanning different cultures and centuries. Recognizing these signs is valuable knowledge — and knowing how to respond is essential.</p>
+    <div class="grid2">
+      <div class="gcard"><span class="gcard-icon">🌡️</span><h4>Physical Signs</h4><ul class="blist" style="font-size:15px;"><li>Sudden localized temperature drop — "cold spots"</li><li>Unexplained goosebumps with no logical cause</li><li>Sulfur / rotten egg smell — negative entity indicator</li><li>Familiar scent (perfume, tobacco) with no source — possible benign spirit</li><li>Peripheral vision movement — shadows against the light</li></ul></div>
+      <div class="gcard"><span class="gcard-icon">🧠</span><h4>Emotional &amp; Psychological</h4><ul class="blist" style="font-size:15px;"><li>Overwhelming dread or deep sadness in a specific location</li><li>Sudden unexplained mood shifts upon entering a room</li><li>Recurring nightmares with consistent specific imagery</li><li>Persistent localized sensation of being watched</li></ul></div>
+      <div class="gcard"><span class="gcard-icon">📱</span><h4>Electronic Disturbances</h4><ul class="blist" style="font-size:15px;"><li>Devices malfunctioning — batteries draining instantly</li><li>Lights flickering with no electrical fault found</li><li>EMF meter spikes in specific consistent locations</li><li>EVP — voices on recordings not heard in person</li></ul></div>
+      <div class="gcard"><span class="gcard-icon">🐾</span><h4>Animal Behaviour</h4><ul class="blist" style="font-size:15px;"><li>Pets staring with sustained focus at empty space</li><li>Dogs refusing to enter a room — hackles raised</li><li>Cats tracking invisible movement with precise eyes</li><li>Birds falling completely and unusually silent in an area</li></ul></div>
+    </div>
+    <h3>Positive vs. Negative Entity — Signs Compared</h3>
+    <div class="ctable-wrap">
+      <table class="ctable">
+        <thead><tr><th>Sign</th><th>Positive Entity</th><th>Negative Entity</th></tr></thead>
+        <tbody>
+          <tr><td>Temperature</td><td>Warm, comforting</td><td>Icy cold, sudden drop</td></tr>
+          <tr><td>Smell</td><td>Floral, familiar, pleasant</td><td>Sulfur, rot, decay</td></tr>
+          <tr><td>Emotion</td><td>Peace, love, nostalgia</td><td>Dread, rage, despair</td></tr>
+          <tr><td>Physical</td><td>Gentle touch, warm breeze</td><td>Pressure, scratching, pain</td></tr>
+          <tr><td>Animals</td><td>Calm curiosity</td><td>Panic, flee, aggression</td></tr>
+          <tr><td>Sound</td><td>Music, soft voice, bells</td><td>Growling, screaming, banging</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>What To Do If You Sense a Presence</h3>
+    <ul class="blist"><li><strong>Stay calm.</strong> Panic amplifies the experience and may provide energy to negative entities</li><li><strong>Leave if threatened.</strong> Do not engage aggressively or challenge the presence</li><li><strong>Cleansing:</strong> Sage or incense smudging — a cross-cultural practice recognized across traditions</li><li><strong>Verbal command:</strong> Speak firmly — <em>"This is not your space. You must leave."</em></li><li><strong>Seek religious guidance</strong> appropriate to your personal belief system</li><li><strong>Document everything</strong> — dates, times, descriptions, photos, audio</li><li><strong>Medical evaluation first</strong> — always rule out natural causes before supernatural conclusions</li></ul>
+  </div>
+
+  <div class="lang-ml-text" style="display:none;">
+    <p>വ്യത്യസ്ത സംസ്കൃതികളിൽ നിന്നും നൂറ്റാണ്ടുകളിൽ നിന്നും ഒരേ സ്വഭാവത്തിൽ രേഖപ്പെടുത്തപ്പെട്ട ഈ ലക്ഷണങ്ങൾ — ഇവ തിരിച്ചറിയൽ ജ്ഞാനം, ഇവ നേരിടൽ ഒരുക്കം.</p>
+    <div class="grid2">
+      <div class="gcard"><span class="gcard-icon">🌡️</span><h4>ശാരീരിക ലക്ഷണങ്ങൾ</h4><ul class="blist" style="font-size:15px;"><li>പെട്ടെന്ന് ഒരു ഇടത്ത് തണുത്ത് കൊല്ലുന്ന — "ഠണ്ഡ് ഇടം"</li><li>കാരണമില്ലാതെ ദേഹം കോരിത്തരിക്കൽ</li><li>ഗന്ധക / ദ്രവിച്ച ഗന്ധം — ദൂഷ്ടശക്തിയുടെ അടയാളം</li><li>പരിചിത ഗന്ധം — ആത്മ ഉദ്ദേശ ഗന്ധം — ഒരു ഉദ്ദേശ്യഹീന ആത്മ</li></ul></div>
+      <div class="gcard"><span class="gcard-icon">🧠</span><h4>വൈകാരിക ലക്ഷണങ്ങൾ</h4><ul class="blist" style="font-size:15px;"><li>ഒരു ഇടത്ത് ചെല്ലുമ്പോൾ കാരണമില്ലാ ഭയം, ദുഃഖം</li><li>ഒരു മുറിയിൽ കയറുമ്പോൾ ആകസ്മിക മനോഭേദം</li><li>ഒരേ ഒരു ഭ്രമം ആവർത്തിക്കുന്ന ദുഃസ്വപ്നം</li><li>ആരോ നോക്കുന്നു — ഒഴിഞ്ഞ ഒരിടത്ത് ഈ ദൃഢ തോന്നൽ</li></ul></div>
+      <div class="gcard"><span class="gcard-icon">📱</span><h4>ഇലക്ട്രോണിക് ശല്യം</h4><ul class="blist" style="font-size:15px;"><li>ചാർജ്ജ് ചെയ്ത ബാറ്ററി ആ ഇടത്ത് ക്ഷണം നേരം കൊണ്ട് ഒഴിഞ്ഞ്</li><li>ഇലക്ട്രിക് കേടില്ലാതെ ദീപം മിന്നൽ</li><li>EMF അളവ് ഒരിടത്ത് മാത്രം ഒരേ ഒരു തരത്തിൽ കൂടൽ</li><li>EVP — ആ നിമിഷം ആരും കേൾക്കാത്ത ശബ്ദം ഓഡിയോ ഫയലിൽ</li></ul></div>
+      <div class="gcard"><span class="gcard-icon">🐾</span><h4>മൃഗ സ്വഭാവം</h4><ul class="blist" style="font-size:15px;"><li>ഒഴിഞ്ഞ ഒരിടം ഇടവിടാതെ ഉൽക്കടതയോടെ നോക്കുന്ന വളർത്ത് മൃഗം</li><li>ഒരു മുറിയിൽ കയറാൻ ഒരു തരത്തിലും തൈരാകാത്ത നായ</li><li>ഒഴിഞ്ഞ ഒരിടം കൃത്യമായി ഒരു ഗ്രഹിക്കാൻ കഴിയുന്നതെന്ന നോട്ടം</li></ul></div>
+    </div>
+    <h3>ഉദ്ദേശ ആത്മ vs. ദൂഷ്ട ആത്മ — ലക്ഷണ വ്യത്യാസം</h3>
+    <div class="ctable-wrap">
+      <table class="ctable">
+        <thead><tr><th>ലക്ഷണം</th><th>ഉദ്ദേശ ആത്മ</th><th>ദൂഷ്ട ആത്മ</th></tr></thead>
+        <tbody>
+          <tr><td>താപ നില</td><td>ഊഷ്മളം, ആശ്വാസ ഊർജ്ജം</td><td>ഹിമ ശൈത്യം, ആകസ്മിക ഠണ്ഡ്</td></tr>
+          <tr><td>ഗന്ധം</td><td>പൂ, പരിചിത ഗന്ധം</td><td>ഗന്ധകം, ദ്രവിക്കൽ</td></tr>
+          <tr><td>മനോഭ്ഭാവം</td><td>ശാന്തി, സ്നേഹ, ഗൃഹാതുരത</td><td>ഭീതി, ക്രോധം, ആശ ഇല്ലായ്മ</td></tr>
+          <tr><td>ശബ്ദം</td><td>സംഗീതം, മൃദുല ശബ്ദം</td><td>ഗർജ്ജനം, ആർത്തനാദം</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>ഒരു സാന്നിധ്യം ഉണ്ടെങ്കിൽ എന്ത് ചെയ്യണം</h3>
+    <ul class="blist"><li><strong>ശാന്തത പാലിക്കുക.</strong> ഭയം ദൂഷ്ടശക്തിക്ക് ഊർജ്ജം നൽകുന്നു</li><li><strong>ഭീഷണിയെങ്കിൽ ഇടം വിടുക.</strong> ശക്തി കൊണ്ട് ഏറ്റുമുട്ടൽ ബുദ്ധിമോശം</li><li><strong>ശുദ്ധീകരണം:</strong> ഊദ് ദഹനം, ലോബഹൻ — ഓരോ സംസ്കൃതിയിലും ഈ ആചാരം</li><li><strong>ദൃഢ ശബ്ദം:</strong> — <em>"ഇത് നിന്റെ ഇടമല്ല. നീ പോകണം."</em></li><li><strong>ആത്മീയ നിർദ്ദേശം</strong> — നിന്റെ വിശ്വാസ പദ്ധതി അനുസരിച്ച്</li><li><strong>എല്ലാം രേഖപ്പെടുത്തുക</strong> — തീയതി, സമയം, ഫോട്ടോ, ഓഡിയോ</li><li><strong>ആദ്യം ഡോക്ടർ</strong> — അതീന്ദ്രിയ നിഗമനത്തിന് മുൻപ് ഭൗതിക കാരണം ഒഴിവാക്കണം</li></ul>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<div class="conclusion">
+  <div class="lang-en">
+    <h2>Conclusion</h2>
+    <p>Paranormal experiences — ghosts, possession, exorcism — have been documented in every human civilization from the earliest recorded history. Science can explain many of these experiences. But the voice recordings from the Anneliese Michel case, the words that physically appeared on Roland Doe's skin, and the mysteriously growing chains on the Lakkidi tree remain outside the explanatory reach of official science to this day.</p>
+    <br>
+    <p>Kerala holds a uniquely wise perspective. Where Western traditions seek to banish and destroy spirits, Kerala's approach is to <em>appease and coexist</em> — to acknowledge the spirit's unresolved grievance and find resolution together. This philosophical difference reflects a profound truth: the paranormal is not solely about fear. It is about the relationship between the living and the dead, the seen and the unseen.</p>
+    <br>
+    <p>Whether these experiences are genuinely supernatural or extraordinary products of the human mind remains one of history's greatest open questions. The only honest position available to us is this: <strong>we do not yet know.</strong> And in that vast, humbling space of not-knowing lies the fascinating, enduring frontier of paranormal research.</p>
+  </div>
+  <div class="lang-ml-text" style="display:none;">
+    <h2>ഉപസംഹാരം</h2>
+    <p>ചരിത്രം എഴുതിയ ആദ്യ നാഗരികതകൾ മുതൽ ഇന്നോളം — ഓരോ ജനതയും ഈ ലോകത്തെ അറിഞ്ഞിരിക്കുന്നു. ശാസ്ത്രം ഒട്ടേറെ ഉത്തരങ്ങൾ നൽകി. എന്നിട്ടും അനെലിഷ് മൈക്കലിന്റെ ആ ഓഡിയോ, റോളൻഡ്ന്റെ ത്വക്കിൽ ഉദ്ഭവിച്ച ആ ഉയർന്ന വാക്കുകൾ, ലക്കിടിയിലെ ആ ഒരിക്കലും നിൽക്കാത്ത ചങ്ങലകൾ — ശാസ്ത്രം ഇന്നും ഈ ചോദ്യങ്ങൾ‌ക്ക് മുൻ‌പ് നിശബ്ദം.</p>
+    <br>
+    <p>കേരളം ഒരു ആഴമേറിയ ജ്ഞാനം ഉൾക്കൊള്ളുന്നു. ആത്മാക്കളെ ഓടിക്കൂ, നശിപ്പിക്കൂ — ഇതല്ല കേരളത്തിന്റെ ചിന്ത. <em>ആ ദുഃഖം കേൾക്കൂ, ആ ദുഃഖം ശമിപ്പിക്കൂ, ഒപ്പം ജീവിക്കൂ</em> — ഇതാണ് ഇവിടത്തെ വഴി. ഈ ദർശന ഭേദം ഒരു ആഴമേറിയ സത്യം ഉൾക്കൊള്ളുന്നു: ഭൂതലോകം ഭയം മാത്രമല്ല. അത് ജീവിക്കുന്നവരും മരിച്ചവരും തമ്മിലുള്ള ഒരു ബന്ധം — ദൃശ്യവും അദൃശ്യവും തമ്മിലുള്ള ഒരു ഭാഷ.</p>
+    <br>
+    <p>ഈ അനുഭവങ്ങൾ ശരിക്കും അതീന്ദ്രിയമോ, അതോ മനുഷ്യ മനസ്സിന്റെ അദ്ഭുതകരമായ ഉൽപ്പന്നങ്ങളോ — ഇതൊന്നും ഇനിയും ആർക്കും ഉറപ്പ് പറയാൻ കഴിയില്ല. ആ ഉറപ്പ് ഇല്ലായ്മ ഒരു പ്രഖ്യാപനമാണ്: <strong>ഇതുവരെ നമ്മൾ അറിഞ്ഞിട്ടില്ല.</strong> ആ "അറിഞ്ഞില്ല" എന്ന വലിയ ഇടത്തിൽ — ആ വിനീതിയിൽ — ആണ് പരാനോർമൽ ഗവേഷണത്തിന്റെ ചരിത്ര ഭ്രമണ കേന്ദ്രം.</p>
+  </div>
+  <div style="height:1px;background:linear-gradient(90deg,transparent,var(--red2),transparent);margin:30px 0 22px;position:relative;"></div>
+  <p style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:5px;color:var(--muted);text-transform:uppercase;position:relative;">
+    <span class="lang-en">Paranormal Investigation Studies · Salman Hashir · 2025</span>
+    <span class="lang-ml-text" style="display:none;">പരാനോർമൽ ഗവേഷണ പഠനം · സൽമാൻ ഹാഷിർ · 2025</span>
+  </p>
+</div>
+
+</main>
+
+<footer>
+  <span class="lang-en">Paranormal Investigation Studies <span>✦</span> Salman Hashir <span>✦</span> 2025</span>
+  <span class="lang-ml-text" style="display:none;">പരാനോർമൽ ഗവേഷണ പഠനം <span>✦</span> സൽമാൻ ഹാഷിർ <span>✦</span> 2025</span>
+</footer>
+
+<script>
+// ============ LANGUAGE TOGGLE ============
+function setLang(lang) {
+  const body = document.body;
+  const btnEn = document.getElementById('btn-en');
+  const btnMl = document.getElementById('btn-ml');
+  const enEls = document.querySelectorAll('.lang-en');
+  const mlEls = document.querySelectorAll('.lang-ml-text');
+
+  if (lang === 'ml') {
+    btnEn.classList.remove('active');
+    btnMl.classList.add('active');
+    body.classList.add('lang-ml');
+    enEls.forEach(el => el.style.display = 'none');
+    mlEls.forEach(el => {
+      el.style.display = (el.tagName === 'SPAN') ? 'inline' : 'block';
+    });
+  } else {
+    btnMl.classList.remove('active');
+    btnEn.classList.add('active');
+    body.classList.remove('lang-ml');
+    enEls.forEach(el => {
+      el.style.display = (el.tagName === 'SPAN') ? 'inline' : 'block';
+    });
+    mlEls.forEach(el => el.style.display = 'none');
+  }
+}
+
+// ============ SCROLL ANIMATIONS ============
+document.addEventListener('DOMContentLoaded', () => {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+      }
+    });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.section').forEach(s => obs.observe(s));
+
+  // Smooth scroll TOC
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 64, behavior: 'smooth' });
+    });
+  });
+});
+
+// ============ FLOATING PARTICLES ============
+(function() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rand(a, b) { return Math.random() * (b - a) + a; }
+
+  // Create particles — ember-like, red/gold
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: rand(0, W),
+      y: rand(0, H),
+      r: rand(0.5, 2.2),
+      vx: rand(-0.15, 0.15),
+      vy: rand(-0.4, -0.1),
+      life: rand(0, 1),
+      maxLife: rand(0.6, 1),
+      color: Math.random() < 0.6 ? 'rgba(176,48,48,' : 'rgba(201,168,76,',
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.life += 0.002;
+      if (p.life > p.maxLife) {
+        p.life = 0;
+        p.x = rand(0, W);
+        p.y = H + 10;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      const alpha = Math.sin((p.life / p.maxLife) * Math.PI) * 0.7;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + alpha + ')';
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

@@ -61,8 +61,8 @@ const BlogsAndReports = () => {
             initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} 
             variants={{ visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: (i % 2) * 0.1 } }, hidden: { opacity: 0, y: 40 } }}
             style={{ 
-              background: 'rgba(201,168,76,0.02)', 
-              border: '1px solid rgba(201,168,76,0.08)', 
+              background: 'rgba(79,70,229,0.02)', 
+              border: '1px solid rgba(79,70,229,0.08)', 
               padding: '2.5rem', 
               display: 'flex', 
               flexDirection: 'column', 
@@ -88,12 +88,12 @@ const BlogsAndReports = () => {
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--black)', background: 'var(--gold-dim)', padding: '0.2rem 0.6rem' }}>{item.type}</span>
             </div>
             
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(201,168,76,0.5)', marginBottom: '0.8rem' }}>{item.category}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(79,70,229,0.5)', marginBottom: '0.8rem' }}>{item.category}</span>
             <h3 style={{ fontFamily: 'var(--font-body)', fontSize: '1.45rem', fontWeight: 700, color: 'var(--white)', lineHeight: 1.3, marginBottom: '1rem' }}>{item.title}</h3>
-            <p style={{ fontSize: '0.9rem', fontWeight: 300, fontStyle: 'italic', color: 'rgba(240,237,230,0.5)', lineHeight: 1.8, marginBottom: '2rem', flexGrow: 1 }}>{item.desc}</p>
+            <p style={{ fontSize: '0.9rem', fontWeight: 300, fontStyle: 'italic', color: 'rgba(15,23,42,0.6)', lineHeight: 1.8, marginBottom: '2rem', flexGrow: 1 }}>{item.desc}</p>
             
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <a href={item.link} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', padding: '0.5rem 1rem', border: '1px solid var(--gold)', color: 'var(--gold)', background: 'rgba(201,168,76,0.06)', transition: 'all 0.3s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.15)'; e.currentTarget.style.color = 'var(--white)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(201,168,76,0.06)'; e.currentTarget.style.color = 'var(--gold)'; }}>
+              <a href={item.link} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', textDecoration: 'none', padding: '0.5rem 1rem', border: '1px solid var(--gold)', color: 'var(--gold)', background: 'rgba(79,70,229,0.06)', transition: 'all 0.3s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(79,70,229,0.15)'; e.currentTarget.style.color = 'var(--white)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(79,70,229,0.06)'; e.currentTarget.style.color = 'var(--gold)'; }}>
                 {item.type === 'PDF' || item.type === 'HTML' ? '👁 View Online' : '⬇ Download'}
               </a>
             </div>

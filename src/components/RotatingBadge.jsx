@@ -23,7 +23,7 @@ const RotatingBadge = ({ text = "BUILDER OF DIGITAL WORLDS • ", size = 130 }) 
       <div style={{ 
         width: size * 0.15, height: size * 0.15, 
         background: 'var(--gold)', borderRadius: '50%',
-        boxShadow: '0 0 15px rgba(201,168,76,0.3)' 
+        boxShadow: '0 0 15px rgba(79,70,229,0.3)' 
       }} />
     </div>
   );

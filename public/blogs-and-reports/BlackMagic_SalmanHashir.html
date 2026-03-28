@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Magic – The Complete Study of Dark Arts | Salman Hashir</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+Malayalam:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0608;
+    --surface: #120d0f;
+    --card: #1a1215;
+    --border: #3a1f28;
+    --accent: #c9303c;
+    --accent2: #e8a020;
+    --accent3: #7b4fa0;
+    --text: #e8ddd5;
+    --text-muted: #a08880;
+    --text-dim: #6a5050;
+    --glow: rgba(201,48,60,0.15);
+    --gold: #d4a843;
+    --chapter-line: #2e1a22;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── LANGUAGE TOGGLE ─── */
+  .lang-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(10,6,8,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 24px;
+  }
+
+  .lang-bar-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .toggle-label {
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 10px;
+  }
+
+  .toggle-label.active { color: var(--accent2); }
+
+  .toggle-switch {
+    position: relative;
+    width: 56px;
+    height: 28px;
+    cursor: pointer;
+  }
+
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: #2a1520;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.3s, background 0.3s;
+    box-shadow: 0 0 8px rgba(201,48,60,0.6);
+  }
+
+  input:checked ~ .toggle-track { background: #1a1230; border-color: var(--accent3); }
+  input:checked ~ .toggle-thumb { transform: translateX(28px); background: var(--accent3); box-shadow: 0 0 8px rgba(123,79,160,0.7); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(140,20,30,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(60,10,90,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(180,80,10,0.08) 0%, transparent 60%),
+      var(--bg);
+  }
+
+  .hero-pentagram {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.04;
+    animation: rotateSlow 120s linear infinite;
+  }
+
+  @keyframes rotateSlow { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  .hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+  .hero-warning {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    border: 1px solid rgba(201,48,60,0.4);
+    padding: 6px 20px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+    font-family: 'Cinzel Decorative', serif;
+    animation: pulseWarning 3s ease-in-out infinite;
+  }
+
+  @keyframes pulseWarning {
+    0%, 100% { box-shadow: 0 0 0 rgba(201,48,60,0); }
+    50% { box-shadow: 0 0 20px rgba(201,48,60,0.3); }
+  }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(48px, 10vw, 100px);
+    font-weight: 900;
+    line-height: 1;
+    color: #fff;
+    text-shadow:
+      0 0 60px rgba(201,48,60,0.4),
+      0 0 120px rgba(201,48,60,0.2);
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+  }
+
+  .hero-title span { color: var(--accent); }
+
+  .hero-subtitle {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(16px, 3vw, 22px);
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+  }
+
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 32px 0;
+    color: var(--text-dim);
+    font-size: 20px;
+    letter-spacing: 8px;
+  }
+
+  .hero-divider::before, .hero-divider::after {
+    content: '';
+    height: 1px;
+    width: 80px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  .hero-meta {
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    line-height: 2;
+  }
+
+  .hero-meta strong { color: var(--text); font-weight: 600; }
+
+  .hero-disclaimer {
+    margin-top: 48px;
+    background: rgba(201,48,60,0.06);
+    border: 1px solid rgba(201,48,60,0.2);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    text-align: left;
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-disclaimer strong { color: var(--accent); display: block; margin-bottom: 8px; font-family: 'Cinzel Decorative', serif; font-size: 11px; letter-spacing: 2px; }
+
+  /* ─── TOC ─── */
+  .toc {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 24px;
+  }
+
+  .toc-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toc-list { list-style: none; }
+
+  .toc-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dotted rgba(58,31,40,0.5);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .toc-list li:hover .toc-chapter-title { color: var(--accent2); }
+
+  .toc-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 40px;
+    letter-spacing: 1px;
+  }
+
+  .toc-chapter-title {
+    color: var(--text);
+    font-size: 16px;
+    transition: color 0.2s;
+    flex: 1;
+  }
+
+  .toc-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--text-dim);
+    margin: 0 8px;
+    min-width: 20px;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ─── CHAPTER ─── */
+  .chapter {
+    margin-bottom: 80px;
+    scroll-margin-top: 80px;
+  }
+
+  .chapter-header {
+    position: relative;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+  }
+
+  .chapter-number {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .chapter-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .chapter-line {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3), transparent);
+    margin-top: 20px;
+  }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 40px; }
+
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    padding-left: 16px;
+    border-left: 2px solid var(--accent);
+  }
+
+  p { margin-bottom: 16px; color: var(--text); font-weight: 300; }
+
+  /* ─── CASE BOXES ─── */
+  .case-box {
+    background: linear-gradient(135deg, rgba(26,18,21,0.9), rgba(18,13,15,0.9));
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    padding: 24px 28px;
+    margin: 28px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .case-box::before {
+    content: '⊗';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    font-size: 60px;
+    opacity: 0.04;
+    color: var(--accent2);
+  }
+
+  .case-box-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .case-box-title {
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .case-box p { font-size: 16px; color: var(--text-muted); }
+
+  /* ─── DID YOU KNOW ─── */
+  .did-you-know {
+    background: rgba(60,10,90,0.15);
+    border: 1px solid rgba(123,79,160,0.3);
+    border-left: 3px solid var(--accent3);
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+
+  .did-you-know-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--accent3);
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+  }
+
+  .did-you-know p { font-size: 16px; color: var(--text-muted); }
+
+  /* ─── LISTS ─── */
+  ul, ol {
+    padding-left: 24px;
+    margin-bottom: 16px;
+  }
+
+  li {
+    color: var(--text);
+    margin-bottom: 6px;
+    font-weight: 300;
+  }
+
+  li::marker { color: var(--accent); }
+
+  /* ─── DEFINITION LIST ─── */
+  .def-list { margin-bottom: 20px; }
+  .def-term {
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 16px;
+    margin-bottom: 4px;
+    margin-top: 16px;
+  }
+  .def-desc { color: var(--text-muted); font-size: 16px; padding-left: 16px; }
+
+  /* ─── TRADITIONS GRID ─── */
+  .traditions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .tradition-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+
+  .tradition-item strong { color: var(--accent2); display: block; margin-bottom: 4px; font-size: 13px; letter-spacing: 0.5px; }
+  .tradition-item span { color: var(--text-muted); font-size: 14px; }
+
+  /* ─── KEY FINDINGS ─── */
+  .findings-list { list-style: none; padding: 0; }
+  .findings-list li {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--chapter-line);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    font-size: 16px;
+  }
+  .findings-list li:last-child { border-bottom: none; }
+  .finding-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 28px;
+    margin-top: 3px;
+  }
+
+  /* ─── QUOTE ─── */
+  .pull-quote {
+    text-align: center;
+    padding: 40px 32px;
+    margin: 48px 0;
+    position: relative;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pull-quote::before {
+    content: '\201C';
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 80px;
+    color: var(--accent);
+    opacity: 0.3;
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    line-height: 1;
+  }
+
+  .pull-quote p {
+    font-style: italic;
+    font-size: clamp(18px, 3vw, 24px);
+    color: var(--text);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .pull-quote cite {
+    display: block;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--accent2);
+    letter-spacing: 3px;
+    font-style: normal;
+    font-family: 'Cinzel Decorative', serif;
+  }
+
+  /* ─── BIBLIOGRAPHY ─── */
+  .bib-section { }
+  .bib-category {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    margin-top: 24px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .bib-item {
+    font-size: 15px;
+    color: var(--text-muted);
+    padding: 6px 0;
+    border-bottom: 1px dotted rgba(58,31,40,0.3);
+    display: flex;
+    gap: 12px;
+  }
+  .bib-num { color: var(--accent); min-width: 24px; font-size: 13px; }
+
+  /* ─── ABOUT AUTHOR ─── */
+  .author-section {
+    background: linear-gradient(135deg, var(--card), var(--surface));
+    border: 1px solid var(--border);
+    padding: 40px;
+    margin-top: 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .author-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(201,48,60,0.06), transparent 70%);
+  }
+
+  .author-glyph {
+    width: 72px;
+    height: 72px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(201,48,60,0.4);
+  }
+
+  .author-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .author-bio { font-size: 16px; color: var(--text-muted); max-width: 580px; margin: 0 auto; line-height: 1.8; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+  }
+
+  footer span { color: var(--accent); }
+
+  /* ─── MALAYALAM MODE ─── */
+  body.malayalam .en { display: none !important; }
+  body.malayalam .ml { display: block !important; }
+  body:not(.malayalam) .ml { display: none !important; }
+  body:not(.malayalam) .en { display: block; }
+
+  /* For inline ml/en */
+  body.malayalam span.en { display: none !important; }
+  body.malayalam span.ml { display: inline !important; }
+  body:not(.malayalam) span.ml { display: none !important; }
+  body:not(.malayalam) span.en { display: inline; }
+
+  .ml { font-family: 'Noto Sans Malayalam', sans-serif; font-size: 17px; line-height: 2; }
+
+  /* ─── RESOURCES ─── */
+  .resource-item {
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--border);
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+  .resource-item strong { color: var(--text); display: block; }
+
+  /* ─── STAGE STEPS ─── */
+  .stage-steps { counter-reset: stage; }
+  .stage-step {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--chapter-line);
+    align-items: flex-start;
+  }
+  .stage-label {
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    margin-top: 3px;
+    min-width: 80px;
+    text-align: center;
+  }
+  .stage-text { font-size: 16px; color: var(--text-muted); }
+  .stage-text strong { color: var(--text); display: block; margin-bottom: 4px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .lang-bar { padding: 10px 16px; }
+    .lang-bar-title { display: none; }
+    .main-content, .toc { padding: 0 16px 60px; }
+    .hero { padding: 60px 16px; }
+    .case-box { padding: 18px 16px; }
+    .traditions-grid { grid-template-columns: 1fr 1fr; }
+    .author-section { padding: 28px 20px; }
+    .hero-title { letter-spacing: -1px; }
+  }
+
+  /* Fade in animation */
+  .chapter { animation: fadeUp 0.6s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 40px 0;
+  }
+
+  strong { color: var(--text); font-weight: 600; }
+
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE BAR -->
+<div class="lang-bar">
+  <span class="lang-bar-title">Black Magic · The Complete Study</span>
+  <div class="toggle-wrap">
+    <span class="toggle-label" id="en-label">ENG</span>
+    <label class="toggle-switch" title="Toggle Malayalam / English">
+      <input type="checkbox" id="langToggle">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+    <span class="toggle-label" id="ml-label">മലയാളം</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <svg class="hero-pentagram" viewBox="0 0 200 200" fill="none" stroke="white" stroke-width="0.5">
+    <polygon points="100,5 120,65 180,65 132,100 150,160 100,125 50,160 68,100 20,65 80,65"/>
+    <circle cx="100" cy="100" r="95" stroke-dasharray="4 4"/>
+    <circle cx="100" cy="100" r="70"/>
+    <circle cx="100" cy="100" r="50" stroke-dasharray="2 6"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-warning">
+      <span class="en">⚠ Educational &amp; Research Purpose Only</span>
+      <span class="ml">⚠ വിദ്യാഭ്യാസ &amp; ഗവേഷണ ആവശ്യം മാത്രം</span>
+    </div>
+    <h1 class="hero-title">
+      BLACK<br><span>MAGIC</span>
+    </h1>
+    <div class="hero-subtitle">
+      <span class="en">The Complete Study of Dark Arts</span>
+      <span class="ml">ഇരുണ്ട കലകളുടെ സമ്പൂർണ്ണ പഠനം</span>
+    </div>
+    <div class="hero-divider">✦ ✦ ✦</div>
+    <div class="hero-meta">
+      <strong>
+        <span class="en">Written by Salman Hashir</span>
+        <span class="ml">സൽമാൻ ഹാഷിർ രചിച്ചത്</span>
+      </strong><br>
+      <span class="en">An Educational &amp; Research Book · 2026</span>
+      <span class="ml">ഒരു വിദ്യാഭ്യാസ &amp; ഗവേഷണ പുസ്തകം · 2026</span>
+    </div>
+    <div class="hero-disclaimer">
+      <strong>
+        <span class="en">DISCLAIMER</span>
+        <span class="ml">നിരാകരണം</span>
+      </strong>
+      <span class="en">This book is written entirely for educational, research, historical, and psychological analysis of black magic. It is not intended to promote, practice, or endorse any such activities. The author strongly advises against following any practice described herein. <em>"Knowledge is the best shield against ignorance and exploitation."</em></span>
+      <span class="ml">ഈ പുസ്തകം പൂർണ്ണമായും black magic-നെ educational, research, historical, psychological perspectives-ൽ analyze ചെയ്യുന്നതിനായി എഴുതിയതാണ്. Black magic practice ചെയ്യുന്നതിനോ promote ചെയ്യുന്നതിനോ ഇത് ഉദ്ദേശിക്കുന്നില്ല. <em>"അജ്ഞതയ്‌ക്കും ചൂഷണത്തിനും എതിരായ ഏറ്റവും നല്ല ഉപകരണം അറിവാണ്."</em></span>
+    </div>
+  </div>
+</section>
+
+<!-- TOC -->
+<nav class="toc">
+  <div class="toc-title">
+    <span class="en">📖 Table of Contents</span>
+    <span class="ml">📖 ഉള്ളടക്കം</span>
+  </div>
+  <ul class="toc-list" id="toc-list">
+    <li onclick="document.getElementById('ch0').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">00</span>
+      <span class="toc-chapter-title en">Preface</span>
+      <span class="toc-chapter-title ml">ആമുഖം</span>
+    </li>
+    <li onclick="document.getElementById('ch1').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">01</span>
+      <span class="toc-chapter-title en">Black Magic — An Introduction</span>
+      <span class="toc-chapter-title ml">Black Magic — ഒരു ആമുഖം</span>
+    </li>
+    <li onclick="document.getElementById('ch2').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">02</span>
+      <span class="toc-chapter-title en">History — Ancient Times to Modern Era</span>
+      <span class="toc-chapter-title ml">ചരിത്രം — Ancient Times to Modern Era</span>
+    </li>
+    <li onclick="document.getElementById('ch3').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">03</span>
+      <span class="toc-chapter-title en">Black Magic in Kerala — A Detailed Study</span>
+      <span class="toc-chapter-title ml">Kerala-ൽ Black Magic — വിശദമായ പഠനം</span>
+    </li>
+    <li onclick="document.getElementById('ch4').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">04</span>
+      <span class="toc-chapter-title en">Major Black Magic Traditions of the World</span>
+      <span class="toc-chapter-title ml">ലോകത്തിലെ Major Black Magic Traditions</span>
+    </li>
+    <li onclick="document.getElementById('ch5').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">05</span>
+      <span class="toc-chapter-title en">Real Cases — Documented Events from Around the World</span>
+      <span class="toc-chapter-title ml">ലോകത്തിലെ Real Cases — Documented Events</span>
+    </li>
+    <li onclick="document.getElementById('ch6').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">06</span>
+      <span class="toc-chapter-title en">Science Explains Black Magic</span>
+      <span class="toc-chapter-title ml">ശാസ്ത്രം Black Magic-നെ Explain ചെയ്യുന്നു</span>
+    </li>
+    <li onclick="document.getElementById('ch7').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">07</span>
+      <span class="toc-chapter-title en">Black Magic &amp; Organized Religion</span>
+      <span class="toc-chapter-title ml">Black Magic &amp; Organized Religion</span>
+    </li>
+    <li onclick="document.getElementById('ch8').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">08</span>
+      <span class="toc-chapter-title en">Black Magic &amp; Law — Legal Perspectives</span>
+      <span class="toc-chapter-title ml">Black Magic &amp; Law — Legal Perspectives</span>
+    </li>
+    <li onclick="document.getElementById('ch9').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">09</span>
+      <span class="toc-chapter-title en">The Evil Eye — Nazar — Worldwide</span>
+      <span class="toc-chapter-title ml">The Evil Eye — Nazar — ലോകമെമ്പാടും</span>
+    </li>
+    <li onclick="document.getElementById('ch10').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">10</span>
+      <span class="toc-chapter-title en">Black Magic Victims — Stories, Psychology &amp; Recovery</span>
+      <span class="toc-chapter-title ml">Black Magic Victims — Stories, Psychology &amp; Recovery</span>
+    </li>
+    <li onclick="document.getElementById('ch11').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">11</span>
+      <span class="toc-chapter-title en">Famous Black Magic Practitioners</span>
+      <span class="toc-chapter-title ml">Famous Black Magic Practitioners</span>
+    </li>
+    <li onclick="document.getElementById('ch12').scrollIntoView({behavior:'smooth'})">
+      <span class="toc-num">12</span>
+      <span class="toc-chapter-title en">Conclusion</span>
+      <span class="toc-chapter-title ml">ഉപസംഹാരം</span>
+    </li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════ MAIN CONTENT ═══════════════════════ -->
+<main class="main-content">
+
+  <!-- PREFACE -->
+  <article class="chapter" id="ch0">
+    <div class="chapter-header">
+      <span class="chapter-number en">Preface</span>
+      <span class="chapter-number ml">ആമുഖം</span>
+      <h2 class="chapter-title">
+        <span class="en">Preface — The Journey Begins</span>
+        <span class="ml">ആമുഖം — യാത്ര ആരംഭിക്കുന്നു</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <p class="en">In every corner of the world, in every culture, the concept of 'dark power' — dark arts — has persisted for centuries, sometimes thousands of years. This idea is a reflection of one of the most ancient human fears on earth: the fear that invisible forces exist and that those forces can be manipulated to cause harm.</p>
+    <p class="ml">ലോകത്തിന്റെ ഓരോ മൂലയിലും, ഓരോ സംസ്കാരത്തിലും, 'കറുത്ത ശക്തി' — dark arts — എന്ന ആശയം നൂറ്റാണ്ടുകൾ, ചിലപ്പോൾ ആയിരക്കണക്കിന് വർഷങ്ങൾ — നിലനിൽക്കുന്നു. ഈ ആശയം ഭൂമിയിലെ ഏറ്റവും ancient human fears-ൽ ഒന്നിന്റെ reflection ആണ്: invisible forces ഉണ്ടെന്നും, ആ forces manipulate ചെയ്ത് harm ഉണ്ടാക്കാൻ കഴിയുമെന്നും ഉള്ള ഭയം.</p>
+
+    <p class="en">In this book, the origin, evolution, cultural manifestation, psychological basis, and real-world consequences of that fear are systematically explored. From Ancient Egypt's curse tablets to modern Kerala fraud cases; from the Salem Witch Trials to African witch-hunting murders; from Voodoo's real zombie chemicals to psychological manipulation techniques.</p>
+    <p class="ml">ഈ book-ൽ, ആ fear-ന്റെ origin, evolution, cultural manifestation, psychological basis, real-world consequences — ഇവ systematically explore ചെയ്യുന്നു. Ancient Egypt-ലെ curse tablets മുതൽ modern Kerala fraud cases വരെ; Salem Witch Trials-ൽ നിന്ന് African witch-hunting murders വരെ; Voodoo-ലെ real zombie chemicals മുതൽ psychological manipulation techniques വരെ.</p>
+
+    <p class="en">This is not a believer's book, nor a complete skeptic's book. This is the journey of a curious intellectual — an honest attempt to find truth.</p>
+    <p class="ml">ഇത് ഒരു believer's book അല്ല, ഒരു complete skeptic's book-ഉം അല്ല. ഇത് ഒരു curious intellectual-ന്റെ journey ആണ് — truth find ചെയ്യാനുള്ള honest attempt.</p>
+
+    <div class="pull-quote">
+      <p class="en">"To understand darkness, you must first stop being afraid of it."</p>
+      <p class="ml">"ഇരുട്ടിനെ മനസ്സിലാക്കണമെങ്കിൽ, ആദ്യം അതിനെ ഭയക്കുന്നത് നിർത്തണം."</p>
+      <cite>— Salman Hashir</cite>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 1 -->
+  <article class="chapter" id="ch1">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter One</span>
+      <span class="chapter-number ml">അദ്ധ്യായം ഒന്ന്</span>
+      <h2 class="chapter-title">
+        <span class="en">Black Magic — An Introduction</span>
+        <span class="ml">Black Magic — ഒരു ആമുഖം</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">1.1 What Is Black Magic?</div>
+      <div class="section-title ml">1.1 Black Magic എന്നാൽ എന്ത്?</div>
+
+      <p class="en">When people hear the two words 'Black Magic', they feel different things. Some feel intense fear, some feel curiosity, some disbelief, some reverence. In these diverse reactions lies a hidden truth: Black magic is a real, powerful cultural phenomenon — whether it is supernatural or not is a separate question.</p>
+      <p class="ml">'Black Magic' — ഈ രണ്ട് വാക്കുകൾ കേൾക്കുമ്പോൾ ആളുകൾക്ക് feel ആകുന്നത് വ്യത്യസ്തമാണ്. ചിലർക്ക് intense fear, ചിലർക്ക് curiosity, ചിലർക്ക് disbelief, ചിലർക്ക് reverence. ഈ diverse reactions-ൽ ഒരു truth hidden ആണ്: Black magic ഒരു real, powerful cultural phenomenon ആണ്.</p>
+
+      <p class="en"><strong>Technical definition:</strong> Black magic is the collective term for practices that attempt to use supernatural forces — evil spirits, demons, dark energies — mostly with harmful intentions, through rituals, spells, and curses to produce desired outcomes. While 'white magic' is intended for healing, protection, and divination, black magic is intended for harm, control, and revenge.</p>
+      <p class="ml"><strong>Technical definition:</strong> Black magic എന്നത് supernatural forces — evil spirits, demons, dark energies — ഉപയോഗിച്ച്, mostly harmful intentions-ൽ, rituals, spells, curses perform ചെയ്ത് desired outcomes produce ചെയ്യാൻ ശ്രമിക്കുന്ന practices-ന്റെ collective term ആണ്.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">1.2 How Does the World Define Black Magic?</div>
+      <div class="section-title ml">1.2 ലോകം Black Magic-നെ എങ്ങനെ Define ചെയ്യുന്നു?</div>
+
+      <div class="traditions-grid">
+        <div class="tradition-item"><strong>Western Occultism</strong><span class="en">Left-hand path vs. Right-hand path magic</span><span class="ml">Left-hand path vs. Right-hand path magic</span></div>
+        <div class="tradition-item"><strong>Islamic Tradition</strong><span class="en">Sihr — forbidden sorcery using Jinns</span><span class="ml">Sihr — Jinns ഉപയോഗിക്കുന്ന നിരോധിത ജാദൂ</span></div>
+        <div class="tradition-item"><strong>Indian Tradition</strong><span class="en">Vamachara (left-hand Tantra), Abhichara</span><span class="ml">വാമാചാരം, ആഭിചാരം</span></div>
+        <div class="tradition-item"><strong>African Traditions</strong><span class="en">Dark medicine men vs. healers</span><span class="ml">Dark medicine men vs. healers</span></div>
+        <div class="tradition-item"><strong>Native American</strong><span class="en">Skinwalkers, dark shamanic practices</span><span class="ml">Skinwalkers, dark shamanic practices</span></div>
+        <div class="tradition-item"><strong>Caribbean</strong><span class="en">'Petro Loa' — aggressive Voodoo spirits</span><span class="ml">'Petro Loa' — aggressive Voodoo spirits</span></div>
+      </div>
+
+      <div class="did-you-know">
+        <span class="did-you-know-label en">💡 Did You Know?</span>
+        <span class="did-you-know-label ml">💡 നിങ്ങൾക്ക് അറിയാമോ?</span>
+        <p class="en">The first recorded usage of 'Black Magic' in the Oxford English Dictionary is in an English text from 1563 CE. But the concept is thousands of years older — just with different names in different cultures.</p>
+        <p class="ml">Oxford English Dictionary-ൽ 'Black Magic' ന്റെ first recorded usage 1563 CE-ലെ ഒരു English text-ൽ ആണ്. എന്നാൽ ആ concept ആയിരക്കണക്കിന് വർഷം പഴക്കമുള്ളതാണ് — വ്യത്യസ്ത സംസ്കാരങ്ങളിൽ വ്യത്യസ്ത പേരുകളിൽ.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">1.3 Black Magic, Witchcraft, Sorcery — The Difference</div>
+      <div class="section-title ml">1.3 Black Magic, Witchcraft, Sorcery — വ്യത്യാസം</div>
+
+      <div class="def-list">
+        <div class="def-term">Witchcraft</div>
+        <div class="def-desc en">A practitioner's (witch/warlock) inherent power. Born with it, or learned. Often nature-connected. Wicca is modern witchcraft.</div>
+        <div class="def-desc ml">Practitioner (witch/warlock) ന്റെ inherent power ഉപയോഗം. Born with it, or learned. Often nature-connected. Wicca modern witchcraft ആണ്.</div>
+
+        <div class="def-term">Sorcery</div>
+        <div class="def-desc en">Uses learned knowledge, formulas, and ingredients. External tools — herbs, crystals, written spells — are essential. Black magic is the dark application of sorcery.</div>
+        <div class="def-desc ml">Learned knowledge, formulas, ingredients ഉപയോഗിക്കുന്നു. External tools — herbs, crystals, written spells — essential. Black magic sorcery-ന്റെ dark application ആണ്.</div>
+
+        <div class="def-term">Necromancy</div>
+        <div class="def-desc en">Invoking dead spirits — a specific type of black magic. Considered the darkest form in many traditions.</div>
+        <div class="def-desc ml">Dead spirits invoke ചെയ്യൽ — specific type of black magic. ഒട്ടേറെ traditions-ൽ ഇത് ഏറ്റവും ഇരുണ്ട രൂപമായി കണക്കാക്കപ്പെടുന്നു.</div>
+
+        <div class="def-term">Demonology</div>
+        <div class="def-desc en">Demon-specific practices — summoning, binding, controlling. Medieval grimoires (magic books) focus on this.</div>
+        <div class="def-desc ml">Demon-specific practices — summoning, binding, controlling. Medieval grimoires ഇതിൽ focus ചെയ്യുന്നു.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">1.4 Why Study Black Magic?</div>
+      <div class="section-title ml">1.4 Black Magic study ചെയ്യേണ്ടത് എന്തുകൊണ്ട്?</div>
+      <ul>
+        <li><strong class="en">Millions still believe:</strong><strong class="ml">ദശലക്ഷക്കണക്കിനു പേർ ഇപ്പോഴും വിശ്വസിക്കുന്നു:</strong> <span class="en">In India alone, 70%+ rural population holds supernatural beliefs — NFHS surveys confirm.</span><span class="ml">India alone-ൽ 70%+ rural population supernatural beliefs hold ചെയ്യുന്നു — NFHS surveys confirm ചെയ്യുന്നു.</span></li>
+        <li><strong class="en">Real harm happens:</strong><strong class="ml">യഥാർത്ഥ ദ്രോഹം സംഭവിക്കുന്നു:</strong> <span class="en">Witch hunting in India causes hundreds of murders annually.</span><span class="ml">Witch hunting India-ൽ annual hundreds of murders ഉണ്ടാക്കുന്നു.</span></li>
+        <li><strong class="en">Financial exploitation:</strong><strong class="ml">സാമ്പത്തിക ചൂഷണം:</strong> <span class="en">Superstition-based fraud in India is a multi-billion rupee industry.</span><span class="ml">India-ൽ superstition-based fraud ഒരു multi-billion rupee industry ആണ്.</span></li>
+        <li><strong class="en">Cultural understanding:</strong><strong class="ml">സാംസ്കാരിക ധാരണ:</strong> <span class="en">Studying magical thinking is essential to properly understand history, anthropology, and psychology.</span><span class="ml">History, anthropology, psychology ശരിയായി മനസ്സിലാക്കാൻ magical thinking study essential ആണ്.</span></li>
+        <li><strong class="en">Protection through knowledge:</strong><strong class="ml">അറിവിലൂടെ സംരക്ഷണം:</strong> <span class="en">Understanding helps you protect yourself.</span><span class="ml">Understand ചെയ്താൽ protect ചെയ്യാൻ കഴിയും.</span></li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 2 -->
+  <article class="chapter" id="ch2">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Two</span>
+      <span class="chapter-number ml">അദ്ധ്യായം രണ്ട്</span>
+      <h2 class="chapter-title">
+        <span class="en">History — Ancient Times to Modern Era</span>
+        <span class="ml">ചരിത്രം — Ancient Times to Modern Era</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">2.1 Prehistoric Origins of Magic</div>
+      <div class="section-title ml">2.1 Magic-ന്റെ Prehistoric Origins</div>
+      <p class="en">The roots of magic are as ancient as human civilization itself. Cave art from the Upper Paleolithic period (40,000–10,000 BCE) shows evidence of ritual activities in the Lascaux Caves of France and Altamira in Spain, where hunters drew images of animals and performed rituals — 'sympathetic magic' — believing that drawing the animal gives power over it.</p>
+      <p class="ml">Magic-ന്റെ roots human civilization-ന്റേതു പോലെ ancient ആണ്. Upper Paleolithic period (40,000-10,000 BCE) cave art-ൽ ritual activities visible ആണ്. France-ലെ Lascaux Caves-ലും Spain-ലെ Altamira-ലും, hunters animals-ന്റെ images draw ചെയ്ത് ritual perform ചെയ്തു — 'sympathetic magic' — drawing the animal gives power over it.</p>
+
+      <div class="did-you-know">
+        <span class="did-you-know-label en">💡 Anthropological Note</span>
+        <span class="did-you-know-label ml">💡 Anthropological Note</span>
+        <p class="en">Sir James George Frazer, in 'The Golden Bough' (1890), argues: Magic is humanity's first attempt at science — a primitive effort to establish cause and effect relationships. The rituals were wrong, but the scientific impulse was there.</p>
+        <p class="ml">Sir James George Frazer, 'The Golden Bough' (1890)-ൽ argue ചെയ്യുന്നു: Magic is humanity's first attempt at science — cause and effect relationship establish ചെയ്യാനുള്ള primitive effort. The rituals were wrong, but the scientific impulse was there.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">2.2 Ancient Egypt — Magic Capital of the Ancient World</div>
+      <div class="section-title ml">2.2 Ancient Egypt — ആദ്യ ലോകത്തിന്റെ Magic Capital</div>
+      <p class="en">In Ancient Egypt, magic (Heka) was a fundamental cosmic force that existed since creation. In Egyptian cosmology, Ra (sun god) used Heka at the time of creation to make it possible. Magic was a universal tool accessible to gods, humans, and trained priests.</p>
+      <p class="ml">Ancient Egypt-ൽ magic (Heka) ഒരു fundamental cosmic force ആയിരുന്നു — creation-ൽ നിന്നേ exist ചെയ്യുന്ന energy. Egyptian cosmology-ൽ, Ra (sun god) ഉദ്ഭവ സമയം Heka use ചെയ്ത് creation possible ആക്കി.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">The Greek Magical Papyri (PGM) — Discovered 1828</div>
+        <div class="case-box-title ml">The Greek Magical Papyri (PGM) — 1828-ൽ Discovered</div>
+        <p class="en">Discovered in the Anastasi collection in 1828, these papyri written between 2nd century BCE and 5th century CE are a treasure. 130+ texts in Greek, Egyptian, and Demotic languages. Love spells, death curses, binding magic, divination — everything included. The 'Curse of Binding' — a spell to completely immobilize a person. Preserved in the British Museum.</p>
+        <p class="ml">1828-ൽ Anastasi collection-ൽ discovered ആയ, 2nd century BCE — 5th century CE-ൽ written papyri ഒരു treasure ആണ്. 130+ texts, Greek, Egyptian, Demotic languages-ൽ. Love spells, death curses, binding magic, divination — everything included. 'Curse of Binding' — ഒരു person-നെ completely immobilize ചെയ്യുന്ന spell. British Museum-ൽ ഇവ preserved ആണ്.</p>
+      </div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">The Execration Texts (2000 BCE — Egypt)</div>
+        <div class="case-box-title ml">The Execration Texts (2000 BCE — Egypt)</div>
+        <p class="en">In Ancient Egypt, the names of a pharaoh's enemies were written on clay figurines and then destroyed — a ritual. The belief was that smashing the enemy's image would harm the actual enemy — sympathetic magic. Hundreds of such broken figurines were excavated at the Saqqara necropolis. Egypt's state-sponsored black magic practice.</p>
+        <p class="ml">Ancient Egypt-ൽ pharaoh-ന്റെ enemies-ന്റെ names clay figurines-ൽ write ചെയ്ത് destroy ചെയ്യുന്ന ritual. Enemy-ന്റെ image smash ചെയ്‌താൽ actual enemy harm ആകും — sympathetic magic. Saqqara necropolis-ൽ hundreds of such broken figurines excavated. Egypt-ന്റെ state-sponsored black magic practice.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">2.3 Mesopotamia — First Anti-Magic Laws</div>
+      <div class="section-title ml">2.3 Mesopotamia — ആദ്യ Anti-Magic Laws</div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Hammurabi's Code on Witchcraft (1754 BCE)</div>
+        <div class="case-box-title ml">Hammurabi's Code on Witchcraft (1754 BCE)</div>
+        <p class="en">One of the world's most ancient written laws, Hammurabi's Code contains specific provisions on witchcraft: 'If a man accuses another of witchcraft but cannot prove it, the accused shall throw himself into the river. If he sinks, the accuser inherits his property. If he floats, the accuser is put to death.' This trial-by-water method (ordeal) became widespread worldwide.</p>
+        <p class="ml">ലോകത്തിലെ ഏറ്റവും ancient written laws-ൽ ഒന്ന് ആയ Hammurabi's Code-ൽ witchcraft-ന് specific provisions: 'If a man accuses another of witchcraft but cannot prove it, the accused shall throw himself into the river. If he sinks, the accuser inherits his property. If he floats, the accuser is put to death.' This trial-by-water method (ordeal) became widespread worldwide.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">2.4 Classical Greece &amp; Rome</div>
+      <div class="section-title ml">2.4 Classical Greece &amp; Rome</div>
+      <p class="en">In Greece, 'Katadesmoi' (binding tablets) were curse-inscribed lead tablets that were buried. Hundreds were discovered in Athens alone. 'Pharmakeia' (drugs, poison + magic) combined ancient pharmacy and magic. In Rome, Emperor Tiberius exiled magic practitioners in 17 CE. The Roman Twelve Tables Law stated: 'Whoever casts an evil spell on a neighbour's crops shall be crucified.'</p>
+      <p class="ml">Greek Magic: 'Katadesmoi' (binding tablets) — lead tablets-ൽ curse write ചെയ്ത് bury ചെയ്യൽ. Athens-ൽ alone hundreds discovered. Rome: Emperor Tiberius — magic practitioners exile ചെയ്തു (17 CE). Roman Twelve Tables Law: 'Whoever casts an evil spell on a neighbour's crops shall be crucified.'</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Bath Curse Tablets (England, Roman era)</div>
+        <div class="case-box-title ml">Bath Curse Tablets (England, Roman era)</div>
+        <p class="en">In Roman Britain, archaeologists discovered more than 130 curse tablets at the shrine of goddess Sulis Minerva in Bath. Dating from the 2nd–4th century AD, the majority cursed thieves. One reads: 'May Vilbia waste away like water. May she who stole Senovara's bracelet lose her mind and eyes.'</p>
+        <p class="ml">Roman Britain-ൽ, Bath-ലെ Sulis Minerva goddess shrine-ൽ, archaeologists 130-ലധികം curse tablets discovered ചെയ്തു. AD 2nd-4th century. Thieves-നെ curse ചെയ്യുന്നതാണ് majority. 'May Vilbia waste away like water. May she who stole Senovara's bracelet lose her mind and eyes.'</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">2.5 Medieval Europe — The Dark Ages of Witch Hunting</div>
+      <div class="section-title ml">2.5 Medieval Europe — Witch Hunting-ന്റെ Dark Ages</div>
+      <p class="en">In Medieval Europe, as the Catholic Church spread Christianity, 'pagan magic' was declared satanic. Old wise women, herbalists, midwives — these were labeled 'witches'. The <em>Malleus Maleficarum</em> (1486), 'The Hammer of Witches', written by Heinrich Kramer, was endorsed by the Catholic Church and remained the standard reference for inquisitors for 300 years. It specified that women should specifically be targeted, along with torture methods and evidence standards.</p>
+      <p class="ml">Medieval Europe-ൽ, Catholic Church Christianity spread ചെയ്‌തതോടെ, 'pagan magic' satanic ആയി declare ചെയ്യപ്പെട്ടു. Malleus Maleficarum (1486): 'The Hammer of Witches' — Heinrich Kramer written witch-hunting manual. Catholic Church-ന്റെ official endorsement ഉണ്ടായിരുന്നു. 300 years — standard reference for inquisitors.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Salem Witch Trials (Massachusetts, USA — 1692)</div>
+        <div class="case-box-title ml">Salem Witch Trials (Massachusetts, USA — 1692)</div>
+        <p class="en">February 1692 — In Salem Village, 9-year-old Betty Parris and 11-year-old Abigail Williams exhibited strange behavior — convulsions, hallucinations, screaming. Doctor William Griggs diagnosed them as 'Bewitched.' An accusation chain began. At its peak, 200+ people were accused. 19 people were hanged, 1 pressed to death with stones (Giles Corey), and 5 died in prison. Modern analysis attributes the cause to ergot fungus contamination in rye bread, mass hysteria, political disputes, jealousy, and property disputes.</p>
+        <p class="ml">1692 February — Salem Village-ൽ 9-year-old Betty Parris, 11-year-old Abigail Williams strange behavior — convulsions, hallucinations, screaming. Doctor William Griggs diagnosis: 'Bewitched.' Peak: 200+ people accused. 19 people hanged, 1 pressed to death with stones (Giles Corey), 5 died in prison. Modern analysis: Ergot fungus contamination in rye bread, mass hysteria, political disputes, jealousy, property disputes — real causes.</p>
+      </div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Scottish Witch Hunts (1590–1727)</div>
+        <div class="case-box-title ml">Scottish Witch Hunts (1590–1727)</div>
+        <p class="en">Scotland had proportionally more witch executions than any other country. In 1590, King James VI himself interrogated accused witches. His book 'Daemonologie' (1597) influenced Shakespeare's Macbeth. An estimated 4,000 executions occurred. The 'North Berwick Witch Trials' saw 70 people accused of attempting to murder the king through witchcraft.</p>
+        <p class="ml">Scotland had proportionally more witch executions than any other country. 1590: King James VI himself interrogated accused witches. His book 'Daemonologie' (1597) influenced Shakespeare's Macbeth. Estimated 4,000 executions. 'North Berwick Witch Trials' — 70 people accused of attempting to murder the king through witchcraft.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">2.6 19th–20th Century — Scientific Age Reactions</div>
+      <div class="section-title ml">2.6 19th–20th Century — Scientific Age Reactions</div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Nazi Occultism (Germany, 1933–1945)</div>
+        <div class="case-box-title ml">Nazi Occultism (Germany, 1933–1945)</div>
+        <p class="en">Occult interest was widespread among Third Reich leadership. Himmler believed himself to be the reincarnation of King Heinrich I. Wewelsburg Castle served as an SS ritual center. Tibet expeditions (1938–39) searched for Aryan origins and mystical objects. Astrologers and psychics advising top Nazis were documented. Karl Ernst Krafft served as Hitler's astrologer before being imprisoned.</p>
+        <p class="ml">Third Reich leadership-ൽ occult interest widespread ആയിരുന്നു. Himmler believed himself to be reincarnation of King Heinrich I. Wewelsburg Castle — SS ritual center. Tibet expeditions (1938-39) — searching for Aryan origins and mystical objects. Karl Ernst Krafft — Hitler's astrologer, later imprisoned.</p>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 3 -->
+  <article class="chapter" id="ch3">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Three</span>
+      <span class="chapter-number ml">അദ്ധ്യായം മൂന്ന്</span>
+      <h2 class="chapter-title">
+        <span class="en">Black Magic in Kerala — A Detailed Study</span>
+        <span class="ml">Kerala-ൽ Black Magic — വിശദമായ പഠനം</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">3.1 Kerala's Magical Traditions — Historical Background</div>
+      <div class="section-title ml">3.1 Kerala-ലെ Magical Traditions — Historical Background</div>
+      <p class="en">Kerala — God's Own Country — is ironically one of the strongest strongholds of black magic belief in India. There are historical, geographical, and social reasons for this. The Atharvaveda (Vedic magic text) had a strong influence in Kerala. Tantric traditions were particularly developed here. Forest communities (Adivasis) maintained ancient animistic practices, and temple culture fostered deity appeasement rituals.</p>
+      <p class="ml">Kerala — God's Own Country — ആണ് ironically ഇന്ത്യയിൽ black magic belief-ന്റെ strongest strongholds-ൽ ഒന്ന്. Atharvaveda (Vedic magic text) Kerala-ൽ strong influence ഉണ്ടായിരുന്നു. Tantric traditions — Kerala-ൽ particularly developed. Forest communities (Adivasis) — ancient animistic practices. Temple culture — deity appeasement rituals.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">3.2 Major Forms of Black Magic in Kerala</div>
+      <div class="section-title ml">3.2 Kerala-ൽ Black Magic-ന്റെ Major Forms</div>
+
+      <div class="def-list">
+        <div class="def-term">കൂടോത്രം (Koodothram)</div>
+        <div class="def-desc en">'Koodo' (container) + 'thram' — to harm, bind, or control a person. Specially prepared objects: lime + needles buried at the enemy's threshold, lemon stuffed with nails, black cloth bundles, hair + nails + specific materials for binding rituals. When a victim sees such an object, they believe: 'I am cursed.' Psychological impact begins — anxiety, sleep problems, health issues — the nocebo effect.</div>
+        <div class="def-desc ml">'കൂടോ' (container) + 'ത്രം' — ഒരാളെ harm ചെയ്യുക, bind ചെയ്യുക, control ചെയ്യുക. ആ object കണ്ടാൽ victim believe ചെയ്യുന്നു: 'I am cursed.' Psychological impact begins. Anxiety, sleep problems, health issues — nocebo effect.</div>
+
+        <div class="def-term">മാരണം (Maranam)</div>
+        <div class="def-desc en">Death curse — a ritual intended for the death of a specific victim. The most feared form in Kerala. Practitioners: Mantravaadi, Ojhan. Complex rituals on specific days, using specific materials and chants. In investigations, some cases have confirmed actual poison administration under the cover of supernatural claims.</div>
+        <div class="def-desc ml">Death curse — specific victim-ന്റെ death ഉദ്ദേശിക്കുന്ന ritual. Kerala-ൽ ഏറ്റവും feared form. Investigation-ൽ ചില cases-ൽ actual poison administration confirmed ആയിട്ടുണ്ട് — supernatural claim-ഉടെ cover-ൽ.</div>
+
+        <div class="def-term">ഉച്ചാടനം (Uchadanam)</div>
+        <div class="def-desc en">Spirit driving away — technically counter-magic, white magic category. Removing a spirit from a 'possessed' person. Kerala practitioners include Velichappadu (oracle), Mutiyettu performers, and Theyyam artists. Researchers suggest there are genuine psychological therapy elements here — community support and ritual catharsis.</div>
+        <div class="def-desc ml">'Possessed' person-ൽ നിന്ന് spirit remove ചെയ്യൽ. Kerala-ൽ specific practitioners: Velichappadu (oracle), Mutiyettu performers, Theyyam artists. ഇതിൽ genuine psychological therapy elements ഉണ്ടെന്ന് researchers suggest ചെയ്യുന്നു.</div>
+
+        <div class="def-term">ആഭിചാരം (Abhicharam)</div>
+        <div class="def-desc en">Sanskrit origin — harmful ritual magic. Six types in classical Tantric texts: Shanti (pacification), Vashikarana (attraction/control), Stambhana (immobilization), Vidvesha (creating enmity), Ucchatana (driving away), Marana (death). Kerala black magic uses this six-fold system.</div>
+        <div class="def-desc ml">Sanskrit origin — harmful ritual magic. Six types: Shanti, Vashikarana, Stambhana, Vidvesha, Ucchatana, Marana. Kerala black magic ഈ six-fold system use ചെയ്യുന്നു.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">3.3 Famous Temples &amp; Black Magic in Kerala</div>
+      <div class="section-title ml">3.3 Kerala-ൽ Famous Temples &amp; Black Magic</div>
+      <p class="en"><strong>Chottanikkara Bhagavathy Temple (Ernakulam):</strong> Known for 'Unmai' (possession) treatment. Every Friday features 'Velichappadu' — an oracle. Thousands of 'possession victims' are brought here. Mental illness cases are actually treated — but through belief-based ritual.</p>
+      <p class="ml"><strong>Chottanikkara Bhagavathy Temple (Ernakulam):</strong> 'Unmai' (possession) treatment. Every Friday 'Velichappadu' — oracle. Thousands of 'possession victims' here brought. Mental illness cases actually treated — but through belief-based ritual.</p>
+      <p class="en"><strong>Kodungalloor Bhagavathy Temple:</strong> The Thalappoli ritual for a fierce deity. The 'Bharani' festival features taboo-breaking rituals. Serves as a black magic removal center.</p>
+      <p class="ml"><strong>Kodungalloor Bhagavathy Temple:</strong> Thalappoli ritual — fierce deity. 'Bharani' festival — taboo-breaking rituals. Black magic removal center.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">3.4 Kerala Black Magic — Economic Reality</div>
+      <div class="section-title ml">3.4 Kerala Black Magic — Economic Reality</div>
+      <ul>
+        <li><span class="en">Annual spend in Kerala: ₹500 crore+</span><span class="ml">Annual spend: ₹500 crore+ (only Kerala)</span></li>
+        <li><span class="en">Active practitioners: 10,000+ 'Ojhans' across Kerala</span><span class="ml">Active practitioners: 10,000+ 'Ojhans' across Kerala</span></li>
+        <li><span class="en">Average fee per 'treatment': ₹5,000 — ₹5,00,000</span><span class="ml">Average fee per 'treatment': ₹5,000 — ₹5,00,000</span></li>
+        <li><span class="en">Repeat visits designed: 'Problem will come back without regular treatment'</span><span class="ml">Repeat visits designed — 'problem will come back without regular treatment'</span></li>
+      </ul>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Kerala Police Black Magic Cell Investigation (2020)</div>
+        <div class="case-box-title ml">Kerala Police Black Magic Cell Investigation (2020)</div>
+        <p class="en">In 2020, Kerala Police busted a fraud ring in Thrissur district. 15 members, an 'Ojhan' network. MO: Advertise black magic removal on social media. When victims contact them, a 'diagnosis' costs ₹500. Then 'serious problem confirmed' leads to a ₹50,000 ritual. Total: 78 victims, ₹1.2 crore fraud. Chief accused: Ex-government employee, MBA graduate.</p>
+        <p class="ml">2020-ൽ Kerala Police Thrissur district-ൽ ഒരു fraud ring bust ചെയ്തു. 15 members, 'Ojhan' network. MO: Social media-ൽ Black magic removal advertise. Total 78 victims, ₹1.2 crore fraud. Chief accused: Ex-government employee, MBA graduate.</p>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 4 -->
+  <article class="chapter" id="ch4">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Four</span>
+      <span class="chapter-number ml">അദ്ധ്യായം നാല്</span>
+      <h2 class="chapter-title">
+        <span class="en">Major Black Magic Traditions of the World</span>
+        <span class="ml">ലോകത്തിലെ Major Black Magic Traditions</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">4.1 Voodoo / Vodou — West Africa &amp; Caribbean</div>
+      <div class="section-title ml">4.1 Voodoo / Vodou — West Africa &amp; Caribbean</div>
+      <p class="en">The Hollywood image of Voodoo: voodoo dolls, zombie curses, evil priests. Reality: Vodou is a genuine religion of West African origin, fully developed in Haiti. It has 60 million+ practitioners worldwide. UNESCO declared Haitian Vodou an Intangible Cultural Heritage in 2003.</p>
+      <p class="ml">Voodoo — Hollywood ഉണ്ടാക്കിയ image-ൽ: Voodoo dolls, zombie curses, evil priests. Reality: Vodou ഒരു genuine religion ആണ്, West African origin, Haiti-ൽ fully developed. 60 million+ practitioners worldwide. UNESCO 2003-ൽ Haitian Vodou UNESCO Intangible Cultural Heritage ആണ്.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">The Haiti Zombie — Real or Fake? (1962)</div>
+        <div class="case-box-title ml">The Haiti Zombie — Real or Fake? (1962)</div>
+        <p class="en">In 1962, a 20-year-old Haitian farmer named Clairvius Narcisse was admitted to Albert Schweitzer Hospital, died, certified dead, and buried. In 1980, a man appeared in his village claiming to be Clairvius. He was identified by family members and knew private family secrets. His story: He was given 'zombie powder' by his brother (in a land dispute), revived by a Bokor, and worked as a zombie slave on a sugar plantation for years. Harvard ethnobotanist Wade Davis investigated and found that Tetrodotoxin (from puffer fish) + Datura stramonium = death-like coma + amnesia. The chemical composition was confirmed. The 'zombie' phenomenon is real — but pharmacological, not supernatural.</p>
+        <p class="ml">1962: 20-year-old Haitian farmer Clairvius Narcisse admitted to Albert Schweitzer Hospital, died, certified dead, buried. 1980: A man appeared in his village, claiming to be Clairvius. Harvard ethnobotanist Wade Davis investigated: Tetrodotoxin (from puffer fish) + Datura stramonium = death-like coma + amnesia. Chemical composition confirmed. The 'zombie' phenomenon is real — but pharmacological, not supernatural.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">4.2 Santeria — Cuba &amp; Latin America</div>
+      <div class="section-title ml">4.2 Santeria — Cuba &amp; Latin America</div>
+      <p class="en">Santeria (La Regla de Ocha) is a fusion of West African Yoruba religion and Spanish Catholicism, forced during the slave trade. African slaves were forced to adopt Catholicism and hid Yoruba Orishas behind Catholic saints. The dark form, Palo Mayombe, uses human bones and skulls ('Nganga' — cauldron with bones). It has been criminally used in some documented cases.</p>
+      <p class="ml">Santeria (La Regla de Ocha, or Lucumi) — West African Yoruba religion + Spanish Catholicism forced fusion. Dark Santeria (Palo Mayombe): Separate tradition, Congo origin. Uses human bones, skulls ('Nganga' — cauldron with bones). Criminally used in some documented cases.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">The Matamoros Cult Murders (Mexico, 1989)</div>
+        <div class="case-box-title ml">The Matamoros Cult Murders (Mexico, 1989)</div>
+        <p class="en">Adolfo de Jesús Constanzo — 'El Padrino' (The Godfather). A self-proclaimed Palo Mayombe practitioner who claimed to provide supernatural protection to drug cartels. For this protection, human sacrifice was required. In March 1989, 21-year-old American student Mark Kilroy was kidnapped and ritually murdered. A police raid found 15 mutilated bodies on 'Rancho Santa Elena' near Matamoros. A ritual cauldron with human remains, animal parts, and herb bundles was found. Constanzo killed himself when cornered by police. This case shocked Mexico and the USA and brought Palo Mayombe to global attention.</p>
+        <p class="ml">Adolfo de Jesús Constanzo — 'El Padrino' (The Godfather). Self-proclaimed Palo Mayombe practitioner. For protection, human sacrifice required. 1989 March: 21-year-old American student Mark Kilroy kidnapped, ritually murdered. Police raid: 15 mutilated bodies found. Constanzo killed himself when cornered by police.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">4.3 Sihr — Black Magic in Islamic Tradition</div>
+      <div class="section-title ml">4.3 Sihr — Islamic Tradition-ൽ Black Magic</div>
+      <p class="en">Sihr (Arabic: سحر) — magic, sorcery. The Quran directly addresses it: Surah Al-Baqarah (2:102) tells the story of Harut and Marut — two angels who taught magic in Babylon as a test. People misused it to separate married couples. Sihr is a major sin (Kabira) in Islam. Counter-magic in Islam is Ruqyah — Quranic recitation as healing (Surah Al-Fatiha, Al-Falaq, An-Nas).</p>
+      <p class="ml">Sihr (Arabic: سحر) — magic, sorcery. Quran directly addresses it: Surah Al-Baqarah (2:102): The story of Harut and Marut — two angels who taught magic in Babylon as a test. Sihr is a major sin (Kabira) in Islam. Counter-Magic in Islam: Ruqyah — Quranic recitation as healing.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Saudi Arabia's Anti-Witchcraft Unit</div>
+        <div class="case-box-title ml">Saudi Arabia's Anti-Witchcraft Unit</div>
+        <p class="en">Saudi Arabia takes Sihr very seriously — it is a capital crime. In 2009, Saudi Arabia established a special 'Anti-Witchcraft Unit' within the religious police (Mutawa). In its first year, 586 witchcraft cases were dealt with. In 2011, Lebanese TV host Ali Hussain Sibat, while on Hajj pilgrimage, was arrested for 'witchcraft' (his TV psychic show). He was initially sentenced to death, but the sentence was later commuted after international pressure.</p>
+        <p class="ml">Saudi Arabia takes Sihr very seriously — it's a capital crime. 2009: Saudi Arabia established a special 'Anti-Witchcraft Unit.' In first year, 586 witchcraft cases dealt with. 2011: A Lebanese TV host Ali Hussain Sibat, while on Hajj pilgrimage, arrested for 'witchcraft.' Initially sentenced to death — later commuted after international pressure.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">4.4 African Traditional Magic</div>
+      <div class="section-title ml">4.4 African Traditional Magic</div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Albino Murders in Tanzania &amp; Malawi</div>
+        <div class="case-box-title ml">Albino Murders in Tanzania &amp; Malawi</div>
+        <p class="en">East Africa — particularly Tanzania and Malawi — has seen albino persons severely targeted. The belief is that albino body parts used in 'muti' (medicine magic) guarantee wealth and success. From 2008–2015, Tanzania documented 76 albino murders. Malawi experienced an 'albino crisis' from 2014–2016 that forced entire families to flee. A UN report documented over 200 albinos killed and 500+ attacks across Africa. International Criminal Court involvement was requested.</p>
+        <p class="ml">East Africa — particularly Tanzania, Malawi — ൽ albino persons severely targeted. Belief: Albino body parts used in 'muti' guarantee wealth, success. 2008-2015: Tanzania-ൽ 76 documented albino murders. UN report: Over 200 albinos killed, 500+ attacks across Africa.</p>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 5 -->
+  <article class="chapter" id="ch5">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Five</span>
+      <span class="chapter-number ml">അദ്ധ്യായം അഞ്ച്</span>
+      <h2 class="chapter-title">
+        <span class="en">Real Cases — Documented Events from Around the World</span>
+        <span class="ml">ലോകത്തിലെ Real Cases — Documented Events</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">5.1 Ancient &amp; Medieval Cases</div>
+      <div class="section-title ml">5.1 Ancient &amp; Medieval Cases</div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Gilles de Rais — Marshal of France (1440)</div>
+        <div class="case-box-title ml">Gilles de Rais — Marshal of France (1440)</div>
+        <p class="en">A famous companion of Joan of Arc and a French hero, Gilles de Rais later became one of history's most notorious criminals. Evidence: 40+ witnesses and a confession under minimal duress. Crimes: 140+ children (mostly boys) ritually murdered. Purpose: Summoning the demon 'Barron' for wealth and power, using children's blood and organs in rituals. Tried by both secular and ecclesiastical courts. On October 25, 1440, he was hanged and burned. Controversy: Some historians argue he was framed by political enemies, but witness testimonies and archaeological evidence at his castles suggest truth.</p>
+        <p class="ml">Joan of Arc-ന്റെ famous companion. French hero. Then one of history's most notorious criminals. Crimes: 140+ children (mostly boys) ritually murdered. Purpose: Summoning demon 'Barron' for wealth and power. October 25, 1440: Hanged and burned.</p>
+      </div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Urbain Grandier &amp; The Loudun Possessions (France, 1634)</div>
+        <div class="case-box-title ml">Urbain Grandier &amp; The Loudun Possessions (France, 1634)</div>
+        <p class="en">A convent of Ursuline nuns in Loudun, France suddenly exhibited strange symptoms: convulsions, blasphemy, claiming to see demons, and sexual behavior. Father Urbain Grandier — a handsome, controversial priest — was accused. 'Evidence' included Lucifer's signed contract with Grandier. Grandier insisted on his innocence. Under extreme torture, no confession was given. He was burned alive on June 18, 1634. Modern analysis points to hysteria sparked by the convent's internal politics and possible ergot contamination.</p>
+        <p class="ml">A convent of Ursuline nuns in Loudun, France suddenly exhibited strange symptoms. Father Urbain Grandier — handsome, controversial priest — accused. Burned alive, June 18, 1634. Modern analysis: Hysteria sparked by convent's internal politics.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">5.2 Modern Cases — 20th Century</div>
+      <div class="section-title ml">5.2 Modern Cases — 20th Century</div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Jonestown Massacre (Guyana, 1978)</div>
+        <div class="case-box-title ml">Jonestown Massacre (Guyana, 1978)</div>
+        <p class="en">Jim Jones founded 'Peoples Temple' — which started as a civil rights church. It gradually incorporated mind control and magical claims. Jones claimed supernatural powers and used magic/religion to demand absolute obedience. On November 18, 1978, following a visit by US Congressman Leo Ryan's delegation (investigating abuse claims), Jones ordered a 'revolutionary suicide.' 918 people died — including 304 children. Most were poisoned with cyanide-laced punch. It was the largest single-day civilian loss of American life until 9/11.</p>
+        <p class="ml">Jim Jones founded 'Peoples Temple' — started as civil rights church. Gradually incorporated mind control, magical claims. November 18, 1978: 918 people died — including 304 children. Most poisoned with cyanide-laced punch. It was the largest single-day civilian loss of American life until 9/11.</p>
+      </div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">The West Memphis Three (Arkansas, USA — 1993)</div>
+        <div class="case-box-title ml">The West Memphis Three (Arkansas, USA — 1993)</div>
+        <p class="en">In May 1993, three 8-year-old boys were found murdered in West Memphis, Arkansas. The police theory: an occult/Satanic ritual. Three teenagers — Damien Echols, Jason Baldwin, and Jessie Misskelley — were arrested. Evidence: they wore black, listened to heavy metal, and Damien had an interest in Wicca. They were convicted largely on Misskelley's coerced confession. In 1994, Damien Echols was sentenced to death, and others to life imprisonment. In 2011, DNA evidence showed none of their DNA was at the crime scene. They were released after 18 years. This is an extreme example of the 'Satanic Panic' fear wave in the USA during the 1980s–90s.</p>
+        <p class="ml">May 1993: Three 8-year-old boys found murdered in West Memphis, Arkansas. Police theory: Occult/Satanic ritual. Three teenagers convicted. 2011: DNA evidence — none of their DNA at crime scene. Real killer may have been Terry Hobbs. Released after 18 years. 'Satanic Panic' — 1980s-90s USA-ൽ magical crime fear wave-ന്റെ extreme example.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">5.3 Indian Cases — Documented</div>
+      <div class="section-title ml">5.3 Indian Cases — Documented</div>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Dr. Narendra Dabholkar — Anti-Superstition Martyr (2013)</div>
+        <div class="case-box-title ml">Dr. Narendra Dabholkar — Anti-Superstition Martyr (2013)</div>
+        <p class="en">Dr. Narendra Dabholkar was Maharashtra's most famous rationalist. Founder of Maharashtra Andhashraddha Nirmulan Samiti (MANS). He campaigned for 30 years against black magic, superstition, and fake godmen. He authored the Maharashtra Prevention of Black Magic bill. On August 20, 2013, during his morning walk, he was shot twice and killed. The irony: He was killed the day his bill was passed in the Maharashtra assembly. Hindu extremist groups were suspected. In 2023, Sanatan Sanstha members were arrested. Dabholkar's legacy — his law remains active, protecting thousands.</p>
+        <p class="ml">Dr. Narendra Dabholkar — Maharashtra's most famous rationalist. Founder of Maharashtra Andhashraddha Nirmulan Samiti (MANS). August 20, 2013: Morning walk-ൽ shot twice, killed. Irony: He was killed the day his bill was passed in Maharashtra assembly. 2023: Sanatan Sanstha members arrested.</p>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 6 -->
+  <article class="chapter" id="ch6">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Six</span>
+      <span class="chapter-number ml">അദ്ധ്യായം ആറ്</span>
+      <h2 class="chapter-title">
+        <span class="en">Science Explains Black Magic</span>
+        <span class="ml">ശാസ്ത്രം Black Magic-നെ Explain ചെയ്യുന്നു</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">6.1 The Nocebo Effect — Mind Creates Reality</div>
+      <div class="section-title ml">6.1 The Nocebo Effect — Mind Creates Reality</div>
+      <p class="en">The world knows the placebo effect: if you believe a sugar pill is medicine, actual healing can occur. The nocebo effect is the opposite: if you believe a harmless substance is harmful, actual harm occurs. A 2012 PLOS ONE study found that cancer patients given saline (instead of chemotherapy) — 30% reported nausea and 10% experienced hair loss. Their <em>belief</em> caused physical symptoms. In the context of black magic: if someone is told 'you are cursed,' the believer's body literally begins to show symptoms.</p>
+      <p class="ml">Placebo effect ലോകം അറിയും. Nocebo effect-ഉടെ opposite: Harmless substance harmful ആണെന്ന് believe ചെയ്‌താൽ actual harm. 2012 PLOS ONE study: Cancer patients given saline — 30% reported nausea, 10% experienced hair loss. Their BELIEF caused physical symptoms. Black magic context: 'You are cursed' tell ചെയ്‌താൽ — believer's body literally begins to show symptoms.</p>
+
+      <div class="did-you-know">
+        <span class="did-you-know-label en">💡 Medical Fact</span>
+        <span class="did-you-know-label ml">💡 Medical Fact</span>
+        <p class="en">The nocebo effect is so powerful that in some documented cases, terminal patients given a wrong terminal prognosis died faster than they should have — purely from the psychological impact of the 'death sentence.' This is called 'voodoo death' in medical literature, coined by Harvard physiologist Walter Cannon in 1942.</p>
+        <p class="ml">Nocebo effect is so powerful that in some documented cases, terminal patients given wrong terminal prognosis died faster than they should have — purely from the psychological impact of the death sentence. This is called 'voodoo death' in medical literature, coined by Harvard physiologist Walter Cannon in 1942.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">6.2 Mass Psychogenic Illness (Mass Hysteria)</div>
+      <div class="section-title ml">6.2 Mass Psychogenic Illness (Mass Hysteria)</div>
+      <p class="en">When a group believes they are under supernatural attack, collective symptoms emerge. No actual pathogen. No actual curse. Just shared belief creating a shared experience.</p>
+      <p class="ml">When a group believes they are under supernatural attack, collective symptoms emerge. No actual pathogen. No actual curse. Just shared belief creating shared experience.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">1962 Tanganyika Laughter Epidemic</div>
+        <div class="case-box-title ml">1962 Tanganyika Laughter Epidemic</div>
+        <p class="en">January 1962: At a mission school in Kashasha, Tanzania, three girls began laughing uncontrollably. It spread. The school was closed. The 'laughter' spread to neighboring villages. 14 schools were affected. It lasted 18 months and 1,000+ people were affected. Symptoms included crying, laughing, fainting, and screaming — interspersed. Medical investigation: No pathogen, no poison. Diagnosis: Mass psychogenic illness. Trigger: School stress and local social tensions.</p>
+        <p class="ml">January 1962: A mission school in Kashasha, Tanzania. Three girls began laughing uncontrollably. It spread. School closed. 14 schools affected. Lasted 18 months. 1,000+ people affected. Medical investigation: No pathogen, no poison. Diagnosis: Mass psychogenic illness.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">6.3 Cold Reading &amp; Manipulation Techniques</div>
+      <div class="section-title ml">6.3 Cold Reading &amp; Manipulation Techniques</div>
+      <p class="en">Most 'black magic practitioners' are skilled manipulators — not supernatural beings but psychological experts.</p>
+      <p class="ml">Most 'black magic practitioners' are skilled manipulators — not supernatural but psychological experts.</p>
+      <p class="en"><strong>Barnum Statements:</strong> Vague statements that everyone relates to — 'You have been experiencing a lot of stress recently.' 'There is someone in your life who is not being completely honest with you.' These create the illusion of specific knowledge.</p>
+      <p class="ml"><strong>Barnum Statements:</strong> Vague statements everyone relates to. 'You have been experiencing a lot of stress recently.' 'There is someone in your life who is not being completely honest with you.'</p>
+      <p class="en"><strong>The 'Shotgun' Approach:</strong> Many statements delivered quickly; observe reactions, focus on 'hits', ignore 'misses'. Due to confirmation bias, clients remember the hits and forget the misses.</p>
+      <p class="ml"><strong>The 'Shotgun' Approach:</strong> Many statements quickly, observe reactions, focus on 'hits', ignore 'misses'. Client's memory: Remembers the hits, forgets the misses. Confirmation bias at work.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">6.4 Real Substances Misused as 'Magic'</div>
+      <div class="section-title ml">6.4 'Magic' ആയി Misuse ചെയ്യുന്ന Real Substances</div>
+
+      <div class="def-list">
+        <div class="def-term">Scopolamine ('Devil's Breath')</div>
+        <div class="def-desc en">Burundanga — Datura plant extract. Causes complete amnesia and extreme suggestibility; victims can be commanded to do anything. A 2015 BBC documentary showed its widespread criminal use in Colombia, where victims were robbed and sexually assaulted with no memory. Called 'chemical black magic' by Colombian police.</div>
+        <div class="def-desc ml">Burundanga — Datura plant extract. Causes: Complete amnesia. Extreme suggestibility. Victim can be commanded to do anything. 2015 BBC documentary: Colombia-ൽ widespread criminal use. Called 'chemical black magic' by Colombian police.</div>
+
+        <div class="def-term">Ergot Alkaloids</div>
+        <div class="def-desc en">The Claviceps purpurea fungus on rye causes vivid hallucinations, convulsions, and burning sensations. The Salem Witch Trials (1692) ergot hypothesis — proposed by Linda Caporael in a 1976 paper in Science journal — matches the symptoms of the affected girls to ergotism.</div>
+        <div class="def-desc ml">Claviceps purpurea fungus on rye. Causes: Vivid hallucinations, convulsions, burning sensations. Salem Witch Trials (1692): Ergot hypothesis — Linda Caporael's 1976 paper in Science journal. Affected girls' symptoms match ergotism.</div>
+
+        <div class="def-term">Arsenic Trioxide</div>
+        <div class="def-desc en">Tasteless and odorless, chronic poisoning with arsenic produces symptoms that match a 'wasting away curse.' Several documented 'magical death' cases in Kerala have been proven to be arsenic poisoning on autopsy.</div>
+        <div class="def-desc ml">Tasteless, odorless, chronic poisoning. 'Wasting away curse' symptoms match arsenic poisoning. Kerala — several documented 'magical death' cases proven to be arsenic poisoning on autopsy.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">6.5 Psychology of Magical Thinking</div>
+      <div class="section-title ml">6.5 Psychology of Magical Thinking</div>
+
+      <div class="def-list">
+        <div class="def-term">Terror Management Theory (TMT)</div>
+        <div class="def-desc en">Ernest Becker, 'The Denial of Death' (1973): Humans are unique in knowing they will die. Managing death terror requires symbolic immortality — religion, magic, legacy. When death fear increases, magical thinking increases. Studies confirm: reminding people of death increases supernatural belief.</div>
+        <div class="def-desc ml">Ernest Becker, 'The Denial of Death' (1973). Humans unique in knowing they will die. Death terror management requires symbolic immortality — religion, magic, legacy. When death fear increases, magical thinking increases.</div>
+
+        <div class="def-term">Apophenia</div>
+        <div class="def-desc en">Pattern detection in random data. The human brain evolved for pattern recognition — a survival advantage. A 'false positive' (seeing a pattern where none exists) was safer than a 'false negative' (missing a real pattern). Black magic belief = overactive pattern detection.</div>
+        <div class="def-desc ml">Pattern detection in random data. Human brain evolved for pattern recognition — survival advantage. Black magic belief = overactive pattern detection.</div>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 7 -->
+  <article class="chapter" id="ch7">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Seven</span>
+      <span class="chapter-number ml">അദ്ധ്യായം ഏഴ്</span>
+      <h2 class="chapter-title">
+        <span class="en">Black Magic &amp; Organized Religion</span>
+        <span class="ml">Black Magic &amp; Organized Religion</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">7.1 Christianity &amp; Witchcraft</div>
+      <div class="section-title ml">7.1 Christianity &amp; Witchcraft</div>
+      <p class="en">The Bible explicitly addresses magic and witchcraft: Exodus 22:18 — 'You shall not permit a sorceress to live.' Deuteronomy 18:10-12 — practicing divination, sorcery, interpreting omens, and engaging in witchcraft are declared an abomination. Galatians 5:19-21 — witchcraft is listed among the 'acts of the flesh.' The Medieval Catholic Church formally declared magic to be cooperation with the devil. The Papal Bull 'Summis Desiderantes' (1484) officially endorsed witch hunting.</p>
+      <p class="ml">Bible explicitly addresses magic/witchcraft: Exodus 22:18 — 'You shall not permit a sorceress to live.' Medieval Catholic Church formally declared magic cooperation with devil. Inquisition — systematic persecution. Papal Bull 'Summis Desiderantes' (1484) — Pope Innocent VIII officially endorsed witch hunting.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Roland Doe — The Real Exorcist Case (1949)</div>
+        <div class="case-box-title ml">Roland Doe — The Real Exorcist Case (1949)</div>
+        <p class="en">The movie 'The Exorcist' (1973) was inspired by this case. A 13-year-old boy from Cottage City, Maryland, referred to as 'Roland Doe' in Catholic records, exhibited behaviors including furniture moving, strange sounds, speaking in a strange voice, and objects levitating (as claimed by witnesses). Catholic priests performed exorcism — 30 sessions. He was eventually 'cured.' Modern analysis suggests possible mental illness (schizophrenia) or temporal lobe epilepsy. The Catholic Church maintains it was genuine possession. The case remains disputed.</p>
+        <p class="ml">The movie 'The Exorcist' (1973) inspired by this case. 13-year-old boy from Cottage City, Maryland, referred to as 'Roland Doe.' Behaviors: Furniture moving, strange sounds, speaking in strange voice. Catholic priests performed exorcism — 30 sessions. Eventually 'cured.' Modern analysis: Possible mental illness (schizophrenia), temporal lobe epilepsy.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">7.2 Islam &amp; Sihr — Theological Deep Dive</div>
+      <div class="section-title ml">7.2 Islam &amp; Sihr — Theological Deep Dive</div>
+      <p class="en">Quran 2:102 (Al-Baqarah): People were following what the Satans recited concerning Solomon's reign. Solomon did not practice magic but the Satans did. They also taught people magic and what was revealed to the two angels Harut and Marut in Babylon. But the two angels never taught anyone without saying, 'We are but a temptation. Do not lose your faith.'</p>
+      <p class="ml">Quran 2:102: People were following what the Satans recited concerning Solomon's reign. Solomon did not practice magic but the Satans did. They also taught people magic and what was revealed to the two angels Harut and Marut in Babylon.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Prophet Muhammad (ﷺ) and Sihr</div>
+        <div class="case-box-title ml">Prophet Muhammad (ﷺ) and Sihr</div>
+        <p class="en">A Hadith documented in Bukhari states: A Jewish man named Labid ibn al-Asam performed Sihr on Prophet Muhammad (ﷺ). He used a comb, hair, and the inside of a pollen of a male date palm tree, buried in a well. The Prophet (ﷺ) felt its effect. Angel Gabriel revealed the location. The well was uncovered. Ruqyah was performed, and recovery followed. Islamic scholars use this as evidence that Sihr can affect even prophets — but ultimate control remains with Allah.</p>
+        <p class="ml">Hadith documented in Bukhari: A Jewish man named Labid ibn al-Asam performed Sihr on Prophet Muhammad (ﷺ). Used a comb, hair, inside a pollen of a male date palm tree, buried in a well. Prophet ﷺ felt its effect. Angel Gabriel revealed the location. Well uncovered. Ruqyah performed. Recovery. Islamic scholars use this as evidence Sihr can affect even prophets — but ultimate control remains with Allah.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">7.3 Hinduism — Vedic Magic System</div>
+      <div class="section-title ml">7.3 Hinduism — Vedic Magic System</div>
+      <p class="en">Hinduism has the world's most elaborate magical system — encoded in scripture. The Atharvaveda (4th Veda), unlike the Rig, Sama, and Yajur Vedas, includes spells for healing diseases, exorcism, cursing enemies, love spells, protection charms, and prosperity rituals. This is the foundation of Indian magical tradition. The Vamachara (left-hand Tantra) path uses the five M's literally: Mamsa (meat), Matsya (fish), Madya (wine), Mudra (grain), Maithuna (sexual union). Associated with cremation ground rituals are the Aghoris — the most extreme practitioners, who engage in skull practices.</p>
+      <p class="ml">Hinduism has the world's most elaborate magical system — encoded in scripture. Atharvaveda (4th Veda): Unlike Rig, Sama, Yajur Vedas — Atharvaveda includes spells for healing diseases, exorcism, cursing enemies, love spells, protection charms, prosperity rituals. Tantra — Left Hand Path (Vamachara): Aghoris — most extreme, skull practices.</p>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 8 -->
+  <article class="chapter" id="ch8">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Eight</span>
+      <span class="chapter-number ml">അദ്ധ്യായം എട്ട്</span>
+      <h2 class="chapter-title">
+        <span class="en">Black Magic &amp; Law — Legal Perspectives</span>
+        <span class="ml">Black Magic &amp; Law — Legal Perspectives</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">8.1 Black Magic Laws Around the World</div>
+      <div class="section-title ml">8.1 Black Magic Laws Around the World</div>
+
+      <div class="def-list">
+        <div class="def-term">Saudi Arabia</div>
+        <div class="def-desc en">Sorcery is a capital crime. Anti-Witchcraft Unit exists. Multiple executions annually for 'sihr.' Foreign workers are particularly vulnerable to accusations.</div>
+        <div class="def-desc ml">Sorcery is a capital crime. Anti-Witchcraft Unit exists. Multiple executions annually for 'sihr.' Foreign workers particularly vulnerable to accusations.</div>
+
+        <div class="def-term">India</div>
+        <div class="def-desc en">No central law against black magic practice itself. The Maharashtra Black Magic Act (2013) is the most comprehensive. State-level laws exist in Chhattisgarh, Rajasthan, and Jharkhand. IPC Sections 420 (fraud), 302 (murder), 323 (hurt) are used when crimes occur.</div>
+        <div class="def-desc ml">No central law against black magic practice itself. Maharashtra Black Magic Act (2013) — most comprehensive. IPC Sections 420 (fraud), 302 (murder), 323 (hurt) used when crimes occur.</div>
+
+        <div class="def-term">South Africa</div>
+        <div class="def-desc en">The Witchcraft Suppression Act (1957, amended 1970) makes it illegal to accuse someone of being a witch. South Africa uniquely protects accused witches, not just victims.</div>
+        <div class="def-desc ml">Witchcraft Suppression Act (1957, amended 1970) — makes it illegal to accuse someone of being a witch. South Africa uniquely protects accused witches, not just victims.</div>
+
+        <div class="def-term">UK</div>
+        <div class="def-desc en">The Fraudulent Mediums Act (1951) protected victims from fraudulent practitioners. It was repealed in 2008 and replaced by Consumer Protection Regulations. Now treated as consumer fraud.</div>
+        <div class="def-desc ml">Fraudulent Mediums Act (1951) — protected victims from fraudulent practitioners. Repealed 2008 — replaced by Consumer Protection Regulations. Now treated as consumer fraud.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">8.2 India's Legal Framework in Detail</div>
+      <div class="section-title ml">8.2 India's Legal Framework in Detail</div>
+      <p class="en">Maharashtra Prevention and Eradication of Human Sacrifice and other Inhuman, Evil and Aghori Practices and Black Magic Act, 2013 prohibits: human sacrifice, beating in the name of exorcism, tying/confining a person claiming supernatural forces, and claiming to cure disease through magic. Penalty: 6 months to 7 years imprisonment, fine.</p>
+      <p class="ml">Maharashtra Prevention of Black Magic Act, 2013: Prohibits human sacrifice, beating in the name of exorcism, tying/confining a person claiming supernatural forces, claiming to cure disease through magic. Penalty: 6 months to 7 years imprisonment, fine.</p>
+
+      <div class="case-box">
+        <span class="case-box-label en">📌 Real Event</span>
+        <span class="case-box-label ml">📌 യഥാർത്ഥ സംഭവം</span>
+        <div class="case-box-title en">Kerala High Court on Black Magic (2019)</div>
+        <div class="case-box-title ml">Kerala High Court on Black Magic (2019)</div>
+        <p class="en">In a 2019 judgment, the Kerala High Court specifically addressed black magic fraud cases, stating: 'Exploitation of fear and superstition for financial gain is a serious offense against human dignity.' The court directed police to proactively investigate black magic fraud without waiting for formal complaints, empowering Kerala police to conduct sting operations against practitioners.</p>
+        <p class="ml">Kerala High Court, in a 2019 judgment, specifically addressed black magic fraud cases. Judgment stated: 'Exploitation of fear and superstition for financial gain is a serious offense against human dignity.' Court directed police to proactively investigate black magic fraud without waiting for formal complaints.</p>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 9 -->
+  <article class="chapter" id="ch9">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Nine</span>
+      <span class="chapter-number ml">അദ്ധ്യായം ഒൻപത്</span>
+      <h2 class="chapter-title">
+        <span class="en">The Evil Eye — Nazar — Worldwide</span>
+        <span class="ml">The Evil Eye — Nazar — ലോകമെമ്പാടും</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">9.1 Evil Eye — The Universal Belief</div>
+      <div class="section-title ml">9.1 Evil Eye — The Universal Belief</div>
+      <p class="en">The evil eye (Greek: βασκανία/baskania) is the belief that an envious or admiring gaze from a person can cause harm to that person. This is possibly the world's most widespread magical belief — found in 40% of documented cultures globally, according to anthropologist Clarence Maloney.</p>
+      <p class="ml">Evil eye (Greek: βασκανία/baskania) — ഒരു person-ന്റെ envious or admiring gaze ആ person-ന് harm ഉണ്ടാക്കുമെന്ന belief. This is possibly the world's most widespread magical belief — found in 40% of documented cultures globally according to anthropologist Clarence Maloney.</p>
+
+      <div class="did-you-know">
+        <span class="did-you-know-label en">💡 Documented in Classical Literature</span>
+        <span class="did-you-know-label ml">💡 Classical Literature-ൽ Documented</span>
+        <p class="en">Homer's Iliad (800 BCE), Hesiod's Works and Days, and Pliny the Elder's Natural History all describe the evil eye. The ancient Roman concept of 'fascinum' combined the evil eye with protective phallic amulets. This belief predates Christianity, Islam, and all modern religions.</p>
+        <p class="ml">Homer's Iliad (800 BCE), Hesiod's Works and Days, Pliny the Elder's Natural History — all describe evil eye. The ancient Roman concept of 'fascinum' — evil eye + protective phallic amulets. Shows this belief predates Christianity, Islam, modern religions.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">9.2 Evil Eye Around the World</div>
+      <div class="section-title ml">9.2 Evil Eye Around the World</div>
+
+      <div class="traditions-grid">
+        <div class="tradition-item"><strong>Turkey &amp; Mediterranean</strong><span class="en">Nazar Boncuğu — blue glass bead amulet. National symbol-level status in Turkey.</span><span class="ml">Nazar Boncuğu — blue glass bead amulet. Turkey-ൽ national symbol.</span></div>
+        <div class="tradition-item"><strong>Middle East &amp; North Africa</strong><span class="en">Hamsa (Hand of Fatima) — five-fingered hand with eye. Found in both Islamic and Jewish traditions.</span><span class="ml">Hamsa (Hand of Fatima) — five-fingered hand with eye. Islamic, Jewish traditions-ൽ.</span></div>
+        <div class="tradition-item"><strong>India</strong><span class="en">Nimbu-Mirchi (lemon + chilies) hung at doors. Kajal on babies as protective mark. Tikka on forehead deflects nazar.</span><span class="ml">Nimbu-Mirchi hung at doors. Kajal on babies — protective mark. Tikka on forehead — deflects nazar.</span></div>
+        <div class="tradition-item"><strong>Latin America</strong><span class="en">'Mal de Ojo' — evil eye. If a person admires a baby, they must touch it — otherwise evil eye is activated.</span><span class="ml">'Mal de Ojo' — evil eye. Babies particularly susceptible.</span></div>
+        <div class="tradition-item"><strong>Ethiopia</strong><span class="en">'Buda' — evil eye from blacksmiths and craftspeople. Being stared at by a blacksmith is considered dangerous.</span><span class="ml">'Buda' — blacksmiths and craftspeople-ൽ നിന്ന് evil eye.</span></div>
+        <div class="tradition-item"><strong>Scotland &amp; Ireland</strong><span class="en">'Overlooking' — equivalent of evil eye. Iron as protection — horseshoes above doors. Rowan trees near homes.</span><span class="ml">'Overlooking' — evil eye equivalent. Iron as protection — horseshoes above doors.</span></div>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 10 -->
+  <article class="chapter" id="ch10">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Ten</span>
+      <span class="chapter-number ml">അദ്ധ്യായം പത്ത്</span>
+      <h2 class="chapter-title">
+        <span class="en">Black Magic Victims — Stories, Psychology &amp; Recovery</span>
+        <span class="ml">Black Magic Victims — Stories, Psychology &amp; Recovery</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">10.1 How Victims Are Made</div>
+      <div class="section-title ml">10.1 Victims എങ്ങനെ ഉണ്ടാകുന്നു</div>
+      <div class="stage-steps">
+        <div class="stage-step">
+          <span class="stage-label">Stage 1</span>
+          <div class="stage-text"><strong class="en">Vulnerable State</strong><strong class="ml">Vulnerable State</strong> <span class="en">A life crisis occurs (illness, marital problem, financial loss, death in family). The person is emotionally vulnerable and desperate for an explanation and solution.</span><span class="ml">Life crisis occurs. Person is emotionally vulnerable, desperate for explanation and solution.</span></div>
+        </div>
+        <div class="stage-step">
+          <span class="stage-label">Stage 2</span>
+          <div class="stage-text"><strong class="en">First Contact</strong><strong class="ml">First Contact</strong> <span class="en">A friend, family member, or acquaintance suggests a 'practitioner.' Sometimes practitioners themselves 'approach,' claiming they 'saw' the person's problems.</span><span class="ml">Friend, family member, or acquaintance suggests a 'practitioner.' Sometimes practitioners themselves 'approach.'</span></div>
+        </div>
+        <div class="stage-step">
+          <span class="stage-label">Stage 3</span>
+          <div class="stage-text"><strong class="en">Diagnosis</strong><strong class="ml">Diagnosis</strong> <span class="en">The practitioner 'confirms' black magic presence using cold reading and telling the person what they want to hear. The victim's emotional state makes them receptive.</span><span class="ml">Practitioner 'confirms' black magic presence using cold reading. Victim's emotional state makes them receptive.</span></div>
+        </div>
+        <div class="stage-step">
+          <span class="stage-label">Stage 4</span>
+          <div class="stage-text"><strong class="en">Financial Hook</strong><strong class="ml">Financial Hook</strong> <span class="en">Initial small payment. 'Material needed.' Larger payment. Problem 'worsens' if payment stops. Dependency is created.</span><span class="ml">Initial small payment. 'Material needed.' Larger payment. Problem 'worsens' if payment stops. Dependency created.</span></div>
+        </div>
+        <div class="stage-step">
+          <span class="stage-label">Stage 5</span>
+          <div class="stage-text"><strong class="en">Deepening Trap</strong><strong class="ml">Deepening Trap</strong> <span class="en">Shame of admitting belief keeps the victim from seeking help. Financial investment increases reluctance to walk away ('sunk cost fallacy'). Community pressure sometimes supports the practitioner.</span><span class="ml">Shame of admitting belief keeps victim from seeking help. Financial investment increases reluctance to walk away ('sunk cost fallacy').</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">10.2 Psychological Impact on Victims</div>
+      <div class="section-title ml">10.2 Victims-ൽ Psychological Impact</div>
+      <ul>
+        <li><span class="en">Anxiety Disorder — constant fear of supernatural harm</span><span class="ml">Anxiety Disorder — constant fear of supernatural harm</span></li>
+        <li><span class="en">PTSD symptoms — from traumatic ritual experiences</span><span class="ml">PTSD symptoms — from traumatic ritual experiences</span></li>
+        <li><span class="en">Depression — helplessness, financial loss</span><span class="ml">Depression — helplessness, financial loss</span></li>
+        <li><span class="en">Paranoia — suspecting everyone of placing curses</span><span class="ml">Paranoia — suspecting everyone of placing curses</span></li>
+        <li><span class="en">Social Isolation — avoiding people to prevent 'curses'</span><span class="ml">Social Isolation — avoiding people to prevent 'curses'</span></li>
+        <li><span class="en">Family breakdown — accusations within family</span><span class="ml">Family breakdown — accusations within family</span></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">10.3 How to Help Victims</div>
+      <div class="section-title ml">10.3 Victims-നെ എങ്ങനെ സഹായിക്കാം</div>
+      <ol>
+        <li><span class="en">Don't mock or dismiss — ridicule increases defensiveness and creates a shame spiral.</span><span class="ml">Don't mock or dismiss: Ridicule increases defensiveness. Creates shame spiral.</span></li>
+        <li><span class="en">Establish trust first — relationship before rational argument.</span><span class="ml">Establish trust first: Relationship before rational argument.</span></li>
+        <li><span class="en">Ask questions gently — 'Has the problem improved since starting treatment?' 'How much have you spent?' 'Do you feel better or worse overall?'</span><span class="ml">Ask questions gently: 'Has the problem improved since starting treatment?' 'How much have you spent?'</span></li>
+        <li><span class="en">Provide alternative explanations — frame scientifically: 'What if the original problem has a medical solution?'</span><span class="ml">Provide alternative explanations: 'What if the original problem has a medical solution?'</span></li>
+        <li><span class="en">Financial reality check — calculate the total spent and project future spending if the trend continues.</span><span class="ml">Financial reality check: Calculate total spent. Project future spending.</span></li>
+        <li><span class="en">Seek professional help — Psychologist for anxiety/trauma. Contact Kerala Yukthivadi Sangham, MANS.</span><span class="ml">Professional help: Psychologist for anxiety/trauma. Rational organizations: Kerala Yukthivadi Sangham, MANS.</span></li>
+        <li><span class="en">Legal action — If fraud is clear, file a police complaint. Kerala and Maharashtra police have specific cells.</span><span class="ml">Legal action: If fraud is clear — police complaint. Kerala and Maharashtra police have specific cells.</span></li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">10.4 Resources &amp; Organizations</div>
+      <div class="section-title ml">10.4 Resources &amp; Organizations</div>
+
+      <div class="resource-item">
+        <strong>Maharashtra Andhashraddha Nirmulan Samiti (MANS)</strong>
+        <span class="en">Dr. Dabholkar's organization. Active in Maharashtra.</span>
+        <span class="ml">Dr. Dabholkar's organization. Maharashtra-ൽ active.</span>
+      </div>
+      <div class="resource-item">
+        <strong>Kerala Yukthivadi Sangham</strong>
+        <span class="en">Kerala's oldest rationalist organization. +91-484-2534567</span>
+        <span class="ml">Kerala's oldest rationalist organization. +91-484-2534567</span>
+      </div>
+      <div class="resource-item">
+        <strong>Indian Rationalist Association (IRA)</strong>
+        <span class="en">National body. www.rationalistindia.com</span>
+        <span class="ml">National body. www.rationalistindia.com</span>
+      </div>
+      <div class="resource-item">
+        <strong class="en">Mental Health Support</strong><strong class="ml">Mental Health Support</strong>
+        <span class="en">NIMHANS (Bangalore): 080-46110007 · iCall (Mumbai): 9152987821 · Vandrevala Foundation: 1860-2662-345</span>
+        <span class="ml">NIMHANS (Bangalore): 080-46110007 · iCall (Mumbai): 9152987821 · Vandrevala Foundation: 1860-2662-345</span>
+      </div>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 11 -->
+  <article class="chapter" id="ch11">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Eleven</span>
+      <span class="chapter-number ml">അദ്ധ്യായം പതിനൊന്ന്</span>
+      <h2 class="chapter-title">
+        <span class="en">Famous Black Magic Practitioners</span>
+        <span class="ml">Famous Black Magic Practitioners</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">11.1 Aleister Crowley (1875–1947) — The Great Beast</div>
+      <div class="section-title ml">11.1 Aleister Crowley (1875–1947) — The Great Beast</div>
+      <p class="en">Aleister Crowley is arguably the most influential Western occultist of the 20th century. Born into a wealthy Plymouth Brethren family, he embraced the 'evil' his family feared. A brilliant student, poet, chess player, and mountaineer at Cambridge University, he later developed the 'Thelema' philosophy: 'Do what thou wilt shall be the whole of the Law.' In 1904, he claimed to have channeled 'The Book of the Law' in Cairo. He developed sex magic extensively and wrote 'Magick in Theory and Practice' (1929), the most comprehensive occult manual. He died in 1947 in Hastings, England, in poverty due to heroin addiction. His reported last words: 'I am perplexed.'</p>
+      <p class="ml">Aleister Crowley — arguably the most influential Western occultist of the 20th century. Born into a wealthy Plymouth Brethren family. 'Thelema' philosophy: 'Do what thou wilt shall be the whole of the Law.' 1904: Channeled 'The Book of the Law' in Cairo. Death: 1947, Hastings, England. Heroin addiction. His last words reportedly: 'I am perplexed.'</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">11.2 Anton LaVey (1930–1997) — Church of Satan</div>
+      <div class="section-title ml">11.2 Anton LaVey (1930–1997) — Church of Satan</div>
+      <p class="en">Anton Szandor LaVey founded the Church of Satan in 1966 in San Francisco and authored 'The Satanic Bible' (1969). LaVey's Satan is explicitly NOT a literal supernatural being. It is a symbol of self-indulgence, human nature, individualism, and rebellion against conformity. LaVeyan Satanism is atheistic — no supernatural powers are claimed. Rituals are psychological — cathartic, not magical. 'Magic' is influence, psychology, and manipulation. Essentially, it is a philosophy of extreme individualism wrapped in theatrical trappings.</p>
+      <p class="ml">Anton Szandor LaVey — founder of the Church of Satan (1966, San Francisco). 'The Satanic Bible' (1969). LaVey's Satan is explicitly NOT a literal supernatural being. It is a symbol of: Self-indulgence, human nature, individualism, rebellion against conformity. LaVeyan Satanism is atheistic: No supernatural powers claimed.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">11.3 John Dee (1527–1608) — Queen Elizabeth's Magician</div>
+      <div class="section-title ml">11.3 John Dee (1527–1608) — Queen Elizabeth's Magician</div>
+      <p class="en">John Dee was a mathematician, astronomer, astrologer, spy, and occultist who served Queen Elizabeth I as her court astrologer. He calculated the most auspicious date for her coronation. From 1582–1589, with scryer Edward Kelley, he claimed to contact angels and developed the 'Enochian' language — claimed to be the original language of angels/God. His code '007' was his signature to Queen Elizabeth, later inspiring James Bond's code name. Enochian magic is still used in ceremonial magic today.</p>
+      <p class="ml">John Dee — mathematician, astronomer, astrologer, spy, and occultist. Served Queen Elizabeth I as her court astrologer. 1582-1589: With scryer Edward Kelley, claimed to contact angels. Developed 'Enochian' language — claimed to be the original language of angels/God. Template for James Bond's '007' (code '007' was Dee's signature to Queen Elizabeth).</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">11.4 Notable Indian Figures</div>
+      <div class="section-title ml">11.4 Notable Indian Figures</div>
+      <p class="en"><strong>Sathya Sai Baba (1926–2011):</strong> Claimed spectacular 'miracles' such as the materialization of objects from thin air (vibhuti ash, watches, gold). A BBC documentary, 'The Secret Swami' (2004), caught him on close-up camera palming objects. James Randi exposed these as standard sleight of hand. Multiple sexual abuse allegations were documented. He died in 2011, with an estimated estate worth ₹40,000 crore and a following of 6–40 million worldwide.</p>
+      <p class="ml"><strong>Sathya Sai Baba (1926-2011):</strong> Claims: Supernatural powers, healing. 'Miracles': Materialization of objects from air. BBC documentary 'The Secret Swami' (2004): Close-up camera caught him palming objects. James Randi: Exposed as standard sleight of hand. Sexual abuse allegations — multiple documented. Died 2011. Estate worth estimated ₹40,000 crore.</p>
+
+      <p class="en"><strong>Chandraswami (1930–2017):</strong> India's most politically connected godman. Claimed black magic and supernatural influence powers. His inner circle included Narasimha Rao (PM), Margaret Thatcher, Adnan Khashoggi, and the Sultan of Brunei. Involved in the St. Kitts fraud case and multiple hawala transactions. Example of how 'supernatural' claims create political influence.</p>
+      <p class="ml"><strong>Chandraswami (1930-2017):</strong> India's most politically connected godman. Claimed black magic, supernatural influence powers. Inner circle: Narasimha Rao (PM), Margaret Thatcher, Adnan Khashoggi, Sultan of Brunei. Example: How 'supernatural' claims create political influence.</p>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- CHAPTER 12 — CONCLUSION -->
+  <article class="chapter" id="ch12">
+    <div class="chapter-header">
+      <span class="chapter-number en">Chapter Twelve</span>
+      <span class="chapter-number ml">അദ്ധ്യായം പന്ത്രണ്ട്</span>
+      <h2 class="chapter-title">
+        <span class="en">Conclusion — Ushering in the Light</span>
+        <span class="ml">ഉപസംഹാരം — വെളിച്ചം കൊണ്ടുവരുന്നു</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">12.1 What Have We Learned?</div>
+      <div class="section-title ml">12.1 നാം എന്ത് പഠിച്ചു?</div>
+      <p class="en">This journey has taken us from Ancient Egypt's curse tablets to modern Kerala fraud cases. From the Salem Witch Trials to African albino murders. From Voodoo's chemical zombies to psychological nocebo effects. From Aleister Crowley to Dr. Dabholkar's martyrdom.</p>
+      <p class="ml">ഈ journey-ൽ നാം travel ചെയ്തത്: Ancient Egypt-ലെ curse tablets മുതൽ modern Kerala fraud cases വരെ. Salem Witch Trials-ൽ നിന്ന് African albino murders വരെ. Voodoo's chemical zombies-ൽ നിന്ന് psychological nocebo effects വരെ. Aleister Crowley-ൽ നിന്ന് Dr. Dabholkar's martyrdom വരെ.</p>
+
+      <ul class="findings-list">
+        <li><span class="finding-num">01</span><span class="en">Black magic belief is universal — no culture is entirely free. Different names, same core fear.</span><span class="ml">Black magic belief is universal — no culture entirely free. Different names, same core fear.</span></li>
+        <li><span class="finding-num">02</span><span class="en">History shows: Witch hunting kills innocents. Fear is always weaponized against the marginalized — women, the poor, outsiders.</span><span class="ml">History shows: Witch hunting kills innocents. Fear weaponized against marginalized people — always women, poor, outsiders.</span></li>
+        <li><span class="finding-num">03</span><span class="en">Kerala traditions are culturally rich but economically exploitative. Local belief + poverty = fraud opportunity.</span><span class="ml">Kerala traditions are culturally rich but economically exploitative. Local belief + poverty = fraud opportunity.</span></li>
+        <li><span class="finding-num">04</span><span class="en">Voodoo, Santeria, Sihr — genuine religions distorted by popular culture. 'Black magic' elements are minority practices.</span><span class="ml">Voodoo, Santeria, Sihr — genuine religions distorted by popular culture. 'Black magic' elements are minority practices.</span></li>
+        <li><span class="finding-num">05</span><span class="en">Real cases reveal: murder, exploitation, and financial ruin — the real consequences of supernatural belief.</span><span class="ml">Real cases reveal: Murder, exploitation, financial ruin — real consequences of supernatural belief.</span></li>
+        <li><span class="finding-num">06</span><span class="en">Science explains everything: Nocebo, mass hysteria, cold reading, real poisons. No supernatural explanation is needed.</span><span class="ml">Science explains everything: Nocebo, mass hysteria, cold reading, real poisons. No supernatural explanation needed.</span></li>
+        <li><span class="finding-num">07</span><span class="en">Religion and magic are intertwined in complex ways. All major religions simultaneously forbid magic while creating space for 'approved' supernatural interaction.</span><span class="ml">Religion and magic are intertwined in complex ways. All major religions simultaneously forbid magic while creating space for 'approved' supernatural interaction.</span></li>
+        <li><span class="finding-num">08</span><span class="en">Victims need compassion, not condemnation. Recovery is possible with education and support.</span><span class="ml">Victims need compassion, not condemnation. Recovery is possible with education and support.</span></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title en">12.2 Is Black Magic Real?</div>
+      <div class="section-title ml">12.2 Black Magic യഥാർത്ഥമാണോ?</div>
+
+      <p class="en"><strong>As supernatural power:</strong> No credible scientific evidence exists. Every claimed supernatural effect has a natural explanation. The James Randi Educational Foundation offered $1 million to anyone who could demonstrate supernatural powers under controlled conditions. No one has ever claimed it in 40+ years.</p>
+      <p class="ml"><strong>As supernatural power:</strong> No credible scientific evidence exists. Every claimed supernatural effect has natural explanation. The James Randi Educational Foundation offered $1 million. No one has ever claimed it in 40+ years.</p>
+
+      <p class="en"><strong>As human behavior:</strong> YES. Black magic as a system of human psychology, social control, exploitation, and cultural expression is very real. The suffering it causes is real. The financial exploitation is real. The murders committed in its name are real. The fear it generates is real. The danger is not supernatural — the danger is human.</p>
+      <p class="ml"><strong>As human behavior:</strong> YES. Black magic as a system of human psychology, social control, exploitation, and cultural expression — is very real. The suffering it causes is real. The financial exploitation is real. The danger is not supernatural — the danger is human.</p>
+    </div>
+
+    <div class="pull-quote">
+      <p class="en">"The cure for superstition is knowledge. The cure for exploitation is courage. The cure for fear is understanding."</p>
+      <p class="ml">"അന്ധവിശ്വാസത്തിനുള്ള ഔഷധം അറിവാണ്. ചൂഷണത്തിനുള്ള ഔഷധം ധൈര്യമാണ്. ഭയത്തിനുള്ള ഔഷധം ഗ്രാഹ്യമാണ്."</p>
+      <cite>— Salman Hashir</cite>
+    </div>
+  </article>
+
+  <div class="section-divider"></div>
+
+  <!-- BIBLIOGRAPHY -->
+  <article class="chapter" id="bib">
+    <div class="chapter-header">
+      <span class="chapter-number en">Bibliography</span>
+      <span class="chapter-number ml">Bibliography</span>
+      <h2 class="chapter-title">
+        <span class="en">📚 Bibliography &amp; References</span>
+        <span class="ml">📚 Bibliography &amp; References</span>
+      </h2>
+      <div class="chapter-line"></div>
+    </div>
+
+    <div class="bib-section">
+      <div class="bib-category en">Primary Academic Sources</div>
+      <div class="bib-category ml">Primary Academic Sources</div>
+      <div class="bib-item"><span class="bib-num">1</span><span>Frazer, J.G. (1890). <em>The Golden Bough.</em> Macmillan.</span></div>
+      <div class="bib-item"><span class="bib-num">2</span><span>Evans-Pritchard, E.E. (1937). <em>Witchcraft, Oracles and Magic Among the Azande.</em> Oxford University Press.</span></div>
+      <div class="bib-item"><span class="bib-num">3</span><span>Murray, M. (1921). <em>The Witch-Cult in Western Europe.</em> Oxford University Press.</span></div>
+      <div class="bib-item"><span class="bib-num">4</span><span>Davis, W. (1985). <em>The Serpent and the Rainbow.</em> Simon &amp; Schuster.</span></div>
+      <div class="bib-item"><span class="bib-num">5</span><span>Caporael, L. (1976). Ergotism: The Satan Loosed in Salem? <em>Science,</em> 192(4234), 21–26.</span></div>
+      <div class="bib-item"><span class="bib-num">6</span><span>Becker, E. (1973). <em>The Denial of Death.</em> Free Press.</span></div>
+      <div class="bib-item"><span class="bib-num">7</span><span>Cannon, W.B. (1942). Voodoo Death. <em>American Anthropologist,</em> 44(2), 169–181.</span></div>
+
+      <div class="bib-category en">India-Specific References</div>
+      <div class="bib-category ml">India-Specific References</div>
+      <div class="bib-item"><span class="bib-num">8</span><span>Maharashtra Prevention of Black Magic Act (2013). Government of Maharashtra.</span></div>
+      <div class="bib-item"><span class="bib-num">9</span><span>Jharkhand Prevention of Witch (Daain) Practices Act (1999).</span></div>
+      <div class="bib-item"><span class="bib-num">10</span><span>NFHS-5 (2019–21). National Family Health Survey. Ministry of Health, India.</span></div>
+      <div class="bib-item"><span class="bib-num">11</span><span>Kerala Yukthivadi Sangham. Annual Reports (2015–2022).</span></div>
+
+      <div class="bib-category en">Journalism &amp; Documentaries</div>
+      <div class="bib-category ml">Journalism &amp; Documentaries</div>
+      <div class="bib-item"><span class="bib-num">12</span><span>Secrets of the Dead: The Witches Curse (PBS Documentary, 2000)</span></div>
+      <div class="bib-item"><span class="bib-num">13</span><span>Saving Africa's Witch Children (Channel 4, 2008)</span></div>
+      <div class="bib-item"><span class="bib-num">14</span><span>The Secret Swami (BBC, 2004)</span></div>
+      <div class="bib-item"><span class="bib-num">15</span><span>Devil's Breath (BBC, 2015)</span></div>
+
+      <div class="bib-category en">Online Resources</div>
+      <div class="bib-category ml">Online Resources</div>
+      <div class="bib-item"><span class="bib-num">16</span><span>James Randi Educational Foundation: <a href="https://www.randi.org">www.randi.org</a></span></div>
+      <div class="bib-item"><span class="bib-num">17</span><span>Indian Rationalist Association: <a href="https://www.rationalistindia.com">www.rationalistindia.com</a></span></div>
+      <div class="bib-item"><span class="bib-num">18</span><span>Skeptic Magazine: <a href="https://www.skeptic.com">www.skeptic.com</a></span></div>
+    </div>
+  </article>
+
+  <!-- ABOUT AUTHOR -->
+  <div class="author-section">
+    <div class="author-glyph">SH</div>
+    <div class="author-name">Salman Hashir</div>
+    <p class="author-bio en">Salman Hashir is a writer and researcher with a deep interest in the intersection of human psychology, culture, and belief systems. With a background in technology and a passion for understanding how the human mind constructs and responds to the unknown, Salman approaches the subject of black magic not with fear or faith, but with rigorous intellectual curiosity. This book represents years of research across historical texts, anthropological studies, psychological literature, and documented cases from around the world. Salman believes that education is the most powerful tool against exploitation — and that no belief, however ancient or widespread, should be immune to honest examination.</p>
+    <p class="author-bio ml">സൽമാൻ ഹാഷിർ ഒരു എഴുത്തുകാരനും ഗവേഷകനുമാണ്, human psychology, culture, belief systems-ന്റെ intersection-ൽ അദ്ദേഹത്തിന് ആഴമേറിയ താൽപ്പര്യമുണ്ട്. Technology-ൽ background-ഉം human mind-നെ മനസ്സിലാക്കാനുള്ള passion-ഉം ഉള്ള Salman, black magic-നോട് ഭയത്തോടല്ല, intellectual curiosity-ഓടെ approach ചെയ്യുന്നു. Education is the most powerful tool against exploitation — and no belief, however ancient or widespread, should be immune to honest examination.</p>
+    <br>
+    <p class="author-bio" style="color:var(--accent2); font-style:italic; font-size:16px;">"To understand darkness, you must first stop being afraid of it." — Salman Hashir</p>
+  </div>
+
+</main>
+
+<footer>
+  <span>BLACK MAGIC · THE COMPLETE STUDY OF DARK ARTS</span><br><br>
+  © <span>2026</span> · Prepared by <span>SALMAN HASHIR</span> · Educational &amp; Research Publication<br>
+  <br>All content is for educational, research, and historical analysis purposes only.
+</footer>
+
+<script>
+  const toggle = document.getElementById('langToggle');
+  const enLabel = document.getElementById('en-label');
+  const mlLabel = document.getElementById('ml-label');
+
+  toggle.addEventListener('change', function() {
+    if (this.checked) {
+      document.body.classList.add('malayalam');
+      enLabel.classList.remove('active');
+      mlLabel.classList.add('active');
+    } else {
+      document.body.classList.remove('malayalam');
+      mlLabel.classList.remove('active');
+      enLabel.classList.add('active');
+    }
+  });
+
+  // Set initial active state
+  enLabel.classList.add('active');
+</script>
+</body>
+</html>

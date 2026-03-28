@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consciousness & The Soul — Salman Hashir</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+Malayalam:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --parchment: #f5f0e8;
+    --parchment-dark: #ede8da;
+    --gold: #c9a84c;
+    --gold-light: #e8cc7e;
+    --rust: #8b3a2a;
+    --smoke: #6b6459;
+    --cream: #faf7f2;
+    --border: rgba(201,168,76,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', 'Noto Serif Malayalam', Georgia, serif;
+    line-height: 1.85;
+    font-size: 18px;
+  }
+
+  /* ── Grain overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  /* ── Progress bar ── */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--rust));
+    width: 0%;
+    z-index: 999;
+    transition: width 0.1s;
+  }
+
+  /* ── Language toggle ── */
+  #lang-toggle {
+    position: fixed;
+    top: 1.2rem; right: 1.5rem;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--ink);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 0.55rem 1.1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  #lang-toggle:hover { background: var(--gold); color: var(--ink); }
+  #lang-toggle .toggle-switch {
+    width: 32px; height: 16px;
+    border-radius: 8px;
+    background: rgba(201,168,76,0.3);
+    position: relative;
+    transition: background 0.3s;
+  }
+  #lang-toggle .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    transition: transform 0.3s;
+  }
+  #lang-toggle.ml-active .toggle-switch { background: rgba(201,168,76,0.6); }
+  #lang-toggle.ml-active .toggle-switch::after { transform: translateX(16px); }
+
+  /* ── Loading overlay ── */
+  #loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,20,16,0.88);
+    z-index: 800;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  #loading-overlay.active { display: flex; }
+  .loading-text {
+    font-family: 'Space Mono', monospace;
+    color: var(--gold);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .loading-spinner {
+    width: 40px; height: 40px;
+    border: 2px solid rgba(201,168,76,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+  /* ── Cover / Hero ── */
+  #cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    background: radial-gradient(ellipse at 50% 30%, #2d200f 0%, var(--ink) 70%);
+    overflow: hidden;
+  }
+
+  #cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 80%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(139,58,42,0.08) 0%, transparent 50%);
+  }
+
+  .cover-ornament {
+    font-family: 'Space Mono', monospace;
+    color: var(--gold);
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    opacity: 0.6;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease both;
+  }
+
+  .cover-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    font-weight: 300;
+    color: var(--parchment);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    animation: fadeInUp 1s 0.2s ease both;
+  }
+
+  .cover-title span {
+    display: block;
+    color: var(--gold);
+    font-style: italic;
+    font-size: 0.55em;
+    letter-spacing: 0.15em;
+    font-weight: 300;
+    margin-top: 0.3em;
+  }
+
+  .cover-rule {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 2rem auto;
+    animation: fadeInUp 1s 0.4s ease both;
+  }
+
+  .cover-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--parchment-dark);
+    font-style: italic;
+    opacity: 0.8;
+    max-width: 500px;
+    animation: fadeInUp 1s 0.5s ease both;
+  }
+
+  .cover-author {
+    margin-top: 3rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    opacity: 0.7;
+    animation: fadeInUp 1s 0.7s ease both;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeInUp 1s 1s ease both;
+  }
+  .scroll-hint span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    opacity: 0.5;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  @keyframes scrollBounce {
+    0%,100% { transform: scaleY(1); opacity: 0.5; }
+    50% { transform: scaleY(1.3); opacity: 1; }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── TOC ── */
+  #toc {
+    background: var(--parchment-dark);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 2rem;
+  }
+
+  .toc-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .toc-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0.7;
+  }
+
+  .toc-list {
+    list-style: none;
+  }
+
+  .toc-list li {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .toc-list li:hover { color: var(--rust); }
+  .toc-list li:hover .toc-num { color: var(--rust); }
+
+  .toc-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--gold);
+    flex-shrink: 0;
+    letter-spacing: 0.1em;
+  }
+
+  .toc-name {
+    font-size: 1.05rem;
+    font-style: italic;
+    flex: 1;
+  }
+
+  .toc-sub {
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--smoke);
+    letter-spacing: 0.05em;
+    font-style: normal;
+  }
+
+  /* ── Main content ── */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 4rem 2rem 8rem;
+  }
+
+  /* ── Chapter sections ── */
+  .chapter {
+    margin-bottom: 6rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .chapter.visible { opacity: 1; transform: translateY(0); }
+
+  .chapter-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 0.5rem;
+  }
+
+  .chapter-title {
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .chapter-subtitle {
+    font-style: italic;
+    color: var(--smoke);
+    font-size: 1.05rem;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .chapter-rule {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin-bottom: 2.5rem;
+    opacity: 0.4;
+  }
+
+  /* ── Section headings ── */
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 2.5rem 0 1rem;
+    color: var(--ink);
+    position: relative;
+    padding-left: 1.2rem;
+  }
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.2em;
+    width: 3px;
+    height: 1.1em;
+    background: var(--gold);
+  }
+
+  /* ── Paragraph ── */
+  p { margin-bottom: 1.4rem; }
+
+  /* ── Blockquote ── */
+  blockquote {
+    margin: 2.5rem 0;
+    padding: 1.5rem 2rem;
+    border-left: 3px solid var(--gold);
+    background: var(--parchment-dark);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--smoke);
+    position: relative;
+  }
+  blockquote::before {
+    content: '\201C';
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.2;
+    position: absolute;
+    top: -0.5rem;
+    left: 0.5rem;
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+
+  /* ── Lists ── */
+  .content-list {
+    list-style: none;
+    margin: 1.5rem 0 1.5rem 0;
+    padding: 0;
+    border: 1px solid var(--border);
+    background: var(--parchment-dark);
+  }
+
+  .content-list li {
+    padding: 0.9rem 1.5rem 0.9rem 3rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    font-size: 0.97rem;
+    line-height: 1.6;
+  }
+  .content-list li:last-child { border-bottom: none; }
+  .content-list li::before {
+    content: '◆';
+    position: absolute;
+    left: 1.2rem;
+    color: var(--gold);
+    font-size: 0.5rem;
+    top: 1.2rem;
+  }
+
+  .list-title {
+    font-weight: 600;
+    font-style: normal;
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 1rem;
+  }
+
+  /* ── Intro / special sections ── */
+  .intro-section {
+    background: linear-gradient(135deg, var(--parchment-dark), var(--cream));
+    border: 1px solid var(--border);
+    padding: 3rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .intro-section::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
+  }
+
+  .intro-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    opacity: 0.7;
+  }
+
+  /* ── Conclusion ── */
+  #conclusion {
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 5rem 2rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+  .conclusion-inner { max-width: 680px; margin: 0 auto; }
+  #conclusion .chapter-title { color: var(--parchment); }
+  #conclusion .chapter-subtitle { color: var(--gold-light); }
+  #conclusion p { color: var(--parchment-dark); }
+  #conclusion blockquote {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+    color: var(--gold-light);
+  }
+  #conclusion blockquote::before { color: var(--gold); opacity: 0.3; }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--ink);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 3rem 2rem;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    opacity: 0.6;
+  }
+
+  /* ── Malayalam mode ── */
+  body.malayalam-mode {
+    font-family: 'Noto Serif Malayalam', 'Cormorant Garamond', serif;
+  }
+
+  .text-content { transition: opacity 0.3s ease; }
+  .text-content.translating { opacity: 0.3; }
+
+  /* ── Notification toast ── */
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 0.8rem 1.8rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    z-index: 600;
+    transition: transform 0.4s ease;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    main { padding: 2.5rem 1.2rem 6rem; }
+    blockquote { padding: 1.2rem 1.2rem; }
+    .intro-section { padding: 2rem 1.5rem; }
+    #lang-toggle { top: 0.8rem; right: 0.8rem; font-size: 0.62rem; padding: 0.45rem 0.8rem; }
+    .toc-name { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- Loading overlay -->
+<div id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loading-msg">TRANSLATING TO MALAYALAM...</div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+<!-- Language toggle -->
+<button id="lang-toggle" onclick="toggleLanguage()" title="Toggle Malayalam">
+  <span id="lang-label">ML</span>
+  <div class="toggle-switch"></div>
+</button>
+
+<!-- ══════════════ COVER ══════════════ -->
+<section id="cover">
+  <div class="cover-ornament">◆ ◆ ◆</div>
+  <h1 class="cover-title">
+    Consciousness &amp; the Soul
+    <span>Science Meets Spirituality</span>
+  </h1>
+  <div class="cover-rule"></div>
+  <p class="cover-subtitle text-content" id="cover-sub">
+    From Sleep Paralysis to Exorcism — A Complete Study in Consciousness, Parapsychology &amp; Spirituality
+  </p>
+  <div class="cover-author">Written by Salman Hashir &nbsp;·&nbsp; 2025 – 2026</div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══════════════ TOC ══════════════ -->
+<section id="toc">
+  <div class="toc-inner">
+    <div class="toc-label">TABLE OF CONTENTS</div>
+    <ul class="toc-list">
+      <li onclick="scrollTo('intro')"><span class="toc-num">00</span><span class="toc-name">Introduction</span><span class="toc-sub">The Question at the Heart of Existence</span></li>
+      <li onclick="scrollTo('ch1')"><span class="toc-num">01</span><span class="toc-name">Consciousness</span><span class="toc-sub">Is the Soul Made of Quantum Physics?</span></li>
+      <li onclick="scrollTo('ch2')"><span class="toc-num">02</span><span class="toc-name">The Secret World of Sleep</span><span class="toc-sub">What Happens When Consciousness Retreats</span></li>
+      <li onclick="scrollTo('ch3')"><span class="toc-num">03</span><span class="toc-name">Memory, Identity &amp; Time</span><span class="toc-sub">When the Past Bleeds into the Present</span></li>
+      <li onclick="scrollTo('ch4')"><span class="toc-num">04</span><span class="toc-name">The Power of the Mind</span><span class="toc-sub">Thought Forms, Tulpas &amp; Mass Hysteria</span></li>
+      <li onclick="scrollTo('ch5')"><span class="toc-num">05</span><span class="toc-name">The Edge of Death</span><span class="toc-sub">Near Death, Shared Death &amp; Crisis Apparitions</span></li>
+      <li onclick="scrollTo('ch6')"><span class="toc-num">06</span><span class="toc-name">Haunted Locations &amp; Place Energy</span><span class="toc-sub">Why Some Places Feel Wrong</span></li>
+      <li onclick="scrollTo('ch7')"><span class="toc-num">07</span><span class="toc-name">Exorcism</span><span class="toc-sub">Driving Out the Spirit — Ancient Ritual, Modern World</span></li>
+      <li onclick="scrollTo('ch8')"><span class="toc-num">08</span><span class="toc-name">The Psychology of Possession</span><span class="toc-sub">When the Mind Fractures</span></li>
+      <li onclick="scrollTo('ch9')"><span class="toc-num">09</span><span class="tco-name">Science vs. Spirituality</span><span class="toc-sub">The Final Verdict</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main>
+
+  <!-- INTRODUCTION -->
+  <article class="chapter" id="intro">
+    <div class="chapter-number">INTRODUCTION</div>
+    <h2 class="chapter-title">The Question at the Heart of Existence</h2>
+    <div class="chapter-rule"></div>
+    <div class="intro-section">
+      <div class="intro-label">PREFACE</div>
+      <p class="text-content">There is one question humanity has never stopped asking: <em>Who am I?</em> Am I only this body, or is there something more — something that thinks, feels, and persists even when the body is at rest, or when it ceases entirely?</p>
+      <p class="text-content">Have you ever woken in the night, unable to move, with the overwhelming sense that someone is sitting on your chest? Have you walked into an empty house and felt your stomach drop for no rational reason? Have you experienced a moment so familiar that you were certain it had happened before — yet it could not have?</p>
+      <p class="text-content">These experiences are dismissed in two ways: by the religious as the supernatural, and by the scientific as mere misfires of the brain. But the truth — honest, careful, evidence-based truth — lives somewhere in between.</p>
+    </div>
+    <p class="text-content">This book is a journey. We travel from the deepest layers of consciousness, through the mysterious architecture of sleep, past the boundary of death, into the ancient rituals of exorcism, and back again. Every topic is examined through three lenses: science, parapsychology, and spirituality. No single lens is complete on its own. Together, they begin to reveal a picture that is more complex, more astonishing, and more humbling than any one worldview can hold alone.</p>
+    <blockquote class="text-content">"Science reveals one layer of reality. Spirituality reveals another. A conscious person explores both with an open mind."</blockquote>
+  </article>
+
+  <!-- CHAPTER 1 -->
+  <article class="chapter" id="ch1">
+    <div class="chapter-number">CHAPTER 01</div>
+    <h2 class="chapter-title">Consciousness</h2>
+    <p class="chapter-subtitle">Is the Soul Made of Quantum Physics?</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">Everything begins here. Consciousness — awareness itself — is the most intimate fact of your existence, yet it remains the deepest mystery in all of science. You know that you are reading these words. But what, exactly, is doing the knowing?</p>
+
+    <h3 class="section-title">1.1 Brain vs. Mind — What Is the Difference?</h3>
+    <p class="text-content">The brain is an organ. It is made of neurons, synapses, and electrochemical signals. It can be scanned, measured, operated upon, and studied under a microscope. But the mind — awareness, subjective experience, the sense of being <em>you</em> — is something else entirely.</p>
+    <p class="text-content">Philosopher David Chalmers famously named this gap the 'Hard Problem of Consciousness.' Neuroscience can explain how the brain processes visual information — but it cannot explain why that processing <em>feels</em> like something. Why does seeing the colour red produce an inner experience of redness? Why is there something it is like to be you, rather than nothing at all?</p>
+    <blockquote class="text-content">"The brain is the hardware. But who, or what, is running the software?"</blockquote>
+
+    <h3 class="section-title">1.2 Quantum Consciousness — The Penrose-Hameroff Theory</h3>
+    <p class="text-content">Physicist Sir Roger Penrose and anaesthesiologist Stuart Hameroff proposed one of the most ambitious and controversial theories in modern science: that consciousness arises from quantum computations occurring inside microscopic structures called microtubules within the brain's neurons.</p>
+    <p class="text-content">Their theory, called Orchestrated Objective Reduction (Orch-OR), suggests that consciousness is not merely a byproduct of classical brain chemistry, but is instead deeply connected to the quantum fabric of reality itself. If consciousness operates on quantum principles, then the 'self' may be a quantum entity — one that is not strictly confined to the body, and whose informational structure may persist even after biological death.</p>
+    <blockquote class="text-content">"If the soul is quantum information, it may never truly be lost — only transformed."</blockquote>
+
+    <h3 class="section-title">1.3 The Collective Unconscious — Jung's Revolutionary Theory</h3>
+    <p class="text-content">Carl Gustav Jung proposed a concept that remains radical to this day: beneath the personal unconscious of each individual lies a deeper layer shared by all human beings — the Collective Unconscious. This shared psychological inheritance is not learned or constructed. It is inherited — a kind of mental bedrock encoded into the human species over millennia.</p>
+    <p class="text-content">Within it live what Jung called Archetypes: universal symbols, figures, and themes that appear spontaneously across all cultures, in all eras, without any possibility of direct contact or cultural transmission.</p>
+    <ul class="content-list">
+      <li class="text-content"><span class="list-title">The Shadow</span>The repressed, darker aspects of the self; in myth: demons, monsters, the underworld</li>
+      <li class="text-content"><span class="list-title">The Anima / Animus</span>The inner feminine in men / masculine in women; in myth: the divine counterpart, the muse</li>
+      <li class="text-content"><span class="list-title">The Trickster</span>The agent of chaos and change; in myth: the cunning god who upends the established order</li>
+      <li class="text-content"><span class="list-title">The Great Mother</span>Simultaneously nurturing and devouring; in myth: earth goddesses, goddesses of fate</li>
+      <li class="text-content"><span class="list-title">The Hero</span>The self overcoming its own limitations; in myth: the quest narrative found in every culture on earth</li>
+    </ul>
+  </article>
+
+  <!-- CHAPTER 2 -->
+  <article class="chapter" id="ch2">
+    <div class="chapter-number">CHAPTER 02</div>
+    <h2 class="chapter-title">The Secret World of Sleep</h2>
+    <p class="chapter-subtitle">What Happens When Consciousness Retreats</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">A human being spends roughly one third of their entire life asleep. That is decades of time in which the body lies still, the eyes close, and consciousness — or something very much like it — travels elsewhere. Sleep is not an absence of experience. It is an alternate mode of experience, and its depths have barely been charted.</p>
+
+    <h3 class="section-title">2.1 The Hypnagogic State — The Doorway into Sleep</h3>
+    <p class="text-content">The transition from wakefulness into sleep is a gradual dissolving — a twilight state called the Hypnagogic State. In this condition, the brain shifts from alert alpha waves into slower theta waves. People commonly report hearing their name called when no one is there, seeing faces behind closed eyes, experiencing the sudden hypnic jerk, and feeling a distinct 'presence' nearby.</p>
+    <p class="text-content">Thomas Edison reportedly held a steel ball in his hand while napping: as he slipped into sleep, the ball would drop, the sound would wake him, and he would record whatever vision had appeared. Salvador Dalí used a similar method with a key and a plate.</p>
+    <blockquote class="text-content">"The doorway into sleep is also a doorway into a different kind of knowing."</blockquote>
+
+    <h3 class="section-title">2.2 Sleep Paralysis — The Terror in the Night</h3>
+    <p class="text-content">Sleep paralysis is one of the most universal and well-documented phenomena in all of human experience. Approximately 40% of people experience it at least once. It occurs at the boundary between REM sleep and wakefulness: the person is awake — thinking, perceiving, alarmed — but completely unable to move.</p>
+    <ul class="content-list">
+      <li class="text-content"><span class="list-title">Intruder Hallucination</span>The absolute certainty that someone — or something — is in the room. The amygdala activates powerfully, and the perceptual system constructs a shadowy figure, often standing in the corner or approaching the bed.</li>
+      <li class="text-content"><span class="list-title">Incubus Hallucination</span>A crushing pressure on the chest, accompanied by difficulty breathing and an overwhelming sense of malevolent weight. REM paralysis weakens chest muscles; the brain interprets reduced respiratory sensation as a physical burden pressing down.</li>
+      <li class="text-content"><span class="list-title">Vestibular Hallucination</span>The sensation of floating, being dragged, spinning, or rising from the bed — arising from disturbances in the brain's spatial orientation systems during the sleep-wake transition.</li>
+    </ul>
+    <p class="text-content">This experience carries local names across every culture: <em>Karindhiri</em> in Kerala, <em>Kanashibari</em> in Japan, <em>Karabasan</em> in Turkey, <em>The Old Hag</em> in Newfoundland, <em>Pisadeira</em> in Brazil. The same experience, the same creature, the same crushing weight — reported independently across the world.</p>
+
+    <h3 class="section-title">2.3 Lucid Dreaming — Waking Within the Dream</h3>
+    <p class="text-content">A lucid dream is a dream in which the dreamer becomes aware that they are dreaming — and may exercise varying degrees of conscious control over the dream's content. In 1975, British researcher Keith Hearne became the first person to scientifically confirm lucid dreaming. Stephen LaBerge at Stanford University later developed protocols that allow people to reliably enter and maintain lucid dream states.</p>
+
+    <h3 class="section-title">2.4 Out-of-Body Experience (OBE)</h3>
+    <p class="text-content">An OBE is the vivid perception that one's consciousness has separated from the physical body and is observing it from an external vantage point. Scientists at the University of Geneva demonstrated this experimentally by applying mild electrical stimulation to a patient's Temporoparietal Junction (TPJ). The patient immediately reported floating upward and looking down at her own body — a reliably reproducible effect.</p>
+
+    <h3 class="section-title">2.5 Astral Projection — The Deliberate OBE</h3>
+    <p class="text-content">The Stargate Project, funded by the CIA and Defense Intelligence Agency from the early 1970s until 1995, investigated whether trained individuals could use 'remote viewing' — a form of directed OBE — to gather intelligence. Declassified documents confirm that some remote viewers produced descriptions of Soviet military installations with a degree of accuracy that statistical analysis found difficult to attribute to chance alone.</p>
+  </article>
+
+  <!-- CHAPTER 3 -->
+  <article class="chapter" id="ch3">
+    <div class="chapter-number">CHAPTER 03</div>
+    <h2 class="chapter-title">Memory, Identity &amp; Time</h2>
+    <p class="chapter-subtitle">When the Past Bleeds into the Present</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">Memory is not a recording. It is a reconstruction — an active, creative process that the brain performs anew each time a recollection is summoned. This makes memory both deeply personal and fundamentally unreliable. It also opens the door to some of the strangest experiences in human life.</p>
+
+    <h3 class="section-title">3.1 Déjà Vu — A Glitch in the Time Loop?</h3>
+    <p class="text-content">The feeling is unmistakable: the absolute certainty that this precise moment has happened before. Yet it could not have. Approximately 70% of people report experiencing déjà vu at some point. The leading neurological explanation involves <em>double encoding</em> — a familiarity signal that fires prematurely, creating the paradox of a present moment that feels like a remembered past.</p>
+
+    <h3 class="section-title">3.2 Cryptomnesia — The Forgotten Memory</h3>
+    <p class="text-content">Cryptomnesia is the phenomenon whereby a forgotten memory resurfaces without being recognised as a memory — and is therefore experienced as an original new idea. The most famous legal case involves George Harrison, found by a court to have unconsciously reproduced, in his 1970 song 'My Sweet Lord,' the melody of 'He's So Fine' by The Chiffons. The court accepted his credible account of having no awareness of the borrowing — judging it 'subconscious plagiarism.'</p>
+
+    <h3 class="section-title">3.3 Time Slips — A Window into the Past</h3>
+    <p class="text-content">The most thoroughly investigated case is the Versailles Time Slip of 1901. Two Oxford academics — Anne Moberly and Eleanor Jourdain — were visiting the gardens of the Palace of Versailles when both independently reported a sudden, complete transformation of their surroundings. The people they encountered wore eighteenth-century clothing; the landscape matched the configuration of 1789. A woman sketching outdoors was later identified, through extensive archival research, with a high degree of probability, as Marie Antoinette herself. No consensus explanation has been reached.</p>
+  </article>
+
+  <!-- CHAPTER 4 -->
+  <article class="chapter" id="ch4">
+    <div class="chapter-number">CHAPTER 04</div>
+    <h2 class="chapter-title">The Power of the Mind</h2>
+    <p class="chapter-subtitle">Thought Forms, Tulpas &amp; Mass Hysteria</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">If consciousness is more than a byproduct of brain chemistry, then focused consciousness may have the power to shape external reality in ways that conventional science does not yet understand.</p>
+
+    <h3 class="section-title">4.1 Tulpa — The Being Created by the Mind</h3>
+    <p class="text-content">In Tibetan Buddhist tradition, a Tulpa is a being brought into existence through sustained, concentrated mental effort. The most extensively documented Western account comes from French explorer Alexandra David-Néel, who spent fourteen years in Tibet and undertook the practice of Tulpa creation with full sceptical intent. After weeks of concentration, a monk-figure began appearing spontaneously, was seen independently by others in her party, and began changing in ways she had not intended. Its dissolution required several weeks of equally concentrated effort.</p>
+    <blockquote class="text-content">"A thought given enough energy may cross the threshold from the merely imagined into something that acts of its own accord."</blockquote>
+
+    <h3 class="section-title">4.2 Mass Hysteria — The Contagion of Fear</h3>
+    <p class="text-content">Mass Psychogenic Illness (MPI) is the rapid spread of physical symptoms through a group of people in the absence of any physical cause. The most historically significant case is the Salem Witch Trials of 1692, where adolescent girls exhibiting convulsions and visions triggered a legal crisis resulting in twenty executions. Modern analysis proposes that ergot fungus on rye grain — producing compounds chemically related to LSD — may have caused the initial hallucinations, with mass hysteria amplifying and spreading symptoms through social contagion.</p>
+  </article>
+
+  <!-- CHAPTER 5 -->
+  <article class="chapter" id="ch5">
+    <div class="chapter-number">CHAPTER 05</div>
+    <h2 class="chapter-title">The Edge of Death</h2>
+    <p class="chapter-subtitle">Near Death, Shared Death &amp; Crisis Apparitions</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">Death is the horizon beyond which science, by definition, cannot follow. Yet there exists a growing body of rigorously documented evidence from people who have approached that horizon and returned.</p>
+
+    <h3 class="section-title">5.1 Near-Death Experience — The Most Documented Phenomenon</h3>
+    <p class="text-content">The International Association for Near Death Studies (IANDS) has collected and analysed more than 5,000 documented cases. The consistency across these accounts is remarkable — reported by people of every culture, religion, age, and philosophical background, including committed atheists.</p>
+    <ul class="content-list">
+      <li class="text-content">A profound sense of peace and the absence of pain</li>
+      <li class="text-content">Separation from the physical body, often with perception of observing it from above</li>
+      <li class="text-content">Passage through a dark tunnel toward an intensely bright, warm light</li>
+      <li class="text-content">Encounters with deceased relatives or other luminous presences</li>
+      <li class="text-content">A life review in which the entirety of one's existence is replayed and felt from every perspective</li>
+      <li class="text-content">A boundary or threshold that cannot be crossed — and the experience of being 'sent back'</li>
+      <li class="text-content">A permanent transformation in the person's relationship to death, fear, and the meaning of existence</li>
+    </ul>
+
+    <h3 class="section-title">5.2 The Pam Reynolds Case (1991)</h3>
+    <p class="text-content">In 1991, Pam Reynolds underwent a radical neurosurgical procedure requiring her heart be stopped, blood drained from her brain, and brain activity reduced to a flat EEG — clinical death by every medical measure. Her eyes were taped shut; moulded earphones delivering 100-decibel clicks blocked all auditory perception. Yet when she regained consciousness, she provided a detailed and accurate description of the bone saw used to open her skull — equipment she had never seen — and accurately described specific conversations among the surgical team.</p>
+    <blockquote class="text-content">"The brain was silent. And yet something was observing, listening, and remembering."</blockquote>
+
+    <h3 class="section-title">5.3 Shared Death Experience</h3>
+    <p class="text-content">A Shared Death Experience occurs when a healthy person — present at the deathbed of another, but not themselves dying — appears to partially share in the dying person's experience. Dr. Raymond Moody documented over 100 such cases among family members, friends, and medical professionals. Unlike the NDE, it cannot be attributed to the dying brain, since the witnessing person is in full health.</p>
+
+    <h3 class="section-title">5.4 Crisis Apparitions — The Final Farewell</h3>
+    <p class="text-content">The Society for Psychical Research conducted a systematic Census of Hallucinations in the 1890s, collecting nearly 17,000 responses. Of the veridical hallucinations reported, approximately one in ten occurred within twelve hours of the death of the person seen — far exceeding any probability attributable to chance.</p>
+
+    <h3 class="section-title">5.5 The Doppelgänger — The Double</h3>
+    <p class="text-content">Perhaps the most frequently cited historical case involves Abraham Lincoln, who reportedly saw a double image of his own face in a mirror on the night of his presidential election in 1860 — one face clear and living, the other pale and ghostly. He described the experience to his wife and associates. He was assassinated in 1865.</p>
+  </article>
+
+  <!-- CHAPTER 6 -->
+  <article class="chapter" id="ch6">
+    <div class="chapter-number">CHAPTER 06</div>
+    <h2 class="chapter-title">Haunted Locations &amp; Place Energy</h2>
+    <p class="chapter-subtitle">Why Some Places Feel Wrong</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">Every culture, on every continent, has places it considers haunted. Ancient ruins, abandoned houses, particular stretches of road, specific rooms in otherwise unremarkable buildings. What causes the unease, the cold, the sense of being watched?</p>
+
+    <h3 class="section-title">Five Layers of Explanation</h3>
+    <ul class="content-list">
+      <li class="text-content"><span class="list-title">Infrasound</span>Sound waves below 20 Hz that the ear does not consciously register, but that can cause the eyeball to resonate, producing visual disturbances at the periphery of vision — fleeting shadows, shapes, the impression of movement — along with a generalised unease and dread.</li>
+      <li class="text-content"><span class="list-title">Electromagnetic Fields (EMF)</span>Elevated EMF can stimulate the temporal lobes of the brain. Neuroscientist Michael Persinger's 'God Helmet' demonstrated that weak magnetic fields applied to this region reliably produced the experience of a 'presence' in the room.</li>
+      <li class="text-content"><span class="list-title">Mould &amp; VOCs</span>Black mould releases neurotoxic compounds that can produce cognitive impairment, paranoia, visual and auditory hallucinations, overwhelming dread, and the persistent sense of being observed. Several high-profile 'hauntings' have been traced to severe mould contamination.</li>
+      <li class="text-content"><span class="list-title">Psychology &amp; Priming</span>The brain is a prediction machine. When told that a location is haunted, it enters threat-detection mode. Every creak, shadow, and gust of air is filtered through a lens already primed to find danger.</li>
+      <li class="text-content"><span class="list-title">The Stone Tape Theory</span>The speculative idea that intense emotional events can imprint themselves upon the physical fabric of a location, particularly within certain materials — and that sensitive individuals can subsequently perceive these imprinted residues as apparitions.</li>
+    </ul>
+
+    <h3 class="section-title">6.2 Poltergeist Activity — When Objects Move</h3>
+    <p class="text-content">The Enfield Poltergeist case of 1977 remains the most extensively documented poltergeist investigation in history. Janet Hodgson, an 11-year-old girl, was the apparent focus. Over fourteen months, investigators from the Society for Psychical Research documented furniture moving, flying objects, and Janet apparently levitating — witnessed by investigators, BBC journalists, police constables, and more than thirty independent witnesses.</p>
+
+    <h3 class="section-title">6.3 Electronic Voice Phenomena (EVP)</h3>
+    <p class="text-content">EVP refers to sounds captured on audio recording devices — in the frequency range of human speech — that were not audible at the time of recording. The scientific explanation centres on <em>apophenia</em>: the brain's tendency to find patterns, particularly voice-like patterns, in random noise. Controlled studies show very low inter-rater agreement on EVP recordings — consistent with apophenia rather than genuine linguistic content.</p>
+  </article>
+
+  <!-- CHAPTER 7 -->
+  <article class="chapter" id="ch7">
+    <div class="chapter-number">CHAPTER 07</div>
+    <h2 class="chapter-title">Exorcism</h2>
+    <p class="chapter-subtitle">Driving Out the Spirit — Ancient Ritual, Modern World</p>
+    <div class="chapter-rule"></div>
+
+    <h3 class="section-title">7.1 Exorcism in Judaism — The Dybbuk</h3>
+    <p class="text-content">In Jewish mystical tradition, the Dybbuk is the wandering soul of a deceased person that attaches itself to a living body — not an evil entity, but a soul whose earthly affairs were left unresolved. It clings to a living person, it is believed, in the hope that the living can help resolve what it could not.</p>
+    <ul class="content-list">
+      <li class="text-content"><span class="list-title">Signs of Possession</span>The affected person speaks in a distinctly different voice; exhibits memories and knowledge belonging to the deceased; reacts with extreme agitation to sacred Hebrew texts; multiple apparent personalities emerge.</li>
+      <li class="text-content"><span class="list-title">The Ritual</span>Psalm 91 is recited; the shofar is sounded seven times; the rabbi opens direct communication: "Who are you? Why have you come?"; Divine names are invoked; the Dybbuk exits through the small toe of the left foot; Kaddish is recited.</li>
+    </ul>
+    <blockquote class="text-content">"The Dybbuk is not a monster. It is a grieving, wandering soul. The exorcism is not punishment — it is release."</blockquote>
+
+    <h3 class="section-title">7.2 Exorcism in Christianity</h3>
+    <p class="text-content">The Roman Catholic Church maintains an official exorcism rite — the Rituale Romanum — first codified in 1614 and revised in 1999. Its use requires explicit authorisation of the local bishop and is conducted only by an ordained priest. The Church's official diagnostic criteria require that mental illness and neurological disorder be ruled out first.</p>
+    <p class="text-content">The Roland Doe case (1949) — the basis of 'The Exorcist' — involved a 14-year-old boy who began exhibiting violent symptoms after using a Ouija board. A team of Catholic priests conducted more than thirty exorcism sessions over several months. Roland Doe subsequently lived an entirely ordinary adult life.</p>
+
+    <h3 class="section-title">7.3 Exorcism Across Other Traditions</h3>
+    <p class="text-content">Exorcism is not a Christian or Jewish phenomenon. Hinduism employs elaborate rituals involving mantras and fire ceremonies; shamanic traditions use trance states and spirit-negotiation; Buddhist practices involve pacifying and redirecting malevolent forces; African traditional practices employ specialist healers. This universality demands explanation — why would every human culture, independently, arrive at the same framework?</p>
+  </article>
+
+  <!-- CHAPTER 8 -->
+  <article class="chapter" id="ch8">
+    <div class="chapter-number">CHAPTER 08</div>
+    <h2 class="chapter-title">The Psychology of Possession</h2>
+    <p class="chapter-subtitle">When the Mind Fractures</p>
+    <div class="chapter-rule"></div>
+
+    <h3 class="section-title">8.1 Dissociative Identity Disorder (DID)</h3>
+    <p class="text-content">DID arises from severe, prolonged trauma — typically in childhood — in which the personality fractures into two or more distinct identity states. When an alternate identity takes control, the primary identity typically has no memory of what occurred. To an outside observer in a culture where spirit possession is an available explanatory framework, the presentation is indistinguishable from what that culture would call possession.</p>
+
+    <h3 class="section-title">8.2 Temporal Lobe Epilepsy</h3>
+    <p class="text-content">Temporal lobe seizures can include vivid hallucinations, the sensation of presences, intense religious or mystical experiences, déjà vu of unusual depth, and sudden personality changes. Before the neurological basis of epilepsy was understood, these were frequently interpreted as manifestations of divine inspiration or demonic possession. The misdiagnosis of epilepsy as possession — with attempts at exorcism rather than medical treatment — has been directly responsible for serious harm and death in documented cases.</p>
+
+    <h3 class="section-title">8.3 The Therapeutic Dimension of Exorcism</h3>
+    <p class="text-content">One of the most genuinely unexpected findings in the psychological literature is that, under specific cultural and psychological conditions, exorcism can be therapeutically effective — even when the underlying condition is a recognised psychiatric disorder. The mechanism operates through the provision of narrative, community, authority, and the externalisation of distress. The neurochemistry of the placebo effect is well-established: genuine belief in a treatment produces genuine measurable changes in brain chemistry.</p>
+    <blockquote class="text-content">"'Possession' may be understood as a cultural idiom of distress — an extreme psychological suffering expressed in the language that a particular culture makes available."</blockquote>
+
+    <h3 class="section-title">8.4 When Exorcism Goes Wrong</h3>
+    <p class="text-content">Cases in which individuals with epilepsy, schizophrenia, severe depression, or brain tumours were subjected to exorcism rituals rather than receiving appropriate medical treatment — sometimes in conditions of physical restraint, deprivation, and coercion — have resulted in death. The critical ethical principle is clear: where a person is suffering, the first obligation is to ensure that all demonstrably effective medical treatment has been offered and is available.</p>
+  </article>
+
+  <!-- CHAPTER 9 -->
+  <article class="chapter" id="ch9">
+    <div class="chapter-number">CHAPTER 09</div>
+    <h2 class="chapter-title">Science vs. Spirituality</h2>
+    <p class="chapter-subtitle">The Final Verdict</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">We have travelled far. We began with the question of what consciousness is, and we have moved through sleep, memory, death, haunted places, and the ancient ritual of exorcism. It is time to look honestly at what we know, what we do not know, and what remains — as it has always remained — magnificently, provocatively open.</p>
+
+    <h3 class="section-title">9.1 Two Possibilities</h3>
+    <ul class="content-list">
+      <li class="text-content"><span class="list-title">Possibility One</span>Consciousness is entirely a product of the physical brain. It arises from neural complexity, exists only as long as the brain functions, and ceases entirely at death. The self is the brain. Death is final.</li>
+      <li class="text-content"><span class="list-title">Possibility Two</span>Consciousness is not entirely contained within the brain. The brain mediates, shapes, and constrains consciousness — but consciousness may have an existence or a dimension that is not reducible to neural firing. The self is not identical to the brain. Death is a transition.</li>
+    </ul>
+    <p class="text-content">Science has not settled this question. That is not a failure of science — it is an honest acknowledgement of the limits of a methodology designed to study the measurable.</p>
+
+    <h3 class="section-title">9.2 What the Evidence Actually Supports</h3>
+    <ul class="content-list">
+      <li class="text-content">Consciousness is far more complex, far more strange, and far less understood than most people — including most scientists — assume.</li>
+      <li class="text-content">The brain does not operate as a simple input-output machine. It constructs reality actively, creatively, and sometimes in ways extraordinarily difficult to distinguish from 'experience of the external world.'</li>
+      <li class="text-content">Human beings, across all cultures and all eras, have experiences at the boundaries of ordinary consciousness that share striking structural similarities. This universality demands explanation.</li>
+      <li class="text-content">No single explanatory framework — scientific, religious, or philosophical — currently accounts for the full range of documented human experience.</li>
+    </ul>
+  </article>
+
+</main>
+
+<!-- ══════════════ CONCLUSION ══════════════ -->
+<section id="conclusion">
+  <div class="conclusion-inner">
+    <div class="chapter-number" style="color:var(--gold);opacity:0.7">CONCLUSION</div>
+    <h2 class="chapter-title">Two Possibilities &amp; One Open Mind</h2>
+    <p class="chapter-subtitle">The honest answer, in every case, is: we do not fully know.</p>
+    <div class="chapter-rule"></div>
+    <p class="text-content">Someone pressing down on your chest in the night may be REM Atonia, or it may be the Shadow archetype surfacing from the Collective Unconscious, or it may be something we do not yet have adequate language to describe.</p>
+    <p class="text-content">The dying person who sees a tunnel of light may be experiencing the brain's final neurochemical cascade, or a genuine transition to something beyond the biological.</p>
+    <p class="text-content">The purpose of this book has not been to convince you of any particular answer. It has been to ensure that when you encounter these experiences — in your own life or in the lives of others — you approach them with the two things they deserve above all: the rigour of science, and the openness of wonder.</p>
+    <blockquote class="text-content">"Reality does not have a single layer. Science illuminates one. Spirituality illuminates another. A conscious human being explores both — with curiosity, with rigour, and without fear."</blockquote>
+    <div style="margin-top:3rem;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--gold);opacity:0.5">
+      SALMAN HASHIR &nbsp;·&nbsp; 2025 – 2026 &nbsp;·&nbsp; END
+    </div>
+  </div>
+</section>
+
+<footer>
+  Consciousness &amp; the Soul: Science Meets Spirituality &nbsp;·&nbsp; Salman Hashir &nbsp;·&nbsp; 2025–2026
+</footer>
+
+<script>
+// ── Scroll progress ──
+window.addEventListener('scroll', () => {
+  const p = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progress-bar').style.width = p + '%';
+});
+
+// ── Scroll into view ──
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Chapter reveal on scroll ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.chapter').forEach(c => observer.observe(c));
+
+// ── Toast ──
+function showToast(msg, duration = 3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── Language toggle state ──
+let isML = false;
+const originalTexts = new Map();
+const mlCache = new Map();
+
+async function toggleLanguage() {
+  if (isML) {
+    restoreEnglish();
+    isML = false;
+    document.getElementById('lang-toggle').classList.remove('ml-active');
+    document.getElementById('lang-label').textContent = 'ML';
+    document.body.classList.remove('malayalam-mode');
+    showToast('Switched to English');
+  } else {
+    isML = true;
+    document.getElementById('lang-toggle').classList.add('ml-active');
+    document.getElementById('lang-label').textContent = 'EN';
+    document.body.classList.add('malayalam-mode');
+    await translateToMalayalam();
+  }
+}
+
+function restoreEnglish() {
+  originalTexts.forEach((html, el) => { el.innerHTML = html; });
+}
+
+// ── Google Translate free endpoint (no API key needed) ──
+async function gtranslate(text) {
+  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ml&dt=t&q=' + encodeURIComponent(text);
+  const res = await fetch(url);
+  const json = await res.json();
+  // Response is nested arrays: [[["translated","original",...], ...], ...]
+  let result = '';
+  if (json && json[0]) {
+    json[0].forEach(chunk => { if (chunk[0]) result += chunk[0]; });
+  }
+  return result;
+}
+
+async function translateToMalayalam() {
+  const overlay = document.getElementById('loading-overlay');
+  const loadingMsg = document.getElementById('loading-msg');
+  overlay.classList.add('active');
+  loadingMsg.textContent = 'TRANSLATING TO MALAYALAM...';
+
+  const elements = Array.from(document.querySelectorAll('.text-content'));
+
+  // Save originals
+  elements.forEach(el => {
+    if (!originalTexts.has(el)) originalTexts.set(el, el.innerHTML);
+  });
+
+  // Find elements not yet cached
+  const toTranslate = elements.filter(el => !mlCache.has(el));
+  const total = toTranslate.length;
+
+  if (total === 0) {
+    applyMalayalam(elements);
+    overlay.classList.remove('active');
+    showToast('മലയാളത്തിലേക്ക് മാറ്റി ✓');
+    return;
+  }
+
+  let done = 0;
+  // Translate one by one (Google free endpoint works best with single calls)
+  for (const el of toTranslate) {
+    const text = el.innerText.trim();
+    if (!text) { done++; continue; }
+    loadingMsg.textContent = `TRANSLATING... ${Math.round((done / total) * 100)}%`;
+    try {
+      const translated = await gtranslate(text);
+      mlCache.set(el, translated || text);
+    } catch(e) {
+      mlCache.set(el, text); // fallback to original on error
+    }
+    done++;
+    // Small delay to avoid rate limiting
+    await new Promise(r => setTimeout(r, 60));
+  }
+
+  loadingMsg.textContent = 'TRANSLATING... 100%';
+  applyMalayalam(elements);
+  overlay.classList.remove('active');
+  showToast('മലയാളത്തിലേക്ക് മാറ്റി ✓');
+}
+
+function applyMalayalam(elements) {
+  elements.forEach(el => {
+    if (mlCache.has(el)) el.textContent = mlCache.get(el);
+  });
+}
+</script>
+</body>
+</html>

@@ -147,7 +147,7 @@ function BookCard({ book, index }) {
       initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-40px' }}
       variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: index * 0.07 } } }}
       style={{
-        background: '#0d0d10',
+        background: 'var(--card-bg)',
         border: `1px solid ${book.accent}33`,
         borderLeft: `3px solid ${book.accent}`,
         padding: '1.8rem 2rem',
@@ -226,11 +226,11 @@ function BookCard({ book, index }) {
                 fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.15em',
                 textTransform: 'uppercase', textDecoration: 'none',
                 padding: '0.5rem 1.1rem', background: 'transparent', color: 'var(--muted)',
-                border: '1px solid rgba(255,255,255,0.15)',
+                border: '1px solid var(--download-border)',
                 transition: 'all 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = book.accent; e.currentTarget.style.color = book.accent; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = 'var(--muted)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--download-border)'; e.currentTarget.style.color = 'var(--muted)'; }}
             >
               ⬇ Download
             </a>
@@ -247,7 +247,7 @@ function ResearchCard({ item, index }) {
       initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
       style={{
-        background: '#0d0d10', border: `1px solid ${item.accent}33`,
+        background: 'var(--card-bg)', border: `1px solid ${item.accent}33`,
         borderTop: `3px solid ${item.accent}`,
         padding: '1.8rem 2rem', display: 'flex', flexDirection: 'column',
         position: 'relative', overflow: 'hidden',
@@ -299,7 +299,7 @@ function JourneyCard({ item, index }) {
       initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
       style={{
-        background: '#0d0d10', border: `1px solid ${item.accent}33`,
+        background: 'var(--card-bg)', border: `1px solid ${item.accent}33`,
         borderLeft: `3px solid ${item.accent}`,
         padding: '1.5rem 1.8rem', display: 'flex', flexDirection: 'column', gap: '0.6rem',
         position: 'relative',
@@ -410,7 +410,7 @@ const Writings = () => {
         {/* Tab Bar */}
         <div style={{
           display: 'flex', gap: '0', flexWrap: 'wrap',
-          border: '1px solid rgba(255,255,255,0.1)',
+          border: '1px solid var(--card-border-alpha)',
           marginBottom: '2rem', width: 'fit-content',
         }}>
           {JOURNEY_TABS.map(tab => {

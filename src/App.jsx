@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Lenis from 'lenis';
+import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/Layout';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
@@ -7,7 +8,6 @@ import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Writings from './components/Writings';
-
 import Contact from './components/Contact';
 import Marquee from './components/Marquee';
 import Spotlight from './components/Spotlight';
@@ -38,19 +38,20 @@ function App() {
   }, []);
 
   return (
-    <Layout>
-      <Spotlight />
-      <Navigation />
-      <Hero />
-      <Marquee text="AVAILABLE FOR NEW PROJECTS" />
-      <About />
-      <Experience />
-      <Marquee text="CREATIVE DEVELOPMENT & ENGINEERING" />
-      <Projects />
-      <Writings />
-
-      <Contact />
-    </Layout>
+    <ThemeProvider>
+      <Layout>
+        <Spotlight />
+        <Navigation />
+        <Hero />
+        <Marquee text="AVAILABLE FOR NEW PROJECTS" />
+        <About />
+        <Experience />
+        <Marquee text="CREATIVE DEVELOPMENT & ENGINEERING" />
+        <Projects />
+        <Writings />
+        <Contact />
+      </Layout>
+    </ThemeProvider>
   )
 }
 

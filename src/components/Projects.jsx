@@ -227,11 +227,10 @@ const Projects = () => {
                       onClick={() => toggle(proj.originalIndex)}
                       style={{
                         background: 'var(--card-bg)',
-                        border: `1px solid ${isOpen ? proj.accent + '66' : proj.accent + '33'}`,
+                        border: `1px solid ${isOpen ? proj.accent + '44' : proj.accent + '33'}`,
                         borderLeft: `3px solid ${proj.accent}`,
-                        borderBottom: rowHasOpen && isOpen
-                          ? `1px solid ${proj.accent}00`  // fade bottom border into panel
-                          : `1px solid ${isOpen ? proj.accent + '66' : proj.accent + '33'}`,
+                        /* No bottom border when open — panel continues below seamlessly */
+                        borderBottom: rowHasOpen && isOpen ? 'none' : `1px solid ${isOpen ? proj.accent + '44' : proj.accent + '33'}`,
                         padding: isMobile ? '1.4rem 1.2rem' : '1.8rem 2rem',
                         position: 'relative',
                         overflow: 'hidden',
@@ -353,26 +352,37 @@ const Projects = () => {
                     transition={{ duration: 0.45, ease: EASE }}
                     style={{ overflow: 'hidden', marginBottom: '1.2rem' }}
                   >
-                    {/* Inner panel */}
+                    {/* Inner panel — seamlessly extends the open card */}
                     <motion.div
-                      initial={{ y: -16, opacity: 0 }}
+                      initial={{ y: -8, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -16, opacity: 0 }}
-                      transition={{ duration: 0.4, ease: EASE, delay: 0.08 }}
+                      exit={{ y: -8, opacity: 0 }}
+                      transition={{ duration: 0.35, ease: EASE, delay: 0.06 }}
                       style={{
-                        background: `linear-gradient(135deg, rgba(${selected.accentRaw},0.06) 0%, var(--card-bg) 60%)`,
-                        border: `1px solid rgba(${selected.accentRaw},0.3)`,
-                        borderTop: `2px solid ${selected.accent}`,
-                        padding: isMobile ? '1.6rem 1.2rem' : '2.2rem 2.8rem',
+                        /* Same background as cards */
+                        background: 'var(--card-bg)',
+                        /* Continue the card's border on all sides EXCEPT top */
+                        borderLeft: `3px solid ${selected.accent}`,
+                        borderRight: `1px solid ${selected.accent}44`,
+                        borderBottom: `1px solid ${selected.accent}44`,
+                        borderTop: 'none',
+                        padding: isMobile ? '1.4rem 1.2rem' : '2rem 2.8rem',
                         position: 'relative',
                         overflow: 'hidden',
                       }}
                     >
-                      {/* Background accent blur */}
+                      {/* Subtle top separator line inside panel */}
                       <div style={{
-                        position: 'absolute', top: '-60px', right: '-60px',
-                        width: 280, height: 280,
-                        background: `radial-gradient(circle, rgba(${selected.accentRaw},0.1), transparent 70%)`,
+                        height: '1px',
+                        background: `linear-gradient(90deg, ${selected.accent}66, ${selected.accent}11, transparent)`,
+                        marginBottom: isMobile ? '1.2rem' : '1.6rem',
+                      }} />
+
+                      {/* Soft ambient glow */}
+                      <div style={{
+                        position: 'absolute', top: '-40px', right: '-40px',
+                        width: 240, height: 240,
+                        background: `radial-gradient(circle, rgba(${selected.accentRaw},0.08), transparent 70%)`,
                         pointerEvents: 'none',
                       }} />
 

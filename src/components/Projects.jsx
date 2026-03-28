@@ -229,8 +229,8 @@ const Projects = () => {
                         background: 'var(--card-bg)',
                         border: `1px solid ${isOpen ? proj.accent : proj.accent + '33'}`,
                         borderLeft: `3px solid ${proj.accent}`,
-                        /* No bottom border when open — panel continues below seamlessly */
-                        borderBottom: rowHasOpen && isOpen ? 'none' : `1px solid ${isOpen ? proj.accent : proj.accent + '33'}`,
+                        /* Active row cards lose bottom border so Drawer T-line can cap them perfectly */
+                        borderBottom: rowHasOpen ? 'none' : `1px solid ${isOpen ? proj.accent : proj.accent + '33'}`,
                         padding: isMobile ? '1.4rem 1.2rem' : '1.8rem 2rem',
                         position: 'relative',
                         overflow: 'hidden',
@@ -350,8 +350,27 @@ const Projects = () => {
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.45, ease: EASE }}
-                    style={{ overflow: 'hidden', marginBottom: '1.2rem' }}
+                    style={{ overflow: 'hidden', marginBottom: '1.2rem', position: 'relative' }}
                   >
+                    {/* TOP LEFT T-LINE (Caps inactive cards on the left) */}
+                    {!isMobile && (openIndex % cols) > 0 && (
+                      <div style={{
+                        position: 'absolute', top: 0, left: 0, height: '1px',
+                        background: selected.accent,
+                        width: `calc(((${openIndex % cols} * (100% - ${(cols - 1)} * 1.2rem) / ${cols}) + ${openIndex % cols} * 1.2rem))`,
+                        zIndex: 10,
+                      }} />
+                    )}
+                    
+                    {/* TOP RIGHT T-LINE (Caps inactive cards on the right) */}
+                    {!isMobile && (openIndex % cols) < cols - 1 && (
+                      <div style={{
+                        position: 'absolute', top: 0, right: 0, height: '1px',
+                        background: selected.accent,
+                        width: `calc(((${cols - 1 - (openIndex % cols)} * (100% - ${(cols - 1)} * 1.2rem) / ${cols}) + ${cols - 1 - (openIndex % cols)} * 1.2rem))`,
+                        zIndex: 10,
+                      }} />
+                    )}
                     {/* Inner panel — seamlessly extends the open card */}
                     <motion.div
                       initial={{ y: -8, opacity: 0 }}

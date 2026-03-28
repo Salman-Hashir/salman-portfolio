@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Magnetic from './Magnetic';
 import { useTheme } from '../context/ThemeContext';
 
 const Navigation = () => {
   const { theme, toggleTheme } = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const links = ['About', 'Experience', 'Projects', 'Writings', 'Contact'];
   const isDark = theme === 'dark';
+
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [isMobileMenuOpen]);
 
   return (
     <motion.nav
@@ -69,8 +79,8 @@ const Navigation = () => {
           </motion.button>
         </Magnetic>
 
-        {/* Resume Button */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}>
+        {/* Resume Button (Desktop) */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="nav-resume-desktop">
           <Magnetic strength={40}>
             <a
               href="resume/Salman-Hashir-Resume.pdf"
@@ -82,7 +92,74 @@ const Navigation = () => {
             </a>
           </Magnetic>
         </motion.div>
+
+        {/* Hamburger Menu Toggle (Mobile) */}
+        <motion.button 
+          className="mobile-menu-btn"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          {isMobileMenuOpen ? 'CLOSE' : 'MENU'}
+        </motion.button>
       </div>
+
+      {/* ── Mobile Sidebar Overlay ── */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mobile-sidebar-backdrop"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            {/* Sidebar */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="mobile-sidebar"
+            >
+              <ul className="mobile-sidebar-links">
+                {links.map((link, i) => (
+                  <motion.li
+                    key={link}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + i * 0.05 }}
+                  >
+                    <a href={`#${link.toLowerCase()}`} onClick={() => setIsMobileMenuOpen(false)}>
+                      {link}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                style={{ marginTop: 'auto', paddingTop: '2rem' }}
+              >
+                <a
+                  href="resume/Salman-Hashir-Resume.pdf"
+                  download
+                  className="btn-primary"
+                  style={{ width: '100%', padding: '1rem', border: '1px solid rgba(201,168,76,0.3)' }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Download Resume
+                </a>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 };

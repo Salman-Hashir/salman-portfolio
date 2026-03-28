@@ -266,12 +266,84 @@ body::after {
   box-shadow: 12px 12px 0px var(--neon-green);
 }
 
+.mobile-menu-btn, .mobile-sidebar, .mobile-sidebar-backdrop { display: none; }
+
 @media(max-width: 900px) {
   .hero { grid-template-columns: 1fr; text-align: center; gap: 4rem; padding-top: 8rem; }
   .nav { padding: 1.5rem 1.5rem; }
   .nav-links { display: none; }
+  .nav-resume-desktop { display: none; }
   .hero-content { align-items: center; }
   .hero-image-wrapper { justify-content: center; }
+  
+  .mobile-menu-btn {
+    display: inline-flex;
+    background: var(--neon-cyan);
+    color: var(--black);
+    border: var(--brutal-border);
+    padding: 0.5rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--neon-pink);
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+  .mobile-menu-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--neon-pink);
+  }
+
+  /* Right-side mobile drawer */
+  .mobile-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 280px;
+    background: var(--bg-surface);
+    border-left: var(--brutal-border);
+    z-index: 90;
+    padding: 7rem 2rem 2rem 2rem;
+    box-shadow: -10px 0 50px rgba(0,0,0,0.8);
+  }
+  
+  .mobile-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 89;
+  }
+
+  .mobile-sidebar-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .mobile-sidebar-links a {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--white);
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .mobile-sidebar-links a::after {
+    content: '';
+    position: absolute; left: 0; bottom: -4px;
+    width: 0; height: 3px;
+    background: var(--neon-cyan);
+    transition: width 0.3s ease;
+  }
+  .mobile-sidebar-links a:hover::after { width: 100%; }
 }
 
 /* Separator Line */

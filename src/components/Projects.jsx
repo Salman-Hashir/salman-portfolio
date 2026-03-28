@@ -137,10 +137,15 @@ const Projects = () => {
     setOpenIndex(prev => {
       const next = prev === i ? null : i;
       if (next !== null) {
-        // Give Framer Motion time to run the layout spring, then scroll card into view
+        // Wait for spring layout to settle, then scroll so the card top
+        // sits ~80px below the viewport top — title always fully visible
         setTimeout(() => {
-          cardRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 260);
+          const el = cardRefs.current[i];
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          const offset = 80; // gap from top (clears nav + breathing room)
+          window.scrollTo({ top: window.scrollY + rect.top - offset, behavior: 'smooth' });
+        }, 280);
       }
       return next;
     });

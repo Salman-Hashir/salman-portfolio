@@ -9,7 +9,7 @@ const projectsList = [
     preview: 'An intelligent WhatsApp bot that handles customer interactions and lead management automatically.',
     desc: 'An intelligent conversational agent integrated with the WhatsApp Cloud API. Engineered to handle real-time customer interactions, business inquiries, and lead management automatically.',
     tags: ['Python', 'FastAPI', 'WhatsApp API', 'Bot'],
-    link: '#',
+    link: 'demos/fluw-ai.html',
     accent: 'var(--neon-green)',
     accentRaw: '74,222,128',
   },
@@ -114,6 +114,78 @@ const useColumns = () => {
   return cols;
 };
 
+const ContinuousGlow = ({ isOpen, accent, rowIdx }) => {
+  const [path, setPath] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updatePath = () => {
+      const wrapper = document.getElementById(`row-wrapper-${rowIdx}`);
+      if (!wrapper) return;
+      
+      const card = wrapper.querySelector('.active-card');
+      const drawer = wrapper.querySelector('.active-drawer');
+      
+      if (!card || !drawer) return;
+      
+      const wRect = wrapper.getBoundingClientRect();
+      const cRect = card.getBoundingClientRect();
+      const dRect = drawer.getBoundingClientRect();
+      
+      const cx = cRect.left - wRect.left;
+      const cy = cRect.top - wRect.top;
+      const cw = cRect.width;
+      const ch = cRect.height;
+      
+      const dx = dRect.left - wRect.left;
+      const dy = dRect.top - wRect.top;
+      const dw = dRect.width;
+      const dh = dRect.height;
+      
+      const dStr = `M ${dx},${dy} L ${cx},${dy} L ${cx},${cy} L ${cx+cw},${cy} L ${cx+cw},${dy} L ${dx+dw},${dy} L ${dx+dw},${dy+dh} L ${dx},${dy+dh} Z`;
+      setPath(dStr);
+    };
+
+    updatePath();
+    const t = setTimeout(updatePath, 50); // initial render pass
+    
+    const ro = new ResizeObserver(updatePath);
+    const wrapper = document.getElementById(`row-wrapper-${rowIdx}`);
+    if (wrapper) ro.observe(wrapper);
+
+    return () => {
+      ro.disconnect();
+      clearTimeout(t);
+    };
+  }, [isOpen, rowIdx]);
+
+  if (!isOpen || !path) return null;
+
+  return (
+    <svg 
+      style={{
+        position: 'absolute', inset: 0, width: '100%', height: '100%',
+        zIndex: 10, pointerEvents: 'none', overflow: 'visible'
+      }}
+    >
+      <motion.path 
+        d={path}
+        fill="none"
+        stroke={accent}
+        strokeWidth="1.5"
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+        pathLength="1"
+        strokeDasharray="0.1 1"
+        animate={{ strokeDashoffset: [1, 0] }}
+        transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+        style={{ filter: `drop-shadow(0 0 6px ${accent})` }}
+      />
+    </svg>
+  );
+};
+
 const Projects = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const sectionRef = useRef(null);
@@ -205,7 +277,12 @@ const Projects = () => {
           const rowHasOpen = rowCards.some(p => p.originalIndex === openIndex);
 
           return (
-            <React.Fragment key={rowIdx}>
+            <div key={rowIdx} id={`row-wrapper-${rowIdx}`} style={{ position: 'relative' }}>
+              <ContinuousGlow 
+                isOpen={rowHasOpen} 
+                accent={rowHasOpen ? selected.accent : ''} 
+                rowIdx={rowIdx} 
+              />
 
               {/* ── Card row ── */}
               <div style={{
@@ -225,6 +302,7 @@ const Projects = () => {
                       transition={{ duration: 0.5, delay: proj.originalIndex * 0.04, ease: EASE }}
                       whileHover={{ y: -3, transition: { duration: 0.18 } }}
                       onClick={() => toggle(proj.originalIndex)}
+                      className={isOpen ? 'active-card' : ''}
                       style={{
                         background: 'var(--card-bg)',
                         border: `1px solid ${isOpen ? proj.accent : proj.accent + '33'}`,
@@ -346,6 +424,7 @@ const Projects = () => {
                   <motion.div
                     key={`panel-${openIndex}`}
                     ref={expandedRef}
+                    className="active-drawer"
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -485,8 +564,7 @@ const Projects = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-
-            </React.Fragment>
+            </div>
           );
         })}
       </div>

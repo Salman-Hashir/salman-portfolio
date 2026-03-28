@@ -376,130 +376,81 @@ const Projects = () => {
                         pointerEvents: 'none',
                       }} />
 
-                      <div style={{
-                        display: 'flex',
-                        flexDirection: isMobile ? 'column' : 'row',
-                        gap: isMobile ? '1.6rem' : '3rem',
-                        alignItems: 'flex-start',
+                      {/* Full description */}
+                      <p style={{
+                        fontSize: isMobile ? '0.83rem' : '0.92rem',
+                        color: 'var(--muted)', lineHeight: 1.88,
+                        borderLeft: `2px solid rgba(${selected.accentRaw},0.5)`,
+                        paddingLeft: '1.1rem',
+                        marginBottom: '1.4rem',
                         position: 'relative',
                       }}>
+                        {selected.desc}
+                      </p>
 
-                        {/* LEFT — project identity recap */}
-                        <div style={{ flex: isMobile ? 'none' : '0 0 260px' }}>
-                          <div style={{
-                            fontFamily: 'var(--font-mono)', fontSize: '0.58rem',
-                            letterSpacing: '0.25em', color: `${selected.accent}bb`,
-                            textTransform: 'uppercase', marginBottom: '0.6rem',
-                          }}>
-                            {selected.icon}&nbsp;&nbsp;{selected.num}
-                          </div>
-                          <h3 style={{
-                            fontFamily: 'var(--font-display)', fontWeight: 900,
-                            color: 'var(--white)', textTransform: 'uppercase',
-                            fontSize: isMobile ? '1.8rem' : '2.1rem',
-                            lineHeight: 1.05, marginBottom: '0.3rem',
-                          }}>
-                            {selected.title}
-                          </h3>
-                          <span style={{
-                            fontFamily: 'var(--font-mono)', fontSize: '0.55rem',
-                            letterSpacing: '0.1em', textTransform: 'uppercase',
-                            color: `${selected.accent}99`, display: 'block', marginBottom: '1.4rem',
-                          }}>
-                            {selected.sub}
-                          </span>
-
-                          {/* Tags */}
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
-                            {selected.tags.map((tag, idx) => (
-                              <motion.span
-                                key={idx}
-                                initial={{ opacity: 0, y: 6 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.15 + idx * 0.06 }}
-                                style={{
-                                  padding: '0.28rem 0.7rem',
-                                  border: `1px solid rgba(${selected.accentRaw},0.4)`,
-                                  fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
-                                  letterSpacing: '0.1em', color: selected.accent,
-                                  textTransform: 'uppercase',
-                                }}
-                              >
-                                {tag}
-                              </motion.span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Divider */}
-                        {!isMobile && (
-                          <motion.div
-                            initial={{ scaleY: 0 }}
-                            animate={{ scaleY: 1 }}
-                            transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
+                      {/* Tech tags */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', marginBottom: '1.6rem' }}>
+                        {selected.tags.map((tag, idx) => (
+                          <motion.span
+                            key={idx}
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.12 + idx * 0.055 }}
                             style={{
-                              width: 1, alignSelf: 'stretch',
-                              background: `linear-gradient(to bottom, transparent, rgba(${selected.accentRaw},0.4), transparent)`,
-                              transformOrigin: 'top', flexShrink: 0,
+                              padding: '0.28rem 0.7rem',
+                              border: `1px solid rgba(${selected.accentRaw},0.4)`,
+                              fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
+                              letterSpacing: '0.1em', color: selected.accent,
+                              textTransform: 'uppercase',
                             }}
-                          />
-                        )}
+                          >
+                            {tag}
+                          </motion.span>
+                        ))}
+                      </div>
 
-                        {/* RIGHT — full description + actions */}
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
-                          <p style={{
-                            fontSize: isMobile ? '0.83rem' : '0.92rem',
-                            color: 'var(--muted)', lineHeight: 1.88,
-                            borderLeft: `2px solid rgba(${selected.accentRaw},0.5)`,
-                            paddingLeft: '1.1rem',
-                          }}>
-                            {selected.desc}
-                          </p>
-
-                          {/* Actions */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                            <a
-                              href={selected.link}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                                fontFamily: 'var(--font-mono)',
-                                fontSize: isMobile ? '0.55rem' : '0.58rem',
-                                letterSpacing: '0.15em', textTransform: 'uppercase',
-                                textDecoration: 'none',
-                                padding: isMobile ? '0.6rem 1.2rem' : '0.7rem 1.6rem',
-                                background: selected.accent, color: 'var(--black)', fontWeight: 700,
-                                border: `1px solid ${selected.accent}`,
-                                transition: 'transform 0.18s ease, box-shadow 0.18s ease',
-                              }}
-                              onMouseEnter={e => {
-                                e.currentTarget.style.transform = 'translate(-2px,-2px)';
-                                e.currentTarget.style.boxShadow = `4px 4px 0 rgba(${selected.accentRaw},0.45)`;
-                              }}
-                              onMouseLeave={e => {
-                                e.currentTarget.style.transform = '';
-                                e.currentTarget.style.boxShadow = '';
-                              }}
-                            >
-                              ↗ {selected.status === 'Live' ? 'View Live' : 'View Demo'}
-                            </a>
-                            <button
-                              onClick={() => setOpenIndex(null)}
-                              style={{
-                                fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
-                                letterSpacing: '0.15em', textTransform: 'uppercase',
-                                color: 'var(--muted)', background: 'none', border: 'none',
-                                cursor: 'pointer', textDecoration: 'underline',
-                                transition: 'color 0.2s ease',
-                              }}
-                              onMouseEnter={e => e.currentTarget.style.color = 'var(--white)'}
-                              onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
-                            >
-                              − Close
-                            </button>
-                          </div>
-                        </div>
+                      {/* Actions */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                        <a
+                          href={selected.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: isMobile ? '0.55rem' : '0.58rem',
+                            letterSpacing: '0.15em', textTransform: 'uppercase',
+                            textDecoration: 'none',
+                            padding: isMobile ? '0.6rem 1.2rem' : '0.7rem 1.6rem',
+                            background: selected.accent, color: 'var(--black)', fontWeight: 700,
+                            border: `1px solid ${selected.accent}`,
+                            transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                          }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.transform = 'translate(-2px,-2px)';
+                            e.currentTarget.style.boxShadow = `4px 4px 0 rgba(${selected.accentRaw},0.45)`;
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.transform = '';
+                            e.currentTarget.style.boxShadow = '';
+                          }}
+                        >
+                          ↗ {selected.status === 'Live' ? 'View Live' : 'View Demo'}
+                        </a>
+                        <button
+                          onClick={() => setOpenIndex(null)}
+                          style={{
+                            fontFamily: 'var(--font-mono)', fontSize: '0.52rem',
+                            letterSpacing: '0.15em', textTransform: 'uppercase',
+                            color: 'var(--muted)', background: 'none', border: 'none',
+                            cursor: 'pointer', textDecoration: 'underline',
+                            transition: 'color 0.2s ease',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.color = 'var(--white)'}
+                          onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
+                        >
+                          − Close
+                        </button>
                       </div>
                     </motion.div>
                   </motion.div>

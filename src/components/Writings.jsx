@@ -333,7 +333,7 @@ const Writings = () => {
                   cursor: 'pointer',
                   transition: 'all 0.3s',
                   background: active ? 'var(--text-primary)' : 'var(--bg-card)',
-                  color: active ? 'var(--bg-main)' : 'var(--muted)',
+                  color: active ? 'var(--btn-text)' : 'var(--muted)',
                   boxShadow: active ? 'var(--soft-shadow)' : '0 1px 3px rgba(0,0,0,0.05)',
                 }}
               >

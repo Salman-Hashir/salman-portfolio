@@ -9,6 +9,16 @@ const Navigation = () => {
   const links = ['About', 'Experience', 'Projects', 'Writings', 'Contact'];
   const isDark = theme === 'dark';
 
+  const [isScrolled, setIsScrolled] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Prevent scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -23,11 +33,11 @@ const Navigation = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
-      className="nav"
+      className={`nav ${isScrolled ? 'nav-scrolled' : ''}`}
     >
       <Magnetic strength={15}>
         <a href="#hero" className="nav-logo">
-          S. Hashir
+          Salman Hashir
         </a>
       </Magnetic>
 

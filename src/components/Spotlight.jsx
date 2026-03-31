@@ -15,12 +15,10 @@ const Spotlight = () => {
     return () => window.removeEventListener('mousemove', updateMousePosition);
   }, []);
 
-  // Dark mode: vivid neon glows / Light mode: softer, more subtle accent glows
+  // Dark mode vs Light mode soft ambient glows (Apple style)
   const gradient = isDark
-    ? `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(244, 63, 94, 0.12), transparent 40%),
-       radial-gradient(400px circle at ${mousePosition.x + 100}px ${mousePosition.y + 100}px, rgba(6, 182, 212, 0.15), transparent 40%)`
-    : `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(3, 105, 161, 0.08), transparent 40%),
-       radial-gradient(400px circle at ${mousePosition.x + 100}px ${mousePosition.y + 100}px, rgba(190, 18, 60, 0.07), transparent 40%)`;
+    ? `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(41, 151, 255, 0.06), transparent 40%)`
+    : `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(0, 102, 204, 0.03), transparent 40%)`;
 
   return (
     <motion.div

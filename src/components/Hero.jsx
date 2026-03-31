@@ -39,7 +39,7 @@ const Hero = () => {
               <motion.span key={index} variants={letterVariants} style={{ display: 'inline-block' }}>{char}</motion.span>
             ))}
           </div>
-          <div style={{ overflow: 'hidden', display: 'flex', color: 'var(--neon-pink)', textShadow: '2px 2px 0px var(--neon-cyan)' }}>
+          <div style={{ overflow: 'hidden', display: 'flex', color: 'var(--accent-blue)' }}>
             {lastName.map((char, index) => (
               <motion.span key={index} variants={letterVariants} style={{ display: 'inline-block' }}>{char}</motion.span>
             ))}
@@ -81,11 +81,8 @@ const Hero = () => {
           
           <motion.div 
             initial={{ height: '100%' }} animate={{ height: '0%' }} transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1], delay: 0.8 }}
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', background: 'var(--black)', zIndex: 10 }}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', background: 'var(--bg-main)', zIndex: 10 }}
           />
-          
-          <div style={{ position: 'absolute', top: '-15px', left: '-15px', width: '30px', height: '30px', borderTop: '4px solid var(--neon-pink)', borderLeft: '4px solid var(--neon-pink)' }} />
-          <div style={{ position: 'absolute', bottom: '-15px', right: '-15px', width: '30px', height: '30px', borderBottom: '4px solid var(--neon-pink)', borderRight: '4px solid var(--neon-pink)' }} />
         </motion.div>
 
         {/* The Gatzara style Rotating Badge positioned dynamically overlapping the image */}

@@ -34,21 +34,11 @@ const Cursor = () => {
       <motion.div
         className="cursor-dot"
         animate={{
-          x: mousePosition.x - 4,
-          y: mousePosition.y - 4,
+          x: mousePosition.x - (isHovered ? 12 : 8),
+          y: mousePosition.y - (isHovered ? 12 : 8),
+          scale: isHovered ? 1.5 : 1,
         }}
         transition={{ type: 'tween', ease: 'linear', duration: 0 }}
-      />
-      <motion.div
-        className="cursor-ring"
-        animate={{
-          x: mousePosition.x - (isHovered ? 24 : 16),
-          y: mousePosition.y - (isHovered ? 24 : 16),
-          width: isHovered ? 48 : 32,
-          height: isHovered ? 48 : 32,
-          borderColor: isHovered ? 'rgba(201, 168, 76, 1)' : 'rgba(201, 168, 76, 0.4)',
-        }}
-        transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.5 }}
       />
     </>
   );

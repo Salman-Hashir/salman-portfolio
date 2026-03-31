@@ -16,41 +16,39 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="section-padding" style={{ background: 'var(--black-alt)' }}>
+    <section id="about" className="section-padding" style={{ background: 'transparent' }}>
       <div className="sep-line" style={{ marginTop: 0 }} />
       <div style={{ display: 'grid', gap: '5rem', alignItems: 'start' }} className="about-grid">
         
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={{ visible: { transition: { staggerChildren: 0.2 } } }}>
-          <motion.div variants={fadeUp} className="label" style={{ marginBottom: '1rem' }}>About</motion.div>
-          <motion.h2 variants={fadeUp} className="title-medium" style={{ marginBottom: '2rem' }}>The Architect<br/>Behind the Screen</motion.h2>
+          <motion.div variants={fadeUp} className="label">About</motion.div>
+          <motion.h2 variants={fadeUp} className="title-medium" style={{ margin: '0.5rem 0 2rem 0' }}>The Architect<br/>Behind the Screen</motion.h2>
           
           <motion.p variants={fadeUp} className="body-text" style={{ marginBottom: '1.5rem' }}>
-            I am an <em style={{ color: 'var(--gold)', fontStyle: 'italic' }}>IT Engineer and full-stack developer</em> based in Dubai, with roots in Kerala. My work spans the full depth of the technology stack — from configuring satellite networks to building AI-powered web platforms.
+            I am an <strong style={{ color: 'var(--text-primary)', fontWeight: 600 }}>IT Engineer and full-stack developer</strong> based in Dubai, with roots in Kerala. My work spans the full depth of the technology stack — from configuring satellite networks to building AI-powered web platforms.
           </motion.p>
           <motion.p variants={fadeUp} className="body-text" style={{ marginBottom: '1.5rem' }}>
-            With hands-on experience as a <em style={{ color: 'var(--gold)', fontStyle: 'italic' }}>Technical Support Engineer</em> at Asianet Satellite Communications and as an IT Instructor, I bring both the infrastructure mindset and the product instinct.
+            With hands-on experience as a <strong style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Technical Support Engineer</strong> at Asianet Satellite Communications and as an IT Instructor, I bring both the infrastructure mindset and the product instinct.
           </motion.p>
           <motion.p variants={fadeUp} className="body-text" style={{ marginBottom: '4rem' }}>
-            Beyond engineering, I write — <em style={{ color: 'var(--gold)', fontStyle: 'italic' }}>dark fiction, paranormal research, philosophical books</em>. The same precision I bring to systems architecture, I bring to storytelling.
+            Beyond engineering, I write — <strong style={{ color: 'var(--text-primary)', fontWeight: 600 }}>dark fiction, paranormal research, philosophical books</strong>. The same precision I bring to systems architecture, I bring to storytelling.
           </motion.p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
             {skills.map((skill, index) => (
               <motion.div 
                 key={index}
                 variants={fadeUp}
+                className="glass-panel"
                 style={{
-                  padding: '1.5rem',
-                  border: 'var(--brutal-border)',
-                  background: 'var(--black)',
-                  boxShadow: '4px 4px 0px var(--neon-cyan)',
-                  transition: 'all 0.2s cubic-bezier(0.25, 1, 0.5, 1)'
+                  padding: '2rem',
+                  borderRadius: 'var(--radius-lg)',
+                  transition: 'all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)'
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translate(4px, 4px)'; e.currentTarget.style.boxShadow = '0px 0px 0px transparent'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translate(0, 0)'; e.currentTarget.style.boxShadow = '4px 4px 0px var(--neon-cyan)'; }}
+                whileHover={{ y: -4, boxShadow: 'var(--soft-shadow)' }}
               >
-                <span className="label" style={{ display: 'block', marginBottom: '0.8rem', letterSpacing: '0.15em' }}>{skill.name}</span>
-                <span style={{ fontSize: '0.85rem', fontWeight: 300, color: 'var(--muted)', lineHeight: 1.6, display: 'block' }}>{skill.tags}</span>
+                <h4 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.8rem' }}>{skill.name}</h4>
+                <p style={{ fontSize: '0.9rem', color: 'var(--muted)', lineHeight: 1.6 }}>{skill.tags}</p>
               </motion.div>
             ))}
           </div>

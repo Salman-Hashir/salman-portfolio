@@ -86,7 +86,7 @@ const Navigation = () => {
               href="resume/Salman-Hashir-Resume.pdf"
               download
               className="btn-primary"
-              style={{ padding: '0.6rem 2rem', border: '1px solid rgba(201,168,76,0.3)' }}
+              style={{ padding: '0.6rem 2rem' }}
             >
               Resume
             </a>
@@ -150,7 +150,7 @@ const Navigation = () => {
                   href="resume/Salman-Hashir-Resume.pdf"
                   download
                   className="btn-primary"
-                  style={{ width: '100%', padding: '1rem', border: '1px solid rgba(201,168,76,0.3)' }}
+                  style={{ width: '100%', padding: '1rem' }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Download Resume

@@ -12,7 +12,7 @@
   --bg-surface: rgba(255, 255, 255, 0.1);
   --border-subtle: rgba(255, 255, 255, 0.3);
 
-  --nav-bg: rgba(255, 255, 255, 0.7);
+  --nav-bg: rgba(255, 255, 255, 0.85); /* High opacity glass to block text bleed */
   --btn-text: #ffffff;
   --section-bg: #f4f7fb; /* Light soft color, not white */
 
@@ -61,7 +61,7 @@
   --bg-surface: rgba(255, 255, 255, 0.02);
   --border-subtle: rgba(255, 255, 255, 0.05);
 
-  --nav-bg: rgba(16, 22, 42, 0.75);
+  --nav-bg: rgba(16, 22, 42, 0.85); /* High opacity glass to block text bleed */
   --btn-text: #0B0C10;
   --section-bg: #10162A; /* Deep rich high color, not pure black */
 
@@ -192,8 +192,8 @@ body::before {
 .nav-scrolled {
   padding: 1rem 4rem;
   background: var(--nav-bg) !important;
-  backdrop-filter: blur(24px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
   border-bottom: 1px solid var(--border-subtle) !important;
   box-shadow: var(--soft-shadow) !important;
 }

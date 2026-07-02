@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Lenis from 'lenis';
-import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/Layout';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
@@ -26,33 +25,25 @@ function App() {
       infinite: false,
     });
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
+    return () => lenis.destroy();
   }, []);
 
   return (
-    <ThemeProvider>
-      <Layout>
-        <Spotlight />
-        <Navigation />
-        <Hero />
-        <Marquee text="AVAILABLE FOR NEW PROJECTS" />
-        <About />
-        <Experience />
-        <Marquee text="CREATIVE DEVELOPMENT & ENGINEERING" />
-        <Projects />
-        <Writings />
-        <Contact />
-      </Layout>
-    </ThemeProvider>
-  )
+    <Layout>
+      <Spotlight />
+      <Navigation />
+      <Hero />
+      <Marquee text="AVAILABLE FOR NEW PROJECTS" />
+      <About />
+      <Experience />
+      <Marquee text="CREATIVE DEVELOPMENT & ENGINEERING" />
+      <Projects />
+      <Writings />
+      <Contact />
+    </Layout>
+  );
 }
 
 export default App;

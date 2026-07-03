@@ -33,12 +33,15 @@ function BookCard({ book, index }) {
       <h3 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.3, marginBottom: '0.8rem' }}>{book.title}</h3>
       <p style={{ fontSize: '0.95rem', fontWeight: 400, color: 'var(--muted)', lineHeight: 1.6, marginBottom: '1.5rem', flexGrow: 1 }}>{book.desc}</p>
       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-        {book.htmlLink ? (
-          <a href={book.htmlLink} target="_blank" rel="noreferrer" className="btn-ghost" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>Read Online</a>
-        ) : (
+        {book.htmlLink && (
+          <a href={book.htmlLink} target="_blank" rel="noreferrer" className="btn-ghost" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>📖 Read Online</a>
+        )}
+        {book.pdfLink && (
           <>
-            <a href={book.pdfLink} target="_blank" rel="noreferrer" className="btn-ghost" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>Read Online</a>
-            <a href={book.pdfLink} download className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>Download</a>
+            {!book.htmlLink && (
+              <a href={book.pdfLink} target="_blank" rel="noreferrer" className="btn-ghost" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>📖 Read Online</a>
+            )}
+            <a href={book.pdfLink} download className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>📥 Download PDF</a>
           </>
         )}
       </div>

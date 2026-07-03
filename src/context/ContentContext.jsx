@@ -38,6 +38,12 @@ export const DEFAULT_CONTENT = {
   ],
   experience: [
     {
+      id: '0', dates: 'May 2026 – Present', location: 'Dubai, UAE',
+      role: 'IT Support Executive', company: 'LIFE Pharmacy Group',
+      desc: 'Providing enterprise-level IT support across LIFE Pharmacy Group operations in the UAE. Managing hardware/software troubleshooting, network infrastructure, and end-user support for a leading healthcare retail chain.',
+      order: 0,
+    },
+    {
       id: '1', dates: 'Aug 2024 – May 2025', location: 'Adoor, Kerala, India',
       role: 'Technical Support Engineer', company: 'Asianet Satellite Communications',
       desc: 'Handled 60+ daily customer inquiries with a 95% first-call resolution rate. Diagnosed complex networking issues including router configurations, ISP connectivity, LAN/WAN setups, and satellite systems.',

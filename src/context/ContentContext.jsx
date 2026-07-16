@@ -1,8 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { db } from '../firebase';
-import {
-  doc, getDoc, setDoc, collection, getDocs, addDoc, updateDoc, deleteDoc
-} from 'firebase/firestore';
+import React, { createContext, useContext, useState } from 'react';
+
 
 // ─── DEFAULT DATA (fallback if no Firebase data exists yet) ───────────────────
 export const DEFAULT_CONTENT = {
@@ -105,105 +102,22 @@ const ContentContext = createContext(null);
 const COLLECTIONS = ['skills', 'experience', 'education', 'projects', 'books', 'research', 'journeyTech', 'journeyInvestigation', 'journeyCaseDiary'];
 
 export function ContentProvider({ children }) {
-  const [content, setContent] = useState(DEFAULT_CONTENT);
-  const [loading, setLoading] = useState(true);
-  const [firebaseReady, setFirebaseReady] = useState(false);
+  const [content] = useState(DEFAULT_CONTENT);
+  const loading = false;
+  const firebaseReady = true;
 
-  // ── Load data from Firebase on mount ─────────────────────────────────────
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        // Load site settings
-        const settingsDoc = await getDoc(doc(db, 'content', 'siteSettings'));
-        const newContent = { ...DEFAULT_CONTENT };
+  // Firebase integration removed – using static default content only.
 
-        if (settingsDoc.exists()) {
-          newContent.siteSettings = { ...DEFAULT_CONTENT.siteSettings, ...settingsDoc.data() };
-        }
-
-        // Load all collections — only override defaults if Firebase has data
-        for (const colName of COLLECTIONS) {
-          try {
-            const snapshot = await getDocs(collection(db, colName));
-            if (!snapshot.empty) {
-              const items = [];
-              snapshot.forEach(d => items.push({ id: d.id, ...d.data() }));
-              items.sort((a, b) => (a.order || 0) - (b.order || 0));
-              newContent[colName] = items;
-            }
-            // If snapshot is empty, keep the DEFAULT_CONTENT for this collection
-          } catch (colErr) {
-            console.warn(`Could not load collection "${colName}":`, colErr.message);
-            // Keep default data for this collection
-          }
-        }
-
-        setContent(newContent);
-        setFirebaseReady(true);
-      } catch (err) {
-        console.warn('Firebase not configured yet — using default content. Error:', err.message);
-        setFirebaseReady(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
 
   // ── Save site settings ────────────────────────────────────────────────────
-  const saveSiteSettings = useCallback(async (settings) => {
-    setContent(prev => ({ ...prev, siteSettings: { ...prev.siteSettings, ...settings } }));
-    try {
-      await setDoc(doc(db, 'content', 'siteSettings'), settings, { merge: true });
-    } catch (err) {
-      console.error('Error saving settings:', err);
-      throw err;
-    }
-  }, []);
+  const saveSiteSettings = async () => {};
 
   // ── Generic CRUD for collections ─────────────────────────────────────────
-  const addItem = useCallback(async (colName, item) => {
-    const newItem = { ...item, order: Date.now() };
-    try {
-      const docRef = await addDoc(collection(db, colName), newItem);
-      const withId = { id: docRef.id, ...newItem };
-      setContent(prev => ({
-        ...prev,
-        [colName]: [...(prev[colName] || []), withId].sort((a, b) => (a.order || 0) - (b.order || 0)),
-      }));
-      return withId;
-    } catch (err) {
-      console.error('Error adding item:', err);
-      throw err;
-    }
-  }, []);
+  const addItem = async () => {};
 
-  const updateItem = useCallback(async (colName, id, updates) => {
-    try {
-      await updateDoc(doc(db, colName, id), updates);
-      setContent(prev => ({
-        ...prev,
-        [colName]: prev[colName].map(item => item.id === id ? { ...item, ...updates } : item),
-      }));
-    } catch (err) {
-      console.error('Error updating item:', err);
-      throw err;
-    }
-  }, []);
+  const updateItem = async () => {};
 
-  const deleteItem = useCallback(async (colName, id) => {
-    try {
-      await deleteDoc(doc(db, colName, id));
-      setContent(prev => ({
-        ...prev,
-        [colName]: prev[colName].filter(item => item.id !== id),
-      }));
-    } catch (err) {
-      console.error('Error deleting item:', err);
-      throw err;
-    }
-  }, []);
+  const deleteItem = async () => {};
 
   return (
     <ContentContext.Provider value={{ content, loading, firebaseReady, saveSiteSettings, addItem, updateItem, deleteItem }}>

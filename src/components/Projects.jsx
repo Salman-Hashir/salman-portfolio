@@ -28,13 +28,20 @@ function ProjectCard({ proj, index }) {
           <span key={tag} style={{ fontSize: '0.75rem', fontWeight: 500, padding: '0.3rem 0.8rem', background: 'var(--bg-main)', color: 'var(--muted)', borderRadius: 'var(--radius-sm)' }}>{tag.trim()}</span>
         ))}
       </div>
-      <a href={proj.link} target={proj.link?.startsWith('http') ? '_blank' : '_self'} rel="noreferrer"
-        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 500, textDecoration: 'none', color: 'var(--accent-blue)', transition: 'color 0.2s' }}
-        onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
-        onMouseLeave={e => e.currentTarget.style.color = 'var(--accent-blue)'}
-      >
-        {proj.link?.includes('demos') ? 'View Demo →' : 'Visit Site →'}
-      </a>
+      {proj.link && !proj.link.startsWith('#') ? (
+        <a href={proj.link} target={proj.link?.startsWith('http') ? '_blank' : '_self'} rel="noreferrer"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 500, textDecoration: 'none', color: 'var(--accent-blue)', transition: 'color 0.2s' }}
+          onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+          onMouseLeave={e => e.currentTarget.style.color = 'var(--accent-blue)'}
+        >
+          {proj.link?.includes('demos') ? 'View Demo →' : 'Visit Site →'}
+        </a>
+      ) : (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.82rem', fontWeight: 500, color: 'var(--text-primary)', background: 'var(--accent-light)', padding: '0.35rem 0.75rem', borderRadius: 'var(--radius-sm)', width: 'fit-content' }}>
+          <span style={{ fontSize: '0.9rem' }}>🏢</span>
+          <span>Company Server · On-Premise</span>
+        </div>
+      )}
     </motion.div>
   );
 }

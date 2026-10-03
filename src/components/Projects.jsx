@@ -39,7 +39,7 @@ function ProjectCard({ proj, index }) {
       ) : (
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.82rem', fontWeight: 500, color: 'var(--text-primary)', background: 'var(--accent-light)', padding: '0.35rem 0.75rem', borderRadius: 'var(--radius-sm)', width: 'fit-content' }}>
           <span style={{ fontSize: '0.9rem' }}>🏢</span>
-          <span>Company Server · On-Premise</span>
+          <span>In-House System · Live on Company Server</span>
         </div>
       )}
     </motion.div>
